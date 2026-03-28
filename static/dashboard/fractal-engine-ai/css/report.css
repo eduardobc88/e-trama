@@ -1,0 +1,227 @@
+:root {
+  --main-accent-color: #212121;
+  --main-body-bg-color: #ffffff;
+  --main-box-bg-color: #f2f2f2;
+  --main-box-bg-color-op: #eeeeee;
+  --main-text-color: #000000;
+  --main-secondary-text-color: #121212;
+  --main-input-border-bottom: 1px solid #212121;
+  --main-input-border-bottom-active: 1px solid #212121;
+  --main-border-color: var(--main-text-color);
+  --main-accent-color: #212121;
+  --main-active-color: #21212130;
+  --main-hover-color: #00549c30;
+  --main-font-size: 12px;
+  --main-table-bg-row: #ededed;
+  --main-secundary-font-size: 12px;
+  --main-accent-font-size: 11px;
+  --main-checkbox-border: 2px solid var(--main-border-color);
+  --main-checkbox-border-hover: 2px solid #212121;
+  --main-box-shadow: 0px 3px 18px -10px #212121;
+  --main-notification-bkg: #afafaf40;
+  --main-icon-font-size: 18px;
+  --main-box-shadow-line: 0px 10px 10px -9px #212121;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  background-color: var(--main-body-bg-color);
+  font-family: "Noto Sans", sans-serif;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+input,
+textarea,
+button,
+a {
+  font-family: "Noto Sans", sans-serif;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  position: relative;
+}
+
+h1 {
+  color: var(--main-text-color);
+  display: block;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1;
+  margin: 0;
+  padding: 20px 0 19px 0;
+  position: relative;
+  text-align: center;
+  text-transform: uppercase;
+  z-index: 1;
+}
+
+h2 {
+  color: var(--main-text-color);
+  display: block;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1;
+  margin-bottom: 15px;
+  position: relative;
+  text-align: center;
+  z-index: 1;
+}
+
+#app-logo {
+  height: 48px;
+}
+
+
+#cards-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.2), 0px 0px 0px 0px rgba(0, 0, 0, 0.14), 0px 0px 0px 0px rgba(0, 0, 0, 0.12);
+  border-width: 1px;
+  border-style: solid;
+  border-color: #e0e0e0;
+  margin: 10px;
+  text-transform: uppercase;
+}
+
+.card > .image {
+  height: 145px;
+  width: 100%;
+  background-color: #ccc;
+}
+
+.card > .header {
+  padding: 16px 16px 16px 16px;
+  font-size: 22px;
+  font-weight: 600;
+  color: #333;
+}
+
+.card > .content {
+  padding: 0 16px 0 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  text-align: justify;
+}
+
+.card > .footer {
+  padding: 16px 16px 16px 16px;
+  justify-content: right;
+  display: flex;
+}
+
+.card > .footer > a {
+  color: #d30047;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+
+#footer {
+  margin: 200px auto auto auto;
+  -webkit-user-select: none;
+  bottom: 0;
+  color: var(--main-text-color);
+  display: flex;
+  justify-content: center;
+  left: 0;
+  padding: 5px 0;
+  position: relative;
+  right: 0;
+  user-select: none;
+  z-index: 1;
+}
+
+#footer span {
+  align-self: center;
+  display: flex;
+  font-size: 10px;
+  margin: auto 5px auto 5px;
+}
+
+#footer a {
+  outline: none;
+}
+
+#footer img {
+  display: flex;
+  position: relative;
+  top: 0;
+  width: 150px;
+}
+
+#footer span {
+  align-self: center;
+  display: flex;
+  font-size: 10px;
+  margin: auto 5px auto 5px;
+}
+
+
+
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 100px) {
+  .wrapper {
+    max-width: 600px;
+    width: 100%;
+  }
+
+  #cards-wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+  .wrapper {
+    max-width: 768px;
+    width: 100%;
+  }
+
+  #cards-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  .wrapper {
+    max-width: 1200px;
+    width: 100%;
+  }
+
+  #cards-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+  .wrapper {
+    width: 100%;
+  }
+
+  #cards-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}

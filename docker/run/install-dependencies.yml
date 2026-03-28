@@ -1,0 +1,27 @@
+services:
+  fractal-engine-ai-base:
+    image: fractal-engine-ai-node-img:latest
+    volumes:
+      - ../../dashboard/:/dashboard/
+      - ../../service/:/service/
+    working_dir: /
+  fractal-install:
+    extends:
+      service: fractal-engine-ai-base
+    command: >
+      bin/sh -c "
+        cd dashboard;
+        cd fractal-engine-ai;
+        npm i --force;
+        cd ../../;
+        cd service;
+        cd fractal-engine-ai;
+        npm i --force;
+        cd ../;
+        cd fractal-engine-ai-notification;
+        npm i --force;
+      "
+  fractal-finish:
+    extends:
+      service: fractal-engine-ai-base
+    command: exit

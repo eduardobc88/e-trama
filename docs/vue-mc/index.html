@@ -1,0 +1,2360 @@
+<!DOCTYPE html><html><head><script src="js/athena.js" type="text/javascript"></script>
+<script type="text/javascript">window.addEventListener('DOMContentLoaded',function(){var v=archive_analytics.values;v.service='wb';v.server_name='wwwb-app211.us.archive.org';v.server_ms=451;archive_analytics.send_pageview({});});</script>
+<script type="text/javascript" src="js/bundle-playback.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/wombat.js" charset="utf-8"></script>
+<script>window.RufflePlayer=window.RufflePlayer||{};window.RufflePlayer.config={"autoplay":"on","unmuteOverlay":"hidden","showSwfDownload":true};</script>
+<script type="text/javascript" src="js/ruffle.js"></script>
+<link rel="stylesheet" type="text/css" href="css/banner-styles.css">
+<link rel="stylesheet" type="text/css" href="css/iconochive.css">
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="shortcut icon" href="images/favicon.ico">
+
+
+            <title>Models and Collections for Vue.js - Vue Models & Collections</title>
+
+
+
+        <link rel="stylesheet" href="css/theme.css">
+    </head>
+    <body>
+        <header>
+            <div class="titles">
+                <label for="menu">
+                    <img class="logo" src="images/logo.png">
+                </label>
+                <a class="title" href="">
+                    <span class="name">vue-mc</span>
+                    <span class="tagline">Vue Models & Collections</span>
+                </a>
+                <a class="github" href="https://github.com/FiguredLimited/vue-mc">
+                    <img src="images/github.png">
+                </a>
+            </div>
+        </header>
+
+        <input type="checkbox" id="menu">
+        <main>
+            <menu>
+                <div class="titles">
+                    <img class="logo" src="images/logo.png">
+
+                    <a class="title" href="">
+                        <span class="name">vue-mc</span>
+                        <span class="tagline">Vue Models & Collections</span>
+                    </a>
+                </div>
+
+                <div class="nav">
+
+                        <a href="#introduction">
+                            <h2>Getting Started</h2>
+                        </a>
+                        <ul>
+
+                                <li>
+                                    <a href="#introduction">Introduction</a>
+                                </li>
+
+
+                                    <ul>
+
+                                    </ul>
+
+
+
+                                <li>
+                                    <a href="#installation">Installation</a>
+                                </li>
+
+
+                                    <ul>
+
+                                    </ul>
+
+
+
+                                <li>
+                                    <a href="#basic-usage">Basic Usage</a>
+                                </li>
+
+
+
+
+                        </ul>
+
+                        <a href="#model-instances">
+                            <h2>Models</h2>
+                        </a>
+                        <ul>
+
+                                <li>
+                                    <a href="#model-instances">Creating instances</a>
+                                </li>
+
+
+                                    <ul>
+
+                                            <li>
+                                                <a href="#model-instance-attributes">Attributes</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#model-instance-collections">Collection</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#model-options">Options</a>
+                                            </li>
+
+                                    </ul>
+
+
+
+                                <li>
+                                    <a href="#model-identifiers">Identifiers</a>
+                                </li>
+
+
+                                    <ul>
+
+                                    </ul>
+
+
+
+                                <li>
+                                    <a href="#model-collections">Collections</a>
+                                </li>
+
+
+                                    <ul>
+
+                                    </ul>
+
+
+
+                                <li>
+                                    <a href="#model-attribute-state">Attribute states</a>
+                                </li>
+
+
+                                    <ul>
+
+                                    </ul>
+
+
+
+                                <li>
+                                    <a href="#model-data-access">Data access</a>
+                                </li>
+
+
+                                    <ul>
+
+                                            <li>
+                                                <a href="#model-data-access-active">Active</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#model-data-access-saved">Saved</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#model-data-access-changed">Changed</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#model-data-access-v-model">Data binding</a>
+                                            </li>
+
+                                    </ul>
+
+
+
+                                <li>
+                                    <a href="#model-mutations">Mutators</a>
+                                </li>
+
+
+                                    <ul>
+
+                                    </ul>
+
+
+
+                                <li>
+                                    <a href="#model-validation">Validation</a>
+                                </li>
+
+
+                                    <ul>
+
+                                            <li>
+                                                <a href="#model-validation-config">Configuration</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#model-validation-nested">Nested validation</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#model-validation-rules">Available rules</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#model-validation-custom">Custom rules</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#model-validation-messages">Error messages</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#model-validation-locale">Localisation</a>
+                                            </li>
+
+                                    </ul>
+
+
+
+                                <li>
+                                    <a href="#model-routes">Routes</a>
+                                </li>
+
+
+                                    <ul>
+
+                                    </ul>
+
+
+
+                                <li>
+                                    <a href="#model-events">Events</a>
+                                </li>
+
+
+                                    <ul>
+
+                                    </ul>
+
+
+
+                                <li>
+                                    <a href="#model-requests">Requests</a>
+                                </li>
+
+
+                                    <ul>
+
+                                            <li>
+                                                <a href="#model-request-fetch">Fetch</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#model-request-save">Save</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#model-request-delete">Delete</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#model-request-custom">Custom</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#model-request-events">Events</a>
+                                            </li>
+
+                                    </ul>
+
+
+
+                        </ul>
+
+                        <a href="#collection-instances">
+                            <h2>Collections</h2>
+                        </a>
+                        <ul>
+
+                                <li>
+                                    <a href="#collection-instances">Creating collections</a>
+                                </li>
+
+
+                                    <ul>
+
+                                            <li>
+                                                <a href="#collection-instance-models">Models</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#collection-options">Options</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#collection-attributes">Attributes</a>
+                                            </li>
+
+                                    </ul>
+
+
+
+                                <li>
+                                    <a href="#collection-models">Models</a>
+                                </li>
+
+
+                                    <ul>
+
+                                            <li>
+                                                <a href="#collection-add">Add</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#collection-remove">Remove</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#collection-replace">Replace</a>
+                                            </li>
+
+                                    </ul>
+
+
+
+                                <li>
+                                    <a href="#collection-routes">Routes</a>
+                                </li>
+
+
+                                    <ul>
+
+                                    </ul>
+
+
+
+                                <li>
+                                    <a href="#collection-events">Events</a>
+                                </li>
+
+
+                                    <ul>
+
+                                    </ul>
+
+
+
+                                <li>
+                                    <a href="#collection-requests">Requests</a>
+                                </li>
+
+
+                                    <ul>
+
+                                            <li>
+                                                <a href="#collection-request-fetch">Fetch</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#collection-request-save">Save</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#collection-request-delete">Delete</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#collection-request-custom">Custom</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#collection-request-events">Events</a>
+                                            </li>
+
+                                    </ul>
+
+
+
+                                <li>
+                                    <a href="#collection-pagination">Pagination</a>
+                                </li>
+
+
+
+
+                                <li>
+                                    <a href="#collection-methods">Methods</a>
+                                </li>
+
+
+                                    <ul>
+
+                                            <li>
+                                                <a href="#collection-first">first</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#collection-last">last</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#collection-shift">shift</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#collection-pop">pop</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#collection-find">find</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#collection-has">has</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#collection-sort">sort</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#collection-sum">sum</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#collection-map">map</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#collection-count">count</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#collection-reduce">reduce</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#collection-each">each</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#collection-filter">filter</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#collection-where">where</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#collection-index-of">indexOf</a>
+                                            </li>
+
+                                    </ul>
+
+
+
+                        </ul>
+
+                </div>
+            </menu>
+            <article>
+                <h1 id="introduction">Models and Collections for Vue.js</h1>
+<p><a href="https://travis-ci.org/FiguredLimited/vue-mc" class="shield"><img src="images/vue-mc.svg" alt="Build Status"></a>
+<a href="https://codecov.io/gh/FiguredLimited/vue-mc" class="shield"><img src="images/master.svg" alt="Coverage"></a>
+<a href="https://www.npmjs.com/package/vue-mc" class="shield"><img src="images/vue-mc_2.svg" alt="Latest Version"></a>
+<a href="https://github.com/FiguredLimited/vue-mc/blob/master/LICENSE" class="shield"><img src="images/vue-mc_1.svg" alt="License"></a></p>
+
+<hr>
+
+<p><a class="source" href="https://github.com/FiguredLimited/vue-mc">
+    <img src="images/github.png">
+    FiguredLimited/vue-mc
+</a></p>
+
+<p>The relationship between data, component states, and the actions that affect them is a fundamental and unavoidable layer to manage when building a component or application. Vue does not provide a way to structure and encapsulate data, so most projects use plain objects and implement their own patterns to communicate with the server. This is perfectly fine for small applications, but can quickly become a lot to manage when the size of your project and team increases.</p>
+
+<p>This library takes care of this for you, providing a single point of entry and a consistent API:</p>
+<ul>
+  <li>Communicating with the server to <strong>fetch</strong>, <strong>save</strong>, and <strong>delete</strong>.</li>
+  <li>Managing model states like <strong>empty</strong>, <strong>active</strong> and <strong>saved</strong>.</li>
+  <li>Managing component states like <strong>loading</strong>, <strong>saving</strong>, and <strong>deleting</strong>.</li>
+</ul>
+
+<p>When we started to use Vue more extensively at <a href="https://figured.com/">Figured</a>, we noticed that every team had a slightly different way of doing this, so we decided to develop a standard solution that is flexible enough to accommodate most use cases in a consistent way, while preserving reactivity and testability.</p>
+
+<p>The basic concept is that of a <code class="language-plaintext highlighter-rouge">Model</code> and a <code class="language-plaintext highlighter-rouge">Collection</code> of models. Data and component state is managed automatically, and CRUD is built-in. A classic example would be a to-do list, where each task would be a model and the list of tasks would be a collection.</p>
+
+<h1 id="installation">Installation</h1>
+
+<h2 id="install">Install</h2>
+
+<p>Add the <code class="language-plaintext highlighter-rouge">vue-mc</code> package to your package dependencies:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">npm <span class="nb">install</span> <span class="nt">--save</span> vue-mc
+
+<span class="c"># Or</span>
+
+yarn add vue-mc</code></pre></figure>
+
+<h1 id="basic-usage">Basic Usage</h1>
+
+<p>You should extend the base classes to create appropriate models and collections for your data. The example we’ll use is a basic <strong>task list</strong>, consisting of a list (<code class="language-plaintext highlighter-rouge">Collection</code>) of tasks (<code class="language-plaintext highlighter-rouge">Model</code>).</p>
+
+<h4 id="basic-usage-extend">Extending the base classes</h4>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="k">import</span> <span class="p">{</span><span class="nx">Model</span><span class="p">,</span> <span class="nx">Collection</span><span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">vue-mc</span><span class="dl">'</span>
+
+<span class="cm">/**
+ * Task model
+ */</span>
+<span class="kd">class</span> <span class="nx">Task</span> <span class="kd">extends</span> <span class="nx">Model</span> <span class="p">{</span>
+
+    <span class="c1">// Default attributes that define the "empty" state.</span>
+    <span class="nx">defaults</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="na">id</span><span class="p">:</span>   <span class="kc">null</span><span class="p">,</span>
+            <span class="na">name</span><span class="p">:</span> <span class="dl">''</span><span class="p">,</span>
+            <span class="na">done</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Attribute mutations.</span>
+    <span class="nx">mutations</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="na">id</span><span class="p">:</span>   <span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="o">=></span> <span class="nb">Number</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="o">||</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="na">name</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span>
+            <span class="na">done</span><span class="p">:</span> <span class="nb">Boolean</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Attribute validation</span>
+    <span class="nx">validation</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="na">id</span><span class="p">:</span>   <span class="nx">integer</span><span class="p">.</span><span class="nx">and</span><span class="p">(</span><span class="nx">min</span><span class="p">(</span><span class="mi">1</span><span class="p">)).</span><span class="nx">or</span><span class="p">(</span><span class="nx">equal</span><span class="p">(</span><span class="kc">null</span><span class="p">)),</span>
+            <span class="na">name</span><span class="p">:</span> <span class="nx">string</span><span class="p">.</span><span class="nx">and</span><span class="p">(</span><span class="nx">required</span><span class="p">),</span>
+            <span class="na">done</span><span class="p">:</span> <span class="nx">boolean</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Route configuration</span>
+    <span class="nx">routes</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="na">fetch</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/task/{id}</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">save</span><span class="p">:</span>  <span class="dl">'</span><span class="s1">/task</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="cm">/**
+ * Task collection
+ */</span>
+<span class="kd">class</span> <span class="nx">TaskList</span> <span class="kd">extends</span> <span class="nx">Collection</span> <span class="p">{</span>
+
+    <span class="c1">// Model that is contained in this collection.</span>
+    <span class="nx">model</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">Task</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Default attributes</span>
+    <span class="nx">defaults</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="na">orderBy</span><span class="p">:</span> <span class="dl">'</span><span class="s1">name</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Route configuration</span>
+    <span class="nx">routes</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="na">fetch</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/tasks</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Number of tasks to be completed.</span>
+    <span class="kd">get</span> <span class="nx">todo</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">sum</span><span class="p">(</span><span class="dl">'</span><span class="s1">done</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Will be `true` if all tasks have been completed.</span>
+    <span class="kd">get</span> <span class="nx">done</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">todo</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<h4 id="basic-usage-list">Creating a new instances</h4>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// Create a new empty task list.</span>
+<span class="kd">let</span> <span class="nx">tasks</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">TaskList</span><span class="p">();</span> <span class="c1">// (models, options)</span>
+
+<span class="c1">// Create some new tasks.</span>
+<span class="kd">let</span> <span class="nx">task1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Task</span><span class="p">({</span><span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Tests</span><span class="dl">'</span><span class="p">});</span>
+<span class="kd">let</span> <span class="nx">task2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Task</span><span class="p">({</span><span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Documentation</span><span class="dl">'</span><span class="p">});</span>
+<span class="kd">let</span> <span class="nx">task3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Task</span><span class="p">({</span><span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Publish</span><span class="dl">'</span><span class="p">});</span></code></pre></figure>
+
+<h4 id="adding-tasks-to-the-list">Adding tasks to the list</h4>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// Add the tasks to the collection.</span>
+<span class="nx">tasks</span><span class="p">.</span><span class="nx">add</span><span class="p">([</span><span class="nx">task1</span><span class="p">,</span> <span class="nx">task2</span><span class="p">,</span> <span class="nx">task3</span><span class="p">]);</span>
+
+<span class="c1">// You can add plain objects directly to the collection.</span>
+<span class="c1">// They will automatically be converted to `Task` models.</span>
+<span class="kd">let</span> <span class="nx">task1</span> <span class="o">=</span> <span class="nx">tasks</span><span class="p">.</span><span class="nx">add</span><span class="p">({</span><span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Tests</span><span class="dl">'</span><span class="p">});</span>
+<span class="kd">let</span> <span class="nx">task2</span> <span class="o">=</span> <span class="nx">tasks</span><span class="p">.</span><span class="nx">add</span><span class="p">({</span><span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Documentation</span><span class="dl">'</span><span class="p">});</span>
+<span class="kd">let</span> <span class="nx">task3</span> <span class="o">=</span> <span class="nx">tasks</span><span class="p">.</span><span class="nx">add</span><span class="p">({</span><span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Publish</span><span class="dl">'</span><span class="p">});</span>
+
+<span class="c1">// You can add multiple models at the same time.</span>
+<span class="kd">let</span> <span class="nx">added</span> <span class="o">=</span> <span class="nx">tasks</span><span class="p">.</span><span class="nx">add</span><span class="p">([</span>
+    <span class="p">{</span><span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Tests</span><span class="dl">'</span><span class="p">},</span>
+    <span class="p">{</span><span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Documentation</span><span class="dl">'</span><span class="p">},</span>
+    <span class="p">{</span><span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Publish</span><span class="dl">'</span><span class="p">},</span>
+<span class="p">]);</span></code></pre></figure>
+
+<h4 id="basic-usage-rendering">Rendering a task input section</h4>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt"><div< span=""> <span class="na">class=</span><span class="s">"task-form"</span> <span class="na">:class=</span><span class="s">"{saving: task.saving}"</span><span class="nt">></span>
+
+    <span class="c"><!-- Name and validation errors --></span>
+    <span class="nt"><input< span=""> <span class="na">type=</span><span class="s">"text"</span> <span class="na">v-model=</span><span class="s">"task.name"</span><span class="nt">></span>
+    <span class="nt"><span< span=""> <span class="na">v-for=</span><span class="s">"(error in task.errors.name)"</span><span class="nt">></span></span<></span>
+
+    <span class="c"><!-- Done checkbox --></span>
+    <span class="nt"><input< span=""> <span class="na">type=</span><span class="s">"checkbox"</span> <span class="na">v-model=</span><span class="s">"task.done"</span><span class="nt">></span>
+
+    <span class="c"><!-- Save button --></span>
+    <span class="nt"><button< span=""> <span class="na">v-on:click=</span><span class="s">"task.save"</span><span class="nt">></span>Save<span class="nt"></span>
+<span class="nt"></span></button<></span></input<></span></input<></span></div<></span></code></pre></figure>
+
+<h4 id="rendering-a-task-row">Rendering a task row</h4>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt"><div< span=""> <span class="na">class=</span><span class="s">"task"</span><span class="nt">></span>
+    <span class="nt"><p>{{ task.$.name }}<span class="nt"></span></p></span>
+    <span class="nt"><p>{{ task.$.done }}<span class="nt"></span></p></span>
+<span class="nt"></span></div<></span></code></pre></figure>
+
+<h4 id="rendering-the-list">Rendering the list</h4>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt"><div< span=""> <span class="na">class=</span><span class="s">"tasks"</span><span class="nt">></span>
+    <span class="nt"><task< span=""> <span class="na">v-for=</span><span class="s">"task in tasks.models"</span> <span class="na">:task=</span><span class="s">"task"</span> <span class="na">:key=</span><span class="s">"task.id"</span><span class="nt">></span>
+<span class="nt"></span></task<></span></div<></span></code></pre></figure>
+
+<h1 id="models">Models</h1>
+
+<h2 id="model-instances">Creating instances</h2>
+
+<p>Model instances can be created using the <code class="language-plaintext highlighter-rouge">new</code> keyword. The default constructor
+for a model accepts three optional parameters: <code class="language-plaintext highlighter-rouge">attributes</code>, <code class="language-plaintext highlighter-rouge">collection</code>, and <code class="language-plaintext highlighter-rouge">options</code>.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">let</span> <span class="nx">model</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Model</span><span class="p">(</span><span class="nx">attributes</span> <span class="o">=</span> <span class="p">{},</span> <span class="nx">collection</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{});</span></code></pre></figure>
+
+<h3 id="model-instance-attributes">Attributes</h3>
+
+<p>Attributes will be merged with the default attributes as defined by the <code class="language-plaintext highlighter-rouge">defaults()</code> method.
+If no attributes are provided on construction, the model will represent an “empty” state.</p>
+
+<p><strong>Important</strong>: You should define a default value for every attribute.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// Create a new task with initial attributes.</span>
+<span class="kd">let</span> <span class="nx">task</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Task</span><span class="p">({</span><span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Task #1</span><span class="dl">'</span><span class="p">});</span>
+
+<span class="nx">task</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// 'Task #1'</span>
+<span class="nx">task</span><span class="p">.</span><span class="nx">done</span><span class="p">;</span> <span class="c1">// false</span></code></pre></figure>
+
+<h3 id="model-instance-collections">Collection</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">collection</code> parameter allows you to specify one or more collections that the
+model belongs to. A common pattern where this comes in handy is when you are creating
+a new model that should be added to a collection when it is created on save.</p>
+
+<p>For example, a user clicks a “New Task” button which shows a form to fill out a new task.
+If we create a new <code class="language-plaintext highlighter-rouge">Task</code> model and set <code class="language-plaintext highlighter-rouge">tasks</code> as its collection, it will automatically
+be added to <code class="language-plaintext highlighter-rouge">tasks</code> when saved successfully.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">onCreateNew</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">task</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Task</span><span class="p">({},</span> <span class="nx">tasks</span><span class="p">);</span>
+<span class="p">}</span></code></pre></figure>
+
+<h3 id="model-options">Options</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">options</code> parameter allows you to set the options of a model instance. These
+can be any of the default options or something specific to your model.
+To get the value of an option, use <code class="language-plaintext highlighter-rouge">getOption(name)</code>. You can also set an option
+later on using <code class="language-plaintext highlighter-rouge">setOption(name, value)</code> or <code class="language-plaintext highlighter-rouge">setOptions(options)</code>.</p>
+
+<p>You should define a model’s default options using the <code class="language-plaintext highlighter-rouge">options()</code> method:</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">class</span> <span class="nx">Task</span> <span class="kd">extends</span> <span class="nx">Model</span> <span class="p">{</span>
+    <span class="nx">options</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="na">editable</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nx">task1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Task</span><span class="p">({},</span> <span class="kc">null</span><span class="p">,</span> <span class="p">{</span><span class="na">editable</span><span class="p">:</span> <span class="kc">true</span><span class="p">});</span>
+<span class="kd">let</span> <span class="nx">task2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Task</span><span class="p">({},</span> <span class="kc">null</span><span class="p">);</span>
+
+<span class="nx">task1</span><span class="p">.</span><span class="nx">getOption</span><span class="p">(</span><span class="dl">'</span><span class="s1">editable</span><span class="dl">'</span><span class="p">);</span> <span class="c1">// true</span>
+<span class="nx">task2</span><span class="p">.</span><span class="nx">getOption</span><span class="p">(</span><span class="dl">'</span><span class="s1">editable</span><span class="dl">'</span><span class="p">);</span> <span class="c1">// false</span></code></pre></figure>
+
+<h4 id="model-available-options">Available options</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Option</th>
+      <th style="text-align: left">Type</th>
+      <th style="text-align: left">Default</th>
+      <th style="text-align: left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">methods</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">Object</code></td>
+      <td style="text-align: left"><em>See below</em></td>
+      <td style="text-align: left">HTTP request methods.</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">identifier</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">String</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">"id"</code></td>
+      <td style="text-align: left">The attribute that should be used to uniquely identify this model, usually a <strong>primary key</strong> like <code class="language-plaintext highlighter-rouge">"id"</code>.</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">overwriteIdentifier</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">Boolean</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">false</code></td>
+      <td style="text-align: left">Whether this model should allow an existing identifier to be overwritten on update.</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">routeParameterPattern</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">Regex</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">/\{([^}]+)\}/</code></td>
+      <td style="text-align: left">Route parameter matching pattern.</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">patch</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">Boolean</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">false</code></td>
+      <td style="text-align: left">Whether this model should perform a “patch” on update (only send attributes that have changed).</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">saveUnchanged</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">Boolean</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">true</code></td>
+      <td style="text-align: left">Whether this model should save even if no attributes have changed. If set to <code class="language-plaintext highlighter-rouge">false</code> and no changes have been made, the request will be considered a success.</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">useFirstErrorOnly</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">Boolean</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">false</code></td>
+      <td style="text-align: left">Whether this model should only use the first validation error it receives, rather than an array of errors.</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">validateOnChange</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">Boolean</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">false</code></td>
+      <td style="text-align: left">Whether this model should validate an attribute after it has changed. This would only affect the errors of the changed attribute and will only be applied if the value is not blank.</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">validateOnSave</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">Boolean</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">true</code></td>
+      <td style="text-align: left">Whether this model should be validated before it is saved. This will cause the request to fail if validation does not pass. This is useful when you only want to validate on demand.</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">validateRecursively</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">Boolean</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">true</code></td>
+      <td style="text-align: left">Whether this model should validate other objects within its attribute tree. The result is implicit recursion as each of those instances will also validate their trees, etc.</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">mutateOnChange</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">Boolean</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">false</code></td>
+      <td style="text-align: left">Whether this model should mutate a property as it is changed before it is set. This is a rare requirement because you usually don’t want to mutate something that you are busy editing.</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">mutateBeforeSync</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">Boolean</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">true</code></td>
+      <td style="text-align: left">Whether this model should mutate all attributes before they are synced to the “saved” state. This would include construction, on fetch, and on save success.</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">mutateBeforeSave</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">Boolean</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">true</code></td>
+      <td style="text-align: left">Whether this model should mutate all attributes before a “save” request is made.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="default-request-methods">Default request methods</h5>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">{</span>
+    <span class="p">...</span>
+
+    <span class="dl">"</span><span class="s2">methods</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">fetch</span><span class="dl">"</span><span class="p">:</span>  <span class="dl">"</span><span class="s2">GET</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">save</span><span class="dl">"</span><span class="p">:</span>   <span class="dl">"</span><span class="s2">POST</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">update</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">POST</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">create</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">POST</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">patch</span><span class="dl">"</span><span class="p">:</span>  <span class="dl">"</span><span class="s2">PATCH</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">delete</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">DELETE</span><span class="dl">"</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<h2 id="model-identifiers">Identifiers</h2>
+
+<p>Models usually have an <em>identifier</em> attribute to uniquely identify them, like a primary key in the database.
+The default identifier attribute is <code class="language-plaintext highlighter-rouge">"id"</code>, but you can override this with the <code class="language-plaintext highlighter-rouge">identifier</code> option.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">class</span> <span class="nx">Task</span> <span class="kd">extends</span> <span class="nx">Model</span> <span class="p">{</span>
+    <span class="nx">options</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="na">identifier</span><span class="p">:</span> <span class="dl">'</span><span class="s1">uuid</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<h2 id="model-collections">Collections</h2>
+
+<p>Models can be registered to collections, which implies that the model “belongs to”
+that collection. If a model is created or deleted, it will automatically be added
+or removed from every collection it is registered to.</p>
+
+<p>When you add a model to a collection, it will automatically be registered to that collection,
+but there may be cases where you want to manually register one or more collections. You can
+do this with the <code class="language-plaintext highlighter-rouge">registerCollection</code> method, which accepts either an instance or an array of collections.</p>
+
+<p>Attempting to register the same collection more than once has no effect.</p>
+
+<h2 id="model-attribute-state">Attribute states</h2>
+
+<p>Models maintain three separate attribute states: <strong>empty</strong>, <strong>active</strong>, and <strong>saved</strong>.</p>
+
+<h3 id="model-attribute-state-empty">Empty</h3>
+
+<p>The empty state is defined by the model’s <code class="language-plaintext highlighter-rouge">defaults()</code> method, and is automatically
+assigned to the active state when the model is created or cleared.</p>
+
+<h3 id="model-attribute-state-active">Active</h3>
+
+<p>The active state is accessed directly on the model, eg. <code class="language-plaintext highlighter-rouge">task.name</code>.
+This is also the attributes that will be sent to the server when the model is saved.
+You can mess with this data as much as you want, then either call <code class="language-plaintext highlighter-rouge">clear()</code> to revert
+back to the empty state, or <code class="language-plaintext highlighter-rouge">reset()</code> to revert back to the saved state.</p>
+
+<h3 id="model-attribute-state-saved">Saved</h3>
+
+<p>The saved state is the “source of truth”, which usually reflects what’s in the database.
+You can use <code class="language-plaintext highlighter-rouge">sync()</code> to apply the active state to the saved state, which happens automatically
+when the model is saved successfully, and when constructed.</p>
+
+<p><img src="images/attributes.png" alt="Attribute state flow diagram"></p>
+
+<h2 id="model-data-access">Data access</h2>
+
+<h3 id="model-data-access-active">Active attributes</h3>
+
+<p>You can access the active state directly on the instance, or with the <code class="language-plaintext highlighter-rouge">get(attribute, default)</code> method which
+allows you to specify a default value to fall back on if the attribute does not exist.</p>
+
+<p>It’s safe to set the value of an existing attribute directly, or you can use <code class="language-plaintext highlighter-rouge">set(attribute, value)</code>. Multiple attributes may be updated by passing an object to <code class="language-plaintext highlighter-rouge">set()</code>.</p>
+
+<p><strong>Important</strong>: You must use <code class="language-plaintext highlighter-rouge">set</code> if you’re setting an attribute that doesn’t exist on the model yet.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">let</span> <span class="nx">task</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Task</span><span class="p">({</span><span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Write some tests!</span><span class="dl">'</span><span class="p">})</span></code></pre></figure>
+
+<h5 id="read">Read</h5>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">task</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>         <span class="c1">// 'Write some tests!'</span>
+<span class="nx">task</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">name</span><span class="dl">'</span><span class="p">);</span>  <span class="c1">// 'Write some tests!'</span>
+
+<span class="nx">task</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">author</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">Unknown</span><span class="dl">'</span><span class="p">);</span> <span class="c1">// 'Unknown'</span></code></pre></figure>
+
+<h5 id="write">Write</h5>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">task</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">Write better tests</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="c1">// Set an attribute that doesn't exist on the model.</span>
+<span class="nx">task</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="dl">'</span><span class="s1">alias</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">Tests</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="c1">// Set multiple attributes</span>
+<span class="nx">task</span><span class="p">.</span><span class="kd">set</span><span class="p">({</span> <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">My Task</span><span class="dl">'</span><span class="p">,</span> <span class="na">description</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Do something</span><span class="dl">'</span><span class="p">});</span></code></pre></figure>
+
+<h3 id="model-data-access-saved">Saved attributes</h3>
+
+<p>You can access the saved state with the <code class="language-plaintext highlighter-rouge">saved(attribute, default)</code> method or directly on the instance using the <code class="language-plaintext highlighter-rouge">$</code> accessor.
+This is useful when you want to display a saved value while editing its active equivalent, for example when you want to show a
+task’s saved name in the list while editing the name (which is bound to the active state).
+If you don’t bind using <code class="language-plaintext highlighter-rouge">$</code> when rendering the list, the task’s name will change on-the-fly as you type.</p>
+
+<p><strong>Important</strong>: You should never write to the saved state directly.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">let</span> <span class="nx">task</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Task</span><span class="p">({</span><span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Get some sleep?</span><span class="dl">'</span><span class="p">})</span>
+
+<span class="c1">// Update the active state.</span>
+<span class="nx">task</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">Do more work!</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="nx">task</span><span class="p">.</span><span class="nx">$</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>         <span class="c1">// 'Get some sleep?'</span>
+<span class="nx">task</span><span class="p">.</span><span class="nx">saved</span><span class="p">(</span><span class="dl">'</span><span class="s1">name</span><span class="dl">'</span><span class="p">);</span>  <span class="c1">// 'Get some sleep?'</span>
+
+<span class="nx">task</span><span class="p">.</span><span class="nx">saved</span><span class="p">(</span><span class="dl">'</span><span class="s1">author</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">Unknown</span><span class="dl">'</span><span class="p">);</span> <span class="c1">// 'Unknown'</span></code></pre></figure>
+
+<h3 id="model-data-access-changed">Changed attributes</h3>
+
+<p>If you’d like to know which fields have changed since the last time the model was synced,
+you can call <code class="language-plaintext highlighter-rouge">changed()</code>, which returns either a list of attributes names or <code class="language-plaintext highlighter-rouge">false</code> if no
+values have changed.</p>
+
+<h3 id="model-data-access-v-model">v-model</h3>
+
+<p>You should <strong>always use the active state</strong> with <code class="language-plaintext highlighter-rouge">v-model</code>.</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt"><input< span=""> <span class="na">id=</span><span class="s">"name"</span> <span class="na">type=</span><span class="s">"text"</span>     <span class="na">v-model=</span><span class="s">"task.name"</span><span class="nt">></span>
+<span class="nt"><input< span=""> <span class="na">id=</span><span class="s">"done"</span> <span class="na">type=</span><span class="s">"checkbox"</span> <span class="na">v-model=</span><span class="s">"task.done"</span><span class="nt">></span></input<></span></input<></span></code></pre></figure>
+
+<h3 id="model-data-access-v-bind">v-bind</h3>
+
+<p>You can use <code class="language-plaintext highlighter-rouge">v-bind</code> with either the active or the saved state.</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt"><label></label></span>{{ task.$.name }}<span class="nt"></span>
+
+<span class="c"><!-- Edit the task's name here without affecting the label above. --></span>
+<span class="nt"><input< span=""> <span class="na">id=</span><span class="s">"name"</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">v-model=</span><span class="s">"task.name"</span><span class="nt">></span></input<></span></code></pre></figure>
+
+<h2 id="model-mutations">Mutators</h2>
+
+<p>You can define functions for each attribute to pass through before they are set on the
+model, which makes things like type coercion or rounding very easy.</p>
+
+<p>Mutators are defined by a model’s <code class="language-plaintext highlighter-rouge">mutations()</code> method, which should return an
+object mapping attribute names to their mutator functions. You can use an array
+to create a pipeline, where each function will receive the result of the previous.</p>
+
+<p>Mutator functions should accept <code class="language-plaintext highlighter-rouge">value</code> and return the mutated value.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">mutations</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="na">id</span><span class="p">:</span>   <span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="o">=></span> <span class="nx">_</span><span class="p">.</span><span class="nx">toNumber</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="o">||</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="na">name</span><span class="p">:</span> <span class="p">[</span><span class="nx">_</span><span class="p">.</span><span class="nx">toString</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">trim</span><span class="p">],</span>
+        <span class="na">done</span><span class="p">:</span> <span class="nb">Boolean</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>See <a href="#model-options">options</a> that determine when mutations should be applied.</p>
+
+<h2 id="model-validation">Validation</h2>
+
+<p>There are already some awesome validation libraries for Vue such as
+<a href="https://github.com/baianat/vee-validate">vee-validate</a> and
+<a href="https://github.com/monterail/vuelidate">vuelidate</a>, which you are more than welcome to keep using. As an alternative, validation is also built into <code class="language-plaintext highlighter-rouge">vue-mc</code>.</p>
+
+<p>The plan was the keep our templates as clean as possible; validation errors should
+be presented by the template, but validation rules should be defined on the model  alongside the data.</p>
+
+<p>To do this, we use the <code class="language-plaintext highlighter-rouge">validation()</code> method.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// Validation rules</span>
+<span class="k">import</span> <span class="p">{</span>
+    <span class="nx">boolean</span><span class="p">,</span>
+    <span class="nx">equal</span><span class="p">,</span>
+    <span class="nx">integer</span><span class="p">,</span>
+    <span class="nx">min</span><span class="p">,</span>
+    <span class="nx">required</span><span class="p">,</span>
+    <span class="nx">string</span><span class="p">,</span>
+<span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">vue-mc/validation</span><span class="dl">'</span>
+
+<span class="kd">class</span> <span class="nx">Task</span> <span class="kd">extends</span> <span class="nx">Model</span> <span class="p">{</span>
+
+    <span class="nx">defaults</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// id, name, done</span>
+    <span class="p">}</span>
+
+    <span class="nx">validation</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="na">id</span><span class="p">:</span>   <span class="nx">integer</span><span class="p">.</span><span class="nx">and</span><span class="p">(</span><span class="nx">min</span><span class="p">(</span><span class="mi">1</span><span class="p">)).</span><span class="nx">or</span><span class="p">(</span><span class="nx">equal</span><span class="p">(</span><span class="kc">null</span><span class="p">)),</span>
+            <span class="na">name</span><span class="p">:</span> <span class="nx">required</span><span class="p">.</span><span class="nx">and</span><span class="p">(</span><span class="nx">string</span><span class="p">),</span>
+            <span class="na">done</span><span class="p">:</span> <span class="nx">boolean</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="nx">options</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="c1">// Whether this model should validate an attribute that has changed.</span>
+            <span class="c1">// This would only affect the errors of the changed attribute and</span>
+            <span class="c1">// will only be applied if the value is not a blank string.</span>
+            <span class="na">validateOnChange</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+
+            <span class="c1">// Whether this model should be validated before it is saved, which</span>
+            <span class="c1">// will cause the request to fail if validation does not pass. This</span>
+            <span class="c1">// is useful when you only want to validate on demand.</span>
+            <span class="na">validateOnSave</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+
+            <span class="c1">// Whether this model should validate models and collections within</span>
+            <span class="c1">// its attribute tree. The result is implicit recursion as each of</span>
+            <span class="c1">// those instances will also validate their trees, etc.</span>
+            <span class="na">validateRecursively</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<h3 id="model-validation-config">Configuration</h3>
+
+<p>A validation rule is a function that accepts a <code class="language-plaintext highlighter-rouge">value</code>, <code class="language-plaintext highlighter-rouge">attribute</code> and the <code class="language-plaintext highlighter-rouge">model</code> under validation,
+and returns an error message if the value is not valid. You can specify one rule or an array
+of rules for each attribute. Using multiple rules means that there might be multiple error
+messages per attribute, which is why error messages are always attached to the attribute
+as an array.</p>
+
+<p>The rules provided by <code class="language-plaintext highlighter-rouge">vue-mc/validation</code> are chainable with <code class="language-plaintext highlighter-rouge">and</code> and <code class="language-plaintext highlighter-rouge">or</code>, and allow you to override
+the default message using <code class="language-plaintext highlighter-rouge">format(message|template)</code>.</p>
+
+<p>For example, if we had an attribute called <code class="language-plaintext highlighter-rouge">secret</code>
+which must be an alphanumeric string with a length between 2 and 8 characters, or <code class="language-plaintext highlighter-rouge">null</code>, we can create a rule for that like this:</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">validation</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="na">secret</span><span class="p">:</span> <span class="nx">string</span><span class="p">.</span><span class="nx">and</span><span class="p">(</span><span class="nx">length</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">)).</span><span class="nx">and</span><span class="p">(</span><span class="nx">alpha</span><span class="p">).</span><span class="nx">or</span><span class="p">(</span><span class="nx">equal</span><span class="p">(</span><span class="kc">null</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>You can also move the <code class="language-plaintext highlighter-rouge">null</code> check to the front of the chain, like this:</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">validation</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="na">secret</span><span class="p">:</span> <span class="nx">isnull</span><span class="p">.</span><span class="nx">or</span><span class="p">(</span><span class="nx">string</span><span class="p">.</span><span class="nx">and</span><span class="p">(</span><span class="nx">length</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">)).</span><span class="nx">and</span><span class="p">(</span><span class="nx">alpha</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>The equivalent of this rule using a function might be something like this:</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">validation</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="na">secret</span><span class="p">:</span> <span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="o">=></span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isNull</span><span class="p">(</span><span class="nx">value</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">return</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="p">(</span> <span class="o">!</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span><span class="p">(</span><span class="nx">value</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="dl">"</span><span class="s2">Must be a string</span><span class="dl">"</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="nx">value</span><span class="p">.</span><span class="nx">length</span> <span class="o"><</span> <span class="mi">2</span> <span class="o">||</span> <span class="nx">value</span><span class="p">.</span><span class="nx">length</span> <span class="o">></span> <span class="mi">8</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="dl">"</span><span class="s2">Must have a length between 2 and 8</span><span class="dl">"</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>If an invalid value for <code class="language-plaintext highlighter-rouge">secret</code> is set, the <code class="language-plaintext highlighter-rouge">errors</code> property of the model would
+then be updated.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">model</span><span class="p">.</span><span class="nx">secret</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+
+<span class="nx">model</span><span class="p">.</span><span class="nx">errors</span><span class="p">;</span> <span class="c1">// {secret: ['Must be a string']}</span></code></pre></figure>
+
+<p>If we separated those rules out into individual rules in an array, we would see
+all three errors because they would be treated as two separate rules rather than a
+single chained rule. One thing we’d lose out on here is the “or null” part of
+the condition, unless we add that to each rule in the array.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">validation</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="na">secret</span><span class="p">:</span> <span class="p">[</span><span class="nx">string</span><span class="p">,</span> <span class="nx">length</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="nx">alpha</span><span class="p">],</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">model</span><span class="p">.</span><span class="nx">secret</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+
+<span class="nx">model</span><span class="p">.</span><span class="nx">errors</span><span class="p">;</span> <span class="c1">//  {secret: [</span>
+              <span class="c1">//     'Must be a string',</span>
+              <span class="c1">//     'Must have a length between 2 and 8',</span>
+              <span class="c1">//     'Can only use letters'</span>
+              <span class="c1">//  ]}</span></code></pre></figure>
+
+<h4 id="order-of-operations">Order of operations</h4>
+
+<ol>
+  <li>Check the base rule first and return its message if it fails.</li>
+  <li>Check if all the <code class="language-plaintext highlighter-rouge">and</code> rules pass in the order that they were chained.</li>
+  <li>Check if any of the <code class="language-plaintext highlighter-rouge">or</code> rules pass in the order that they were chained.</li>
+</ol>
+
+<h3 id="model-validation-nested">Nested validation</h3>
+
+<p>If a model’s <code class="language-plaintext highlighter-rouge">"validateRecursively"</code> option is set to <code class="language-plaintext highlighter-rouge">true</code>, attributes that
+have a <code class="language-plaintext highlighter-rouge">validate</code> method will also be validated. If any descendant fails validation,
+the parent will also fail. You can however still set other rules for the nested attribute,
+but this will not override the default nested validation behaviour.</p>
+
+<h3 id="model-validation-rules">Available rules</h3>
+
+<table class="rules">
+    <tbody><tr>
+        <td class="name">after(date)</td>
+        <td class="desc">
+            Checks if the value is after a given date string or <code>Date</code> object.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">alpha</td>
+        <td class="desc">
+            Checks if a value only has letters.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">alphanumeric</td>
+        <td class="desc">
+            Checks if a value only has letters or numbers.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">array</td>
+        <td class="desc">
+            Checks if a value is an array.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">ascii</td>
+        <td class="desc">
+            Checks if a value is a string consisting only of <a href="https://en.wikipedia.org/wiki/ASCII" target="_blank">ASCII</a> characters.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">base64</td>
+        <td class="desc">
+            Checks if a value is a valid <a href="https://en.wikipedia.org/wiki/Base64" target="_blank">Base64</a> string.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">before(date)</td>
+        <td class="desc">
+            Checks if a value is before a given date string or <code>Date</code> object.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">between(min, max)</td>
+        <td class="desc">
+            Checks if a value is between a given minimum or maximum.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">boolean</td>
+        <td class="desc">
+            Checks if a value is a boolean (strictly <code>true</code> or <code>false</code>).
+        </td>
+    </tr>
+    <tr>
+        <td class="name">creditcard</td>
+        <td class="desc">
+            Checks if a value is a valid credit card number.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">date</td>
+        <td class="desc">
+            Checks if a value is parseable as a date.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">dateformat(format)</td>
+        <td class="desc">
+            Checks if a value matches the given date <a href="https://date-fns.org/v2.0.0-alpha.9/docs/format" _target="blank">format</a>.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">defined</td>
+        <td class="desc">
+            Checks if a value is not <code>undefined</code>.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">email</td>
+        <td class="desc">
+            Checks if a value is a valid email address.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">empty</td>
+        <td class="desc">
+            Checks if value is considered <a href="https://lodash.com/docs/#isEmpty" _target="blank">empty</a>.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">equal(value)</td>
+        <td class="desc">
+            Alias for <code>equals</code>.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">equals(value)</td>
+        <td class="desc">
+            Checks if a value equals the given value.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">gt(min)</td>
+        <td class="desc">
+            Checks if a value is greater than a given minimum.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">gte(min)</td>
+        <td class="desc">
+            Checks if a value is greater than or equal to a given minimum.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">integer</td>
+        <td class="desc">
+            Checks if a value is an integer.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">ip</td>
+        <td class="desc">
+            Checks if a value is a valid IP address.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">isblank</td>
+        <td class="desc">
+            Checks if a value is a zero-length string.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">isnil</td>
+        <td class="desc">
+            Checks if a value is <code>null</code> or <code>undefined</code>.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">isnull</td>
+        <td class="desc">
+            Checks if a value is <code>null</code>.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">iso8601</td>
+        <td class="desc">
+            Checks if a value is a valid <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank">ISO8601</a> date string.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">json</td>
+        <td class="desc">
+            Checks if a value is valid JSON.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">length(min, max)</td>
+        <td class="desc">
+            Checks if a value's <a href="https://lodash.com/docs/#toLength" _target="blank">length</a> is at least <code>min</code> and no more than <code>max</code> (optional).
+        </td>
+    </tr>
+    <tr>
+        <td class="name">lt(max)</td>
+        <td class="desc">
+            Checks if a value is less than a given maximum.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">lte(max)</td>
+        <td class="desc">
+            Checks if a value is less than or equal to a given maximum.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">match(pattern)</td>
+        <td class="desc">
+            Checks if a value matches a given regular expression string or <code>RegExp</code>.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">max(max)</td>
+        <td class="desc">
+            Alias for <code>lte</code>.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">min(min)</td>
+        <td class="desc">
+            Alias for <code>gte</code>.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">negative</td>
+        <td class="desc">
+            Checks if a value is negative.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">not(value)</td>
+        <td class="desc">
+            Checks if a value is not any of one or more given values.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">number</td>
+        <td class="desc">
+            Checks if a value is a number (<code>integer</code> or <code>float</code>), excluding <code>NaN</code>.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">numeric</td>
+        <td class="desc">
+            Checks if a value is a number or numeric string, excluding <code>NaN</code>.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">object</td>
+        <td class="desc">
+            Checks if a value is an object, excluding arrays and functions.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">positive</td>
+        <td class="desc">
+            Checks if a value is positive.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">required</td>
+        <td class="desc">
+            Checks if a value is present, ie. not <code>null</code>, <code>undefined</code>, or a blank string.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">same(other)</td>
+        <td class="desc">
+            Checks if a value equals another attribute's value.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">string</td>
+        <td class="desc">
+            Checks if a value is a string.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">url</td>
+        <td class="desc">
+            Checks if a value is a valid URL string.
+        </td>
+    </tr>
+    <tr>
+        <td class="name">uuid</td>
+        <td class="desc">
+            Checks if a value is a valid <a href="https://en.wikipedia.org/wiki/Universally_unique_identifier" target="_blank">UUID</a>
+        </td>
+    </tr>
+</tbody></table>
+
+<h3 id="model-validation-custom">Custom validation rules</h3>
+
+<p>You can create your own chainable rules that use the same interface as the
+standard rules. All you need to do is define a <code class="language-plaintext highlighter-rouge">name</code>, a <code class="language-plaintext highlighter-rouge">test</code> method,
+and <code class="language-plaintext highlighter-rouge">data</code> that should be passed to its error message template.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="k">import</span> <span class="p">{</span> <span class="nx">validation</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">vue-mc</span><span class="dl">'</span>
+
+<span class="c1">// Create a rule that checks if a value is odd.</span>
+<span class="kd">const</span> <span class="nx">odd</span> <span class="o">=</span> <span class="nx">validation</span><span class="p">.</span><span class="nx">rule</span><span class="p">({</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">odd</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">test</span><span class="p">:</span> <span class="nx">value</span> <span class="o">=></span> <span class="nx">value</span> <span class="o">&</span> <span class="mi">1</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="c1">// Create a rule that checks if a value is divisible by another.</span>
+<span class="kd">const</span> <span class="nx">divisibleBy</span> <span class="o">=</span> <span class="p">(</span><span class="nx">divisor</span><span class="p">)</span> <span class="o">=></span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">validation</span><span class="p">.</span><span class="nx">rule</span><span class="p">({</span>
+        <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">divisible</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">test</span><span class="p">:</span> <span class="nx">value</span> <span class="o">=></span> <span class="nx">value</span> <span class="o">%</span> <span class="nx">divisor</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="na">data</span><span class="p">:</span> <span class="p">{</span><span class="nx">divisor</span><span class="p">},</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="c1">// You can now use these rules in the same way as the standard ones.</span>
+<span class="kd">let</span> <span class="nx">rule</span> <span class="o">=</span> <span class="nx">odd</span><span class="p">.</span><span class="nx">and</span><span class="p">(</span><span class="nx">divisibleBy</span><span class="p">(</span><span class="mi">3</span><span class="p">));</span>
+
+<span class="c1">// Remember to add default messages for the rules.</span>
+<span class="nx">validation</span><span class="p">.</span><span class="nx">messages</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="dl">'</span><span class="s1">odd</span><span class="dl">'</span><span class="p">,</span>       <span class="dl">'</span><span class="s1">Must be an odd number</span><span class="dl">'</span><span class="p">);</span>
+<span class="nx">validation</span><span class="p">.</span><span class="nx">messages</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="dl">'</span><span class="s1">divisible</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">Must be divisible by ${divisor}</span><span class="dl">'</span><span class="p">);</span></code></pre></figure>
+
+<h3 id="model-validation-messages">Messages</h3>
+
+<p>Default error messages are defined for all available validation rules. You can override
+these on a per-rule basis using a rule’s <code class="language-plaintext highlighter-rouge">format</code> method, which accepts either a
+string or a function that returns a formatted message. Functions will receive a <code class="language-plaintext highlighter-rouge">data</code>
+object which contains at least <code class="language-plaintext highlighter-rouge">value</code> and <code class="language-plaintext highlighter-rouge">attribute</code>, along with any other contextual
+data that the rule provides.</p>
+
+<p>String formats will automatically be compiled by <a href="https://lodash.com/docs/#template">_.template</a>.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">let</span> <span class="nx">rule1</span> <span class="o">=</span> <span class="nx">string</span><span class="p">.</span><span class="nx">and</span><span class="p">(</span><span class="nx">length</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">)).</span><span class="nx">format</span><span class="p">(</span><span class="dl">"</span><span class="s2">${value} must be a secret!</span><span class="dl">"</span><span class="p">);</span>
+<span class="kd">let</span> <span class="nx">rule2</span> <span class="o">=</span> <span class="nx">string</span><span class="p">.</span><span class="nx">and</span><span class="p">(</span><span class="nx">length</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">));</span> <span class="c1">// This will still use the default message.</span></code></pre></figure>
+
+<p>You can overwrite global the default for a specific rule by using the
+<code class="language-plaintext highlighter-rouge">set(name, format, locale = null)</code> method of the validation object that is exported
+by <code class="language-plaintext highlighter-rouge">vue-mc</code>. If a locale is not given, it will use the default locale.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="k">import</span> <span class="p">{</span> <span class="nx">validation</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">vue-mc</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="nx">validation</span><span class="p">.</span><span class="nx">messages</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="dl">'</span><span class="s1">email</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">${value} must be an email, please</span><span class="dl">'</span><span class="p">);</span></code></pre></figure>
+
+<h3 id="model-validation-locale">Localisation</h3>
+
+<p>You can change the language of vaidation error messages by setting the <code class="language-plaintext highlighter-rouge">locale</code>.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="k">import</span> <span class="p">{</span> <span class="nx">validation</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">vue-mc</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="c1">// Set a message on the "af" locale.</span>
+<span class="nx">validation</span><span class="p">.</span><span class="nx">messages</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="dl">'</span><span class="s1">email</span><span class="dl">'</span><span class="p">,</span> <span class="dl">"</span><span class="s2">${value} moet 'n email adres wees</span><span class="dl">"</span><span class="p">,</span> <span class="dl">'</span><span class="s1">af</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="c1">// Set the current locale to "af".</span>
+<span class="c1">// The formatted messages for `email` will now be the "af" version.</span>
+<span class="nx">validation</span><span class="p">.</span><span class="nx">messages</span><span class="p">.</span><span class="nx">locale</span><span class="p">(</span><span class="dl">'</span><span class="s1">af</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="nx">validation</span><span class="p">.</span><span class="nx">messages</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">email</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span><span class="na">value</span><span class="p">:</span> <span class="mi">5</span><span class="p">});</span> <span class="c1">// "5 moet 'n email adres wees"</span></code></pre></figure>
+
+<p>The default locale is <code class="language-plaintext highlighter-rouge">null</code>, which is used as a fallback for when a message is not
+defined for the current locale. However, a message might be defined under a <strong>language</strong> like <code class="language-plaintext highlighter-rouge">"es"</code> (Spanish),
+but the locale set to <code class="language-plaintext highlighter-rouge">"es-ar"</code> (Spanish - Argentina). If a requested message does not exist
+under the specific locale, it will fall back to the language, and only then to the default locale.</p>
+
+<p><strong>Note</strong>: You can use <code class="language-plaintext highlighter-rouge">window.navigator.language</code> to detect the browser’s language.</p>
+
+<h4 id="languages">Languages</h4>
+
+<p>You can import entire language packs and register them using <code class="language-plaintext highlighter-rouge">messages.register(bundle)</code>.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="k">import</span> <span class="p">{</span> <span class="nx">validation</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">vue-mc</span><span class="dl">'</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">pt_br</span> <span class="p">}</span>      <span class="k">from</span> <span class="dl">'</span><span class="s1">vue-mc/locale</span><span class="dl">'</span>
+
+<span class="c1">// Register the language bundle.</span>
+<span class="nx">validation</span><span class="p">.</span><span class="nx">messages</span><span class="p">.</span><span class="nx">register</span><span class="p">(</span><span class="nx">pt_br</span><span class="p">);</span>
+
+<span class="c1">// Set the locale.</span>
+<span class="nx">validation</span><span class="p">.</span><span class="nx">messages</span><span class="p">.</span><span class="nx">locale</span><span class="p">(</span><span class="dl">'</span><span class="s1">pt-br</span><span class="dl">'</span><span class="p">);</span></code></pre></figure>
+
+<p>An added bonus of language packs is that it allows you to register your own
+messages using a locale that describes your application rather than a language.
+The structure of a language pack is an object that has a <code class="language-plaintext highlighter-rouge">locale</code> and some <code class="language-plaintext highlighter-rouge">messages</code>.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">locale</span><span class="p">:</span> <span class="dl">'</span><span class="s1">my-app</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">messages</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">email</span><span class="p">:</span> <span class="dl">'</span><span class="s1">No good, try a different one</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">validation</span><span class="p">.</span><span class="nx">messages</span><span class="p">.</span><span class="nx">register</span><span class="p">(</span><span class="nx">pack</span><span class="p">);</span></code></pre></figure>
+
+<h5 id="supported-locales">Supported Locales</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Locale</th>
+      <th style="text-align: left">Language</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">af_za</td>
+      <td style="text-align: left">Afrikaans</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: left">da_dk</td>
+      <td style="text-align: left">Danish</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: left">en_us</td>
+      <td style="text-align: left">English (US)</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: left">id_id</td>
+      <td style="text-align: left">Indonesian</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: left">nl_nl</td>
+      <td style="text-align: left">Dutch</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: left">pl_PL</td>
+      <td style="text-align: left">Polish</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: left">pt_br</td>
+      <td style="text-align: left">Portuguese (Brazil)</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: left">ru_ru</td>
+      <td style="text-align: left">Russian</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="model-routes">Routes</h2>
+
+<p>Routes are defined in a model’s <code class="language-plaintext highlighter-rouge">routes()</code> method. Expected but optional route keys
+are <strong>fetch</strong>, <strong>save</strong>, and <strong>delete</strong>. Route parameters are returned by <code class="language-plaintext highlighter-rouge">getRouteParameters()</code>.
+By default, route values are URL paths that support parameter interpolation with curly-brace syntax,
+where the parameters are the model’s active attributes and options.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">class</span> <span class="nx">Task</span> <span class="kd">extends</span> <span class="nx">Model</span> <span class="p">{</span>
+    <span class="nx">routes</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nl">save</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/task/{id}</span><span class="dl">'</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p><strong>Note</strong>: You can use <code class="language-plaintext highlighter-rouge">getURL(route, parameters = {})</code> to resolve a route’s URL directly.</p>
+
+<h3 id="model-route-resolver">Using a custom route resolver</h3>
+
+<p>A <em>route resolver</em> translates a route value to a URL. The default resolver assumes
+that route values are URL paths, and expects parameters to use curly-brace
+syntax. You can use a custom resolver by overriding <code class="language-plaintext highlighter-rouge">getRouteResolver()</code>, returning a function
+that accepts a route value and parameters.</p>
+
+<p>For example, if you are using <a href="https://github.com/aaronlord/laroute">laroute</a>, your base model might look like this:</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">class</span> <span class="nx">Task</span> <span class="kd">extends</span> <span class="nx">Model</span> <span class="p">{</span>
+    <span class="nx">routes</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nl">save</span><span class="p">:</span> <span class="dl">'</span><span class="s1">task.save</span><span class="dl">'</span><span class="p">,</span> <span class="c1">// Defined in Laravel, eg. `/task/save/{id}`</span>
+    <span class="p">}</span>
+
+    <span class="nx">getRouteResolver</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">laroute</span><span class="p">.</span><span class="nx">route</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<h2 id="model-events">Events</h2>
+
+<p>You can add event listeners using <code class="language-plaintext highlighter-rouge">on(event, listener)</code>. Event context will always
+consist of at least <code class="language-plaintext highlighter-rouge">target</code>, which is the model that the event was emitted by.
+Event names can be comma-separated to register a listener for multiple events.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">task</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">reset</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="o">=></span> <span class="p">{</span>
+   <span class="c1">// Handle event here.</span>
+<span class="p">})</span>
+
+<span class="nx">task</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">reset, sync</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="o">=></span> <span class="p">{</span>
+   <span class="c1">// Handle event here.</span>
+<span class="p">})</span></code></pre></figure>
+
+<h3 id="model-events-reset">reset</h3>
+<p>When the active state is reset to the saved state.<br></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">attributes</code> – The attribute names that were reset.</li>
+  <li><code class="language-plaintext highlighter-rouge">before</code> – A copy of the active state before the attributes were reset.</li>
+  <li><code class="language-plaintext highlighter-rouge">after</code> – A copy of the active state after the attributes were reset.</li>
+</ul>
+
+<h3 id="model-events-sync">sync</h3>
+<p>When the active state is applied to the saved state.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">attributes</code> – The attribute names that were synced.</li>
+  <li><code class="language-plaintext highlighter-rouge">before</code> – A copy of the saved state before the attributes were synced.</li>
+  <li><code class="language-plaintext highlighter-rouge">after</code> – A copy of the saved state after the attributes were synced.</li>
+</ul>
+
+<h3 id="model-events-change">change</h3>
+<p>When a value is set on the model that is different to what it was before. This
+event will also be emitted when a model is constructed with initial values.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">attribute</code> – The name of the attribute that was changed.</li>
+  <li><code class="language-plaintext highlighter-rouge">previous</code> – The previous value of the attribute.</li>
+  <li><code class="language-plaintext highlighter-rouge">value</code> – The new value of the attribute.</li>
+</ul>
+
+<h3 id="model-events-create">create</h3>
+<p>After a model is saved successfully, where the model was <em>created</em>.</p>
+
+<h3 id="model-events-update">update</h3>
+<p>After a model is saved successfully, where the model was <em>updated</em>.</p>
+
+<h3 id="model-events-fetch">fetch</h3>
+<p>Before a model’s data is fetched.
+The request will be cancelled if any of the listeners return <code class="language-plaintext highlighter-rouge">false</code>, or skipped
+if the request is part of a batch within a collection.</p>
+
+<p>Events will also be fired after the request has completed:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">fetch.success</code></li>
+  <li><code class="language-plaintext highlighter-rouge">fetch.failure</code></li>
+  <li><code class="language-plaintext highlighter-rouge">fetch.always</code></li>
+</ul>
+
+<h3 id="model-events-save">save</h3>
+<p>Before a model is saved.
+The request will be cancelled if any of the listeners return <code class="language-plaintext highlighter-rouge">false</code>, or skipped
+if the request is part of a batch within a collection.</p>
+
+<p>Events will also be fired after the request has completed:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">save.success</code></li>
+  <li><code class="language-plaintext highlighter-rouge">save.failure</code></li>
+  <li><code class="language-plaintext highlighter-rouge">save.always</code></li>
+</ul>
+
+<h3 id="model-events-delete">delete</h3>
+<p>Before a model is deleted.
+The request will be cancelled if any of the listeners return <code class="language-plaintext highlighter-rouge">false</code>, or skipped
+if the request is part of a batch within a collection.</p>
+
+<p>Events will also be fired after the request has completed:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">delete.success</code></li>
+  <li><code class="language-plaintext highlighter-rouge">delete.failure</code></li>
+  <li><code class="language-plaintext highlighter-rouge">delete.always</code></li>
+</ul>
+
+<h2 id="model-requests">Requests</h2>
+
+<p>Models support three actions: <code class="language-plaintext highlighter-rouge">fetch</code>, <code class="language-plaintext highlighter-rouge">save</code> and <code class="language-plaintext highlighter-rouge">delete</code>. These are called
+directly on the model, and return a <code class="language-plaintext highlighter-rouge">Promise</code>. The <code class="language-plaintext highlighter-rouge">resolve</code> callback will
+receive a <code class="language-plaintext highlighter-rouge">response</code> which could be <code class="language-plaintext highlighter-rouge">null</code> if a request was cancelled. The <code class="language-plaintext highlighter-rouge">reject</code>
+callback will receive an <code class="language-plaintext highlighter-rouge">error</code> which should always be set.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// These are the default options, which will be merged with those provided.</span>
+<span class="kd">let</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">url</span>     <span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">getSaveURL</span><span class="p">(),</span>
+    <span class="na">method</span>  <span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">getSaveMethod</span><span class="p">(),</span>
+    <span class="na">data</span>    <span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">getSaveData</span><span class="p">(),</span>
+    <span class="na">params</span>  <span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">getSaveQuery</span><span class="p">(),</span>
+    <span class="na">headers</span> <span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">getSaveHeaders</span><span class="p">(),</span>
+<span class="p">};</span>
+
+<span class="nx">model</span><span class="p">.</span><span class="nx">save</span><span class="p">(</span><span class="nx">options</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">response</span><span class="p">)</span> <span class="o">=></span> <span class="p">{</span>
+    <span class="c1">// Handle success here</span>
+<span class="p">}).</span><span class="k">catch</span><span class="p">((</span><span class="nx">error</span><span class="p">)</span> <span class="o">=></span> <span class="p">{</span>
+    <span class="c1">// Handle failure here</span>
+<span class="p">})</span></code></pre></figure>
+
+<h3 id="model-request-fetch">Fetch</h3>
+
+<p>Model data is usually either already in scope or part of a collection of data,
+but you can also <em>fetch</em> attribute data for a specific model. Response data is
+expected to be an object of attributes which will replace the active attributes
+and sync the saved state.</p>
+
+<p>When a fetch request is made, <code class="language-plaintext highlighter-rouge">loading</code> will be <code class="language-plaintext highlighter-rouge">true</code> on the model, and <code class="language-plaintext highlighter-rouge">false</code>
+again when the data has been received and assigned (or if the request failed).
+This allows the UI to indicate a loading state.</p>
+
+<p>The request will be ignored if <code class="language-plaintext highlighter-rouge">loading</code> is already <code class="language-plaintext highlighter-rouge">true</code> when the request is made.</p>
+
+<h3 id="model-request-save">Save</h3>
+
+<p>Saving a model either performs a <em>create</em> or <em>update</em>, depending on whether the model is
+already persisted. The default criteria that qualifies a response as <em>created</em> is to
+check if the model now has an <em>identifier</em> but didn’t before, or if the response status was a <code class="language-plaintext highlighter-rouge">201 Created</code>.</p>
+
+<p>If the model was created, it will <strong>automatically be added</strong> to all registered collections.</p>
+
+<p>If you’d like to enable <em>patching</em> you can override <code class="language-plaintext highlighter-rouge">shouldPatch()</code>. The request will then
+only consist of attributes that have changed, and abort early if no changes have been made.</p>
+
+<p>When a save request is made, <code class="language-plaintext highlighter-rouge">saving</code> will be <code class="language-plaintext highlighter-rouge">true</code> on the model, and <code class="language-plaintext highlighter-rouge">false</code>
+again when the response has been handled (or if the request failed).</p>
+
+<p>The request will be ignored if <code class="language-plaintext highlighter-rouge">saving</code> is already <code class="language-plaintext highlighter-rouge">true</code> when the request is made,
+which prevents the case where clicking a save button multiple times results in more
+than one request.</p>
+
+<h4 id="model-request-save-response">Response</h4>
+
+<p>In most case you would return the saved model in the response,
+so that server-generated attributes like <code class="language-plaintext highlighter-rouge">date_created</code> or <code class="language-plaintext highlighter-rouge">id</code> can be applied.</p>
+
+<p>Response data should be either an object of attributes, an identifier, or nothing at all.</p>
+
+<p>If an object is received, it will replace the active attributes and sync the saved state.</p>
+
+<p>If an identifier is returned it will only set the <a href="#identifiers">identifier</a>.
+You can override identifier handling with <code class="language-plaintext highlighter-rouge">parseIdentifier(data)</code> and <code class="language-plaintext highlighter-rouge">isValidIdentifier(identifier)</code>.</p>
+
+<p>If the response is empty, it will be assumed that the active state is already the source of truth.
+This makes sense when the model doesn’t use any server-generated attributes
+and doesn’t use an identifier.</p>
+
+<h4 id="model-request-save-validation">Validation</h4>
+
+<p>Validation errors are automatically set on a model and can be accessed as <code class="language-plaintext highlighter-rouge">model.errors</code>.
+They are set when a <em>save</em> request receives a <code class="language-plaintext highlighter-rouge">422 Unprocessable Entity</code> response. You can adjust
+how this is determined by overriding <code class="language-plaintext highlighter-rouge">isValidationError(response)</code>.</p>
+
+<p>Validation errors should be an object of arrays keyed by attribute name, for example:</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">{</span>
+    <span class="nl">email</span><span class="p">:</span> <span class="p">[</span>
+        <span class="dl">"</span><span class="s2">Should be a valid email address</span><span class="dl">"</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">}</span></code></pre></figure>
+
+<p><strong>Important</strong>: This should mirror the same structure as <a href="#model-validation">model-based validation</a>.</p>
+
+<h3 id="model-request-delete">Delete</h3>
+
+<p>When a delete request is made, <code class="language-plaintext highlighter-rouge">deleting</code> will be <code class="language-plaintext highlighter-rouge">true</code> on the model, and <code class="language-plaintext highlighter-rouge">false</code>
+again when the response has been handled (or if the request failed).</p>
+
+<p>The request will be ignored if <code class="language-plaintext highlighter-rouge">deleting</code> is already <code class="language-plaintext highlighter-rouge">true</code> when the request is made.</p>
+
+<p>The model will <strong>automatically be removed</strong> from all registered collections if
+the request is successful.</p>
+
+<h3 id="model-request-custom">Custom</h3>
+
+<p>You can also create custom requests to perform custom actions.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">class</span> <span class="nx">Channel</span> <span class="p">{</span>
+    <span class="p">...</span>
+
+    <span class="nx">options</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="na">methods</span><span class="p">:</span> <span class="p">{</span>
+                <span class="na">subscribe</span><span class="p">:</span> <span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="nx">routes</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="na">subscribe</span><span class="p">:</span> <span class="dl">'</span><span class="s1">channel.subscribe.user</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="nx">subscribe</span><span class="p">(</span><span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nx">method</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getOption</span><span class="p">(</span><span class="dl">'</span><span class="s1">methods.subscribe</span><span class="dl">'</span><span class="p">);</span>
+        <span class="kd">let</span> <span class="nx">route</span>  <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getRoute</span><span class="p">(</span><span class="dl">'</span><span class="s1">subscribe</span><span class="dl">'</span><span class="p">);</span>
+        <span class="kd">let</span> <span class="nx">params</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getRouteParameters</span><span class="p">();</span>
+        <span class="kd">let</span> <span class="nx">url</span>    <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getURL</span><span class="p">(</span><span class="nx">route</span><span class="p">,</span> <span class="nx">params</span><span class="p">);</span>
+        <span class="kd">let</span> <span class="nx">data</span>   <span class="o">=</span> <span class="p">{</span><span class="na">user</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">},</span>
+
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">createRequest</span><span class="p">({</span><span class="nx">method</span><span class="p">,</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">data</span><span class="p">}).</span><span class="nx">send</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nx">channel</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Channel</span><span class="p">({</span><span class="na">id</span><span class="p">:</span> <span class="mi">1</span><span class="p">});</span>
+<span class="kd">let</span> <span class="nx">user</span>    <span class="o">=</span> <span class="k">new</span> <span class="nx">User</span><span class="p">({</span><span class="na">id</span><span class="p">:</span> <span class="mi">1</span><span class="p">});</span>
+
+<span class="nx">channel</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="nx">user</span><span class="p">).</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=></span> <span class="p">{</span>
+    <span class="c1">// Handle success here</span>
+<span class="p">}).</span><span class="k">catch</span><span class="p">((</span><span class="nx">error</span><span class="p">)</span> <span class="o">=></span> <span class="p">{</span>
+    <span class="c1">// Handle failure here</span>
+<span class="p">});</span></code></pre></figure>
+
+<p><code class="language-plaintext highlighter-rouge">getRouteParameters</code> will return the model’s attributes by default, but you can adjust this in the custom request method or override the method in your model. It should return an object to be used for route parameter interpolation.</p>
+
+<h3 id="model-request-events">Events</h3>
+<p>Events for <code class="language-plaintext highlighter-rouge">save</code>, <code class="language-plaintext highlighter-rouge">fetch</code>, and <code class="language-plaintext highlighter-rouge">delete</code> will be emitted on the model after
+a request has completed:</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">model</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">save</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="o">=></span> <span class="p">{</span>
+    <span class="c1">// event.error will be set if the action failed</span>
+<span class="p">})</span></code></pre></figure>
+
+<h1 id="collections">Collections</h1>
+
+<h2 id="collection-instances">Creating collections</h2>
+
+<p>Collection instances can be created using the <code class="language-plaintext highlighter-rouge">new</code> keyword. The default constructor
+for a collection accepts two optional parameters: <code class="language-plaintext highlighter-rouge">models</code> and <code class="language-plaintext highlighter-rouge">options</code>.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">let</span> <span class="nx">collection</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Collection</span><span class="p">(</span><span class="nx">models</span> <span class="o">=</span> <span class="p">[],</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{});</span></code></pre></figure>
+
+<h3 id="collection-instance-models">Models</h3>
+
+<p>You can provide initial models as an array of either model instances or plain
+objects that should be converted into models. This follows the same behaviour
+as <a href="#collection-add"><code class="language-plaintext highlighter-rouge">add</code></a>, where a plain object will be passed as the <code class="language-plaintext highlighter-rouge">attributes</code>
+argument to the collection’s model type.</p>
+
+<h3 id="collection-options">Options</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">options</code> parameter allows you to set the options of a collection instance.
+To get the value of an option, use <code class="language-plaintext highlighter-rouge">getOption(name)</code>. You can also set an option
+later on using <code class="language-plaintext highlighter-rouge">setOption(name, value)</code> or <code class="language-plaintext highlighter-rouge">setOptions(options)</code>.</p>
+
+<p>You should define a collection’s default options using the <code class="language-plaintext highlighter-rouge">options()</code> method:</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">class</span> <span class="nx">TaskList</span> <span class="kd">extends</span> <span class="nx">Collection</span> <span class="p">{</span>
+    <span class="nx">options</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="na">model</span><span class="p">:</span> <span class="nx">Task</span><span class="p">,</span>
+            <span class="na">useDeleteBody</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<h4 id="collection-available-options">Available options</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Option</th>
+      <th style="text-align: left">Type</th>
+      <th style="text-align: left">Default</th>
+      <th style="text-align: left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">model</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">Class</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">Model</code></td>
+      <td style="text-align: left">The class/constructor for this collection’s model type.</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">methods</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">Object</code></td>
+      <td style="text-align: left"> </td>
+      <td style="text-align: left">HTTP request methods.</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">routeParameterPattern</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">Regex</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">/\{([^}]+)\}/</code></td>
+      <td style="text-align: left">Route parameter group matching pattern.</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">useDeleteBody</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">Boolean</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">true</code></td>
+      <td style="text-align: left">Whether this collection should send model identifiers as JSON data in the body of a delete request, instead of a query parameter.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="default-request-methods-1">Default request methods</h5>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">{</span>
+    <span class="p">...</span>
+
+    <span class="dl">"</span><span class="s2">methods</span><span class="dl">"</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">fetch</span><span class="dl">"</span><span class="p">:</span>  <span class="dl">"</span><span class="s2">GET</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">save</span><span class="dl">"</span><span class="p">:</span>   <span class="dl">"</span><span class="s2">POST</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">delete</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">DELETE</span><span class="dl">"</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>The collection’s model type can also be determined dynamically by overriding the
+<code class="language-plaintext highlighter-rouge">model</code> method, which by default returns the value of the <code class="language-plaintext highlighter-rouge">model</code> option.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">class</span> <span class="nx">TaskList</span> <span class="kd">extends</span> <span class="nx">Collection</span> <span class="p">{</span>
+    <span class="nx">model</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">Task</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<h3 id="collection-attributes">Attributes</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">attributes</code> parameter allows you to set custom attributes on the the collection,
+much like a model. You can also use <code class="language-plaintext highlighter-rouge">get</code> and <code class="language-plaintext highlighter-rouge">set</code> to manage attributes.
+This is useful for route parameters or custom states like “editing”.</p>
+
+<p><strong>Attributes are included as route parameters by default.</strong></p>
+
+<p>You should define a collection’s default attributes using the <code class="language-plaintext highlighter-rouge">defaults()</code> method:</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">class</span> <span class="nx">TaskList</span> <span class="kd">extends</span> <span class="nx">Collection</span> <span class="p">{</span>
+    <span class="nx">defaults</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="na">orderBy</span><span class="p">:</span> <span class="dl">'</span><span class="s1">name</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nx">list</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">TaskList</span><span class="p">();</span>
+
+<span class="c1">// Read</span>
+<span class="nx">list</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">orderBy</span><span class="dl">'</span><span class="p">);</span> <span class="c1">// "name"</span>
+
+<span class="c1">// Write</span>
+<span class="nx">list</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="dl">'</span><span class="s1">orderBy</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">);</span></code></pre></figure>
+
+<h2 id="collection-models">Models</h2>
+
+<p>Models in a collection is an array that can be accessed as <code class="language-plaintext highlighter-rouge">models</code> on the collection.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">let</span> <span class="nx">task1</span> <span class="o">=</span> <span class="p">{</span><span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">1</span><span class="dl">'</span><span class="p">};</span>
+<span class="kd">let</span> <span class="nx">task2</span> <span class="o">=</span> <span class="p">{</span><span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">2</span><span class="dl">'</span><span class="p">};</span>
+
+<span class="kd">let</span> <span class="nx">tasks</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">TaskList</span><span class="p">([</span><span class="nx">task1</span><span class="p">,</span> <span class="nx">task2</span><span class="p">]);</span>
+
+<span class="nx">tasks</span><span class="p">.</span><span class="nx">models</span><span class="p">;</span> <span class="c1">// [<task>, <task>]</task></task></span></code></pre></figure>
+
+<h3 id="collection-add">Add</h3>
+
+<p>You can add one or more models to a collection using <code class="language-plaintext highlighter-rouge">add(model)</code>, where <code class="language-plaintext highlighter-rouge">model</code>
+can be a model instance, plain object, or array of either. Plain objects will be
+used as the <code class="language-plaintext highlighter-rouge">attributes</code> argument of the collection’s model option when converting
+the plain object into a model instance.</p>
+
+<p>Adding a model to a collection automatically registers the collection on the model,
+so that the model can be removed when deleted successfully.</p>
+
+<p>If no value for <code class="language-plaintext highlighter-rouge">model</code> is given, it will add a new empty model.</p>
+
+<p>The added model will be returned, or an array of added models if more than one was given.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">let</span> <span class="nx">tasks</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">TaskCollection</span><span class="p">();</span>
+
+<span class="c1">// Adding a plain object.</span>
+<span class="kd">let</span> <span class="nx">task1</span> <span class="o">=</span> <span class="nx">tasks</span><span class="p">.</span><span class="nx">add</span><span class="p">({</span><span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">First</span><span class="dl">'</span><span class="p">});</span>
+
+<span class="c1">// Adding a model instance.</span>
+<span class="kd">let</span> <span class="nx">task2</span> <span class="o">=</span> <span class="nx">tasks</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Task</span><span class="p">({</span><span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Second</span><span class="dl">'</span><span class="p">}));</span>
+
+<span class="c1">// Adding a new empty model</span>
+<span class="kd">let</span> <span class="nx">task3</span> <span class="o">=</span> <span class="nx">tasks</span><span class="p">.</span><span class="nx">add</span><span class="p">();</span>
+
+<span class="kd">let</span> <span class="nx">added</span> <span class="o">=</span> <span class="nx">tasks</span><span class="p">.</span><span class="nx">add</span><span class="p">([{</span><span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#4</span><span class="dl">'</span><span class="p">},</span> <span class="p">{</span><span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#5</span><span class="dl">'</span><span class="p">}]);</span>
+<span class="kd">let</span> <span class="nx">task4</span> <span class="o">=</span> <span class="nx">added</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="kd">let</span> <span class="nx">task5</span> <span class="o">=</span> <span class="nx">added</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+
+<span class="nx">tasks</span><span class="p">.</span><span class="nx">models</span><span class="p">;</span> <span class="c1">// [task1, task2, task3, task4, task5]</span></code></pre></figure>
+
+<h3 id="collection-remove">Remove</h3>
+
+<p>You can remove a model instance using the <code class="language-plaintext highlighter-rouge">remove(model)</code> method, where <code class="language-plaintext highlighter-rouge">model</code> can
+be a model instance, plain object, array, or function. Passing a plain object or
+function will use <code class="language-plaintext highlighter-rouge">filter</code> to determine which models to remove, and an array of
+models will call <code class="language-plaintext highlighter-rouge">remove</code> recursively for each element.</p>
+
+<p>All removed models will be returned as either a single model instance or an array
+of models depending on the type of the argument. A plain object, array or function will return an array,
+where removing a specific model instance will only return that instance, if removed.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// Remove all tasks that have been completed.</span>
+<span class="kd">let</span> <span class="nx">done</span> <span class="o">=</span> <span class="nx">tasks</span><span class="p">.</span><span class="nx">remove</span><span class="p">({</span><span class="na">done</span><span class="p">:</span> <span class="kc">true</span><span class="p">});</span>
+
+<span class="c1">// Adding a model instance.</span>
+<span class="kd">let</span> <span class="nx">task2</span> <span class="o">=</span> <span class="nx">tasks</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Task</span><span class="p">({</span><span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Second</span><span class="dl">'</span><span class="p">}));</span>
+
+<span class="c1">// Adding a new empty model</span>
+<span class="kd">let</span> <span class="nx">task3</span> <span class="o">=</span> <span class="nx">tasks</span><span class="p">.</span><span class="nx">add</span><span class="p">();</span>
+
+<span class="kd">let</span> <span class="nx">added</span> <span class="o">=</span> <span class="nx">tasks</span><span class="p">.</span><span class="nx">add</span><span class="p">([{</span><span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#4</span><span class="dl">'</span><span class="p">},</span> <span class="p">{</span><span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#5</span><span class="dl">'</span><span class="p">}]);</span>
+<span class="kd">let</span> <span class="nx">task4</span> <span class="o">=</span> <span class="nx">added</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="kd">let</span> <span class="nx">task5</span> <span class="o">=</span> <span class="nx">added</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+
+<span class="nx">tasks</span><span class="p">.</span><span class="nx">models</span><span class="p">;</span> <span class="c1">// [task1, task2, task3, task4, task5]</span></code></pre></figure>
+
+<h3 id="collection-replace">Replace</h3>
+
+<p>You can replace the models of a collection using <code class="language-plaintext highlighter-rouge">replace(models)</code>, which is
+effectively <code class="language-plaintext highlighter-rouge">clear</code> followed by <code class="language-plaintext highlighter-rouge">add(models)</code>. Models are replaced when new data
+is fetched or when the constructor is called.</p>
+
+<h2 id="collection-routes">Routes</h2>
+
+<p>Like models, routes are defined in a collection’s <code class="language-plaintext highlighter-rouge">routes()</code> method. Expected but optional route keys
+are <strong>fetch</strong>, <strong>save</strong>, and <strong>delete</strong>. Route parameters are returned by <code class="language-plaintext highlighter-rouge">getRouteParameters()</code>.
+By default, route values are URL paths that support parameter interpolation with curly-brace syntax,
+where the parameters are the collection’s attributes and current page.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">class</span> <span class="nx">Task</span> <span class="kd">extends</span> <span class="nx">Model</span> <span class="p">{</span>
+    <span class="nx">routes</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nl">save</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/task/{id}</span><span class="dl">'</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p><strong>Note</strong>: You can use <code class="language-plaintext highlighter-rouge">getURL(route, parameters = {})</code> to resolve a route’s URL directly.</p>
+
+<h3 id="collection-route-resolver">Using a custom route resolver</h3>
+
+<p>A <em>route resolver</em> translates a route value to a URL. The default resolver assumes
+that route values are URL paths, and expects parameters to use curly-brace
+syntax. You can use a custom resolver by overriding <code class="language-plaintext highlighter-rouge">getRouteResolver()</code>, returning a function
+that accepts a route value and parameters.</p>
+
+<p>For example, if you are using <a href="https://github.com/aaronlord/laroute">laroute</a>, your base collection might look like this:</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">class</span> <span class="nx">TaskList</span> <span class="kd">extends</span> <span class="nx">Collection</span> <span class="p">{</span>
+    <span class="nx">routes</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nl">save</span><span class="p">:</span> <span class="dl">'</span><span class="s1">tasks.save</span><span class="dl">'</span><span class="p">,</span> <span class="c1">// Defined in Laravel, eg. `/tasks`</span>
+    <span class="p">}</span>
+
+    <span class="nx">getRouteResolver</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">laroute</span><span class="p">.</span><span class="nx">route</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<h2 id="collection-events">Events</h2>
+
+<p>You can add event listeners using <code class="language-plaintext highlighter-rouge">on(event, listener)</code>. Event context will always
+consist of at least <code class="language-plaintext highlighter-rouge">target</code>, which is the collection that the event was emitted by.
+Event names can be comma-separated to register a listener for multiple events.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">tasks</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">add</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="o">=></span> <span class="p">{</span>
+   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Added</span><span class="dl">"</span><span class="p">,</span> <span class="nx">event</span><span class="p">.</span><span class="nx">model</span><span class="p">);</span>
+<span class="p">})</span>
+
+<span class="nx">tasks</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">remove</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="o">=></span> <span class="p">{</span>
+   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Removed</span><span class="dl">"</span><span class="p">,</span> <span class="nx">event</span><span class="p">.</span><span class="nx">model</span><span class="p">);</span>
+<span class="p">})</span></code></pre></figure>
+
+<h3 id="collection-events-add">add</h3>
+<p>When a model has been added.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">model</code> – The model that was added.</li>
+</ul>
+
+<h3 id="collection-events-remove">remove</h3>
+<p>When a model has been removed.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">model</code> – The model that was removed.</li>
+</ul>
+
+<h3 id="collection-events-fetch">fetch</h3>
+
+<p>A <code class="language-plaintext highlighter-rouge">fetch</code> event will be emitted when a collection has fetched its model data, for
+successful and failed requests. The event context will have an <code class="language-plaintext highlighter-rouge">error</code> attribute,
+which is <code class="language-plaintext highlighter-rouge">null</code> if the request was successful and an <code class="language-plaintext highlighter-rouge">Error</code> if it failed.</p>
+
+<h3 id="collection-events-save">save</h3>
+
+<p>A <code class="language-plaintext highlighter-rouge">save</code> event will be emitted when a collection has fetched its model data, for
+successful and failed requests. The event context will have an <code class="language-plaintext highlighter-rouge">error</code> attribute,
+which is <code class="language-plaintext highlighter-rouge">null</code> if the request was successful and an <code class="language-plaintext highlighter-rouge">Error</code> if it failed.</p>
+
+<h3 id="collection-events-delete">delete</h3>
+
+<p>A <code class="language-plaintext highlighter-rouge">delete</code> event will be emitted when a collection has fetched its model data, for
+successful and failed requests. The event context will have an <code class="language-plaintext highlighter-rouge">error</code> attribute,
+which is <code class="language-plaintext highlighter-rouge">null</code> if the request was successful and an <code class="language-plaintext highlighter-rouge">Error</code> if it failed.</p>
+
+<h2 id="collection-requests">Requests</h2>
+
+<p>Collections support three actions: <code class="language-plaintext highlighter-rouge">fetch</code>, <code class="language-plaintext highlighter-rouge">save</code> and <code class="language-plaintext highlighter-rouge">delete</code>. These are called
+directly on the collection, and return a <code class="language-plaintext highlighter-rouge">Promise</code>. The <code class="language-plaintext highlighter-rouge">resolve</code> callback will
+receive a <code class="language-plaintext highlighter-rouge">response</code> which could be <code class="language-plaintext highlighter-rouge">null</code> if a request was cancelled. The <code class="language-plaintext highlighter-rouge">reject</code>
+callback will receive an <code class="language-plaintext highlighter-rouge">error</code> which should always be set.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">collection</span><span class="p">.</span><span class="nx">save</span><span class="p">().</span><span class="nx">then</span><span class="p">((</span><span class="nx">response</span><span class="p">)</span> <span class="o">=></span> <span class="p">{</span>
+    <span class="c1">// Handle success here</span>
+<span class="p">}).</span><span class="k">catch</span><span class="p">((</span><span class="nx">error</span><span class="p">)</span> <span class="o">=></span> <span class="p">{</span>
+    <span class="c1">// Handle failure here</span>
+<span class="p">})</span></code></pre></figure>
+
+<h3 id="collection-request-fetch">Fetch</h3>
+
+<p>You can <em>fetch</em> model data that belongs to a collection. Response data is
+expected to be an array of attributes which will be passed to <code class="language-plaintext highlighter-rouge">replace</code>.</p>
+
+<p>When a fetch request is made, <code class="language-plaintext highlighter-rouge">loading</code> will be <code class="language-plaintext highlighter-rouge">true</code> on the collection, and <code class="language-plaintext highlighter-rouge">false</code>
+again when the data has been received and replaced (or if the request failed).
+This allows the UI to indicate a loading state.</p>
+
+<p>The request will be ignored if <code class="language-plaintext highlighter-rouge">loading</code> is already <code class="language-plaintext highlighter-rouge">true</code> when the request is made.</p>
+
+<h3 id="collection-request-save">Save</h3>
+
+<p>Instead of calling <code class="language-plaintext highlighter-rouge">save</code> on each model individually, a collection will encode its
+models as an array, using the results of each model’s <code class="language-plaintext highlighter-rouge">getSaveBody()</code> method, which
+defaults to the model’s attributes. You can override <code class="language-plaintext highlighter-rouge">getSaveBody()</code> on the collection
+to change this behaviour.</p>
+
+<p>When a save request is made, <code class="language-plaintext highlighter-rouge">saving</code> will be <code class="language-plaintext highlighter-rouge">true</code> on the collection, and <code class="language-plaintext highlighter-rouge">false</code>
+again when the response has been handled (or if the request failed).</p>
+
+<p>The request will be ignored if <code class="language-plaintext highlighter-rouge">saving</code> is already <code class="language-plaintext highlighter-rouge">true</code> when the request is made,
+which prevents the case where clicking a save button multiple times results in more
+than one request.</p>
+
+<h4 id="collection-request-save-response">Response</h4>
+
+<p>In most case you would return an array of saved models in the response,
+so that server-generated attributes like <code class="language-plaintext highlighter-rouge">date_created</code> or <code class="language-plaintext highlighter-rouge">id</code> can be applied.</p>
+
+<p>Response data should be either an array of attributes, an array of model identifiers,
+or nothing at all.</p>
+
+<p>If an array is received, it will apply each object of attributes to its corresponding
+model in the collection. A strict requirement for this to work is that the order of
+the returned data must match the order of the models in the collection.</p>
+
+<p>If the response is empty, it will be assumed that the active state of each model
+is already its source of truth. This makes sense when a model doesn’t use any
+server-generated attributes and doesn’t use an identifier.</p>
+
+<h4 id="collection-request-save-validation">Validation</h4>
+
+<p>Validation errors must be either an array of each model’s validation errors (empty if there were none),
+or an object that is keyed by model identifiers. These will be applied to each model in the same way
+that the model would have done if it failed validation on save.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// An array of errors for each model.</span>
+<span class="p">[</span>
+    <span class="p">{},</span>
+    <span class="p">{},</span>
+    <span class="p">{</span><span class="na">name</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">Must be a string</span><span class="dl">'</span><span class="p">]},</span>
+    <span class="p">{},</span>
+    <span class="p">...</span>
+<span class="p">]</span>
+
+<span class="c1">// An object of errors keyed by model identifier</span>
+<span class="p">{</span>
+    <span class="mi">4</span><span class="p">:</span> <span class="p">{</span><span class="nl">name</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">Must be a string</span><span class="dl">'</span><span class="p">]},</span>
+<span class="p">}</span></code></pre></figure>
+
+<h3 id="collection-request-delete">Delete</h3>
+
+<p>Instead of calling <code class="language-plaintext highlighter-rouge">delete</code> on each model individually, a collection collects
+the identifiers of models to be deleted. If the <code class="language-plaintext highlighter-rouge">useDeleteBody</code> option is <code class="language-plaintext highlighter-rouge">true</code>,
+identifiers will be sent in the body of the request, or in the URL query otherwise.</p>
+
+<p>When a delete request is made, <code class="language-plaintext highlighter-rouge">deleting</code> will be <code class="language-plaintext highlighter-rouge">true</code> on the collection, and <code class="language-plaintext highlighter-rouge">false</code>
+again when the response has been handled (or if the request failed).</p>
+
+<p>The request will be ignored if <code class="language-plaintext highlighter-rouge">deleting</code> is already <code class="language-plaintext highlighter-rouge">true</code> when the request is made.</p>
+
+<h3 id="collection-request-custom">Custom</h3>
+
+<p>You can also create custom requests to perform custom actions.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">let</span> <span class="nx">config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1">// url</span>
+    <span class="c1">// method</span>
+    <span class="c1">// data</span>
+    <span class="c1">// params</span>
+    <span class="c1">// headers</span>
+<span class="p">};</span>
+
+<span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">createRequest</span><span class="p">(</span><span class="nx">config</span><span class="p">).</span><span class="nx">send</span><span class="p">().</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=></span> <span class="p">{</span>
+    <span class="c1">// Handle success here</span>
+<span class="p">}).</span><span class="k">catch</span><span class="p">((</span><span class="nx">error</span><span class="p">)</span> <span class="o">=></span> <span class="p">{</span>
+    <span class="c1">// Handle failure here</span>
+<span class="p">});</span></code></pre></figure>
+
+<h3 id="collection-request-events">Events</h3>
+<p>Events for <code class="language-plaintext highlighter-rouge">save</code>, <code class="language-plaintext highlighter-rouge">fetch</code>, and <code class="language-plaintext highlighter-rouge">delete</code> will be emitted on the collection after
+a request has completed:</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">collection</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">save</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="o">=></span> <span class="p">{</span>
+    <span class="c1">// event.error will be set if the action failed</span>
+<span class="p">})</span></code></pre></figure>
+
+<h2 id="collection-pagination">Pagination</h2>
+
+<p>You can enable pagination using the <code class="language-plaintext highlighter-rouge">page(integer)</code> method, which sets the current
+page. If you want to disable pagination, pass <code class="language-plaintext highlighter-rouge">null</code> as the page. The <code class="language-plaintext highlighter-rouge">page</code> method
+returns the collection so you can chain <code class="language-plaintext highlighter-rouge">fetch</code> if you want to.</p>
+
+<p>A collection’s page will automatically be incremented when a paginated fetch
+request was successful. Models will be appended with <code class="language-plaintext highlighter-rouge">add</code> rather than replaced.</p>
+
+<p>You can use <code class="language-plaintext highlighter-rouge">isLastPage()</code> or <code class="language-plaintext highlighter-rouge">isPaginated()</code> to determine the current status.
+A collection is considered on its last page if the most recent paginated fetch request
+did not return any models. This is reset again when you call <code class="language-plaintext highlighter-rouge">page</code> to set a new page.
+A paginated <code class="language-plaintext highlighter-rouge">fetch</code> will be cancelled if the collection is on its last page.</p>
+
+<p>Infinite scrolling can be achieved by calling <code class="language-plaintext highlighter-rouge">page(1)</code> initially, then <code class="language-plaintext highlighter-rouge">fetch()</code>
+while <code class="language-plaintext highlighter-rouge">isLastPage()</code> is <code class="language-plaintext highlighter-rouge">false</code>.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">collection</span><span class="p">.</span><span class="nx">page</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="nx">fetch</span><span class="p">(()</span> <span class="o">=></span> <span class="p">{</span>
+    <span class="c1">// Done.</span>
+<span class="p">});</span></code></pre></figure>
+
+<h2 id="collection-methods">Methods</h2>
+
+<p>There are some convenient utility methods that makes some aggregation
+and processing tasks a bit easier.</p>
+
+<h3 id="collection-first">first</h3>
+
+<p>Returns the first model in the collection, or <code class="language-plaintext highlighter-rouge">undefined</code> if empty.</p>
+
+<h3 id="collection-last">last</h3>
+
+<p>Returns the last model in the collection, or <code class="language-plaintext highlighter-rouge">undefined</code> if empty.</p>
+
+<h3 id="collection-shift">shift</h3>
+
+<p>Removes and returns the first model of this collection, or <code class="language-plaintext highlighter-rouge">undefined</code> if the
+collection is empty.</p>
+
+<h3 id="collection-pop">pop</h3>
+
+<p>Removes and returns the last model of this collection, or <code class="language-plaintext highlighter-rouge">undefined</code> if the
+collection is empty.</p>
+
+<h3 id="collection-find">find</h3>
+
+<p>Returns the first model that matches the given criteria, or <code class="language-plaintext highlighter-rouge">undefined</code> if
+none could be found. See <a href="https://lodash.com/docs/#find">_.find</a>.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// Returns the first task that has not been completed yet.</span>
+<span class="nx">tasks</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="na">done</span><span class="p">:</span> <span class="kc">false</span><span class="p">});</span>
+
+<span class="c1">// Returns a task that is done and has a specific name.</span>
+<span class="nx">tasks</span><span class="p">.</span><span class="nx">find</span><span class="p">((</span><span class="nx">task</span><span class="p">)</span> <span class="o">=></span> <span class="p">{</span>
+   <span class="k">return</span> <span class="nx">task</span><span class="p">.</span><span class="nx">done</span> <span class="o">&&</span> <span class="nx">_</span><span class="p">.</span><span class="nx">startsWith</span><span class="p">(</span><span class="nx">task</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="dl">'</span><span class="s1">Try to</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">});</span></code></pre></figure>
+
+<h3 id="collection-has">has</h3>
+
+<p>Returns <code class="language-plaintext highlighter-rouge">true</code> if the collection contains the model or has at least one model
+that matches the given criteria. This method effectively checks if <code class="language-plaintext highlighter-rouge">indexOf</code>
+returns a valid index.</p>
+
+<h3 id="collection-sort">sort</h3>
+
+<p>Sorts the models of the collection in-place, using <a href="https://lodash.com/docs/#sortBy">_.sortBy</a>.
+You will need to pass an attribute name or function to sort the models by.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// Sorts the task list by name, alphabetically.</span>
+<span class="nx">tasks</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="dl">'</span><span class="s1">name</span><span class="dl">'</span><span class="p">);</span></code></pre></figure>
+
+<h3 id="collection-sum">sum</h3>
+
+<p>Returns the sum of all the models in the collection, based on an attribute name
+or mapping function. See <a href="https://lodash.com/docs/#sumBy">_.sumBy</a>.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// Returns the number of tasks that have been completed.</span>
+<span class="nx">tasks</span><span class="p">.</span><span class="nx">sum</span><span class="p">(</span><span class="dl">'</span><span class="s1">done</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="c1">// Returns the total length of all task names.</span>
+<span class="nx">tasks</span><span class="p">.</span><span class="nx">sum</span><span class="p">((</span><span class="nx">task</span><span class="p">)</span> <span class="o">=></span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">task</span><span class="p">.</span><span class="nx">name</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+<span class="p">});</span></code></pre></figure>
+
+<h3 id="collection-map">map</h3>
+
+<p>Returns an array that contains the returned result after applying a function to
+each model in this collection. This method does not modify the collection’s models,
+unless the mapping function does so.
+See <a href="https://lodash.com/docs/#map">_.map</a>.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// Returns an array of task names.</span>
+<span class="nx">tasks</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="dl">'</span><span class="s1">name</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="c1">// Returns an array of the words in each task's name.</span>
+<span class="nx">tasks</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">task</span><span class="p">)</span> <span class="o">=></span> <span class="nx">_</span><span class="p">.</span><span class="nx">words</span><span class="p">(</span><span class="nx">task</span><span class="p">.</span><span class="nx">name</span><span class="p">));</span></code></pre></figure>
+
+<h3 id="collection-count">count</h3>
+
+<p>Returns an object composed of keys generated from the results of running each model
+through <code class="language-plaintext highlighter-rouge">iteratee</code>. The corresponding value of each key is the number of times
+the key was returned by iteratee. See <a href="https://lodash.com/docs/#countBy">_.countBy</a>.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// Count how many tasks are done, or not done.</span>
+<span class="nx">tasks</span><span class="p">.</span><span class="nx">count</span><span class="p">(</span><span class="dl">'</span><span class="s1">done</span><span class="dl">'</span><span class="p">);</span> <span class="c1">// { true: 2, false: 1 }</span>
+
+<span class="c1">// Adjust the keys.</span>
+<span class="nx">tasks</span><span class="p">.</span><span class="nx">count</span><span class="p">((</span><span class="nx">task</span><span class="p">)</span> <span class="o">=></span> <span class="p">(</span><span class="nx">task</span><span class="p">.</span><span class="nx">done</span> <span class="p">?</span> <span class="dl">'</span><span class="s1">yes</span><span class="dl">'</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">no</span><span class="dl">'</span><span class="p">));</span> <span class="c1">// { "yes": 2, "no": 1 }</span></code></pre></figure>
+
+<h3 id="collection-reduce">reduce</h3>
+
+<p>Reduces the collection to a value which is the accumulated returned result of each
+model passed to a callback, where each successive invocation is supplied the return
+value of the previous. See <a href="https://lodash.com/docs/#reduce">_.reduce</a>.</p>
+
+<p>If <code class="language-plaintext highlighter-rouge">initial</code> is not given, the first model of the collection is used as the initial value.</p>
+
+<p>The callback will be passed three arguments: <code class="language-plaintext highlighter-rouge">result</code>, <code class="language-plaintext highlighter-rouge">model</code>, and <code class="language-plaintext highlighter-rouge">index</code>.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// Returns a flat array of every word of every task's name.</span>
+<span class="nx">tasks</span><span class="p">.</span><span class="nx">reduce</span><span class="p">((</span><span class="nx">result</span><span class="p">,</span> <span class="nx">task</span><span class="p">)</span> <span class="o">=></span> <span class="nx">_</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">words</span><span class="p">(</span><span class="nx">task</span><span class="p">.</span><span class="nx">name</span><span class="p">)),</span> <span class="p">[]);</span></code></pre></figure>
+
+<h3 id="collection-each">each</h3>
+
+<p>Iterates through all models, calling a given callback for each one.
+The callback function receives <code class="language-plaintext highlighter-rouge">model</code> and <code class="language-plaintext highlighter-rouge">index</code>, and the iteration is stopped
+if you return <code class="language-plaintext highlighter-rouge">false</code> at any stage. See <a href="https://lodash.com/docs/#each">_.each</a>.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// Loop through each task, logging its details.</span>
+<span class="nx">tasks</span><span class="p">.</span><span class="nx">each</span><span class="p">((</span><span class="nx">task</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="o">=></span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="nx">task</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="nx">task</span><span class="p">.</span><span class="nx">done</span><span class="p">);</span>
+<span class="p">})</span></code></pre></figure>
+
+<h3 id="collection-filter">filter</h3>
+
+<p>Creates a new collection of the same type that contains only the models for
+which the given predicate returns <code class="language-plaintext highlighter-rouge">true</code> for, or matches by property.
+See <a href="https://lodash.com/docs/#filter">_.filter</a>.</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="c1">// Create two new collections, one containing tasks that have been completed,</span>
+<span class="c1">// and another containing only tasks that have not been completed yet.</span>
+<span class="kd">let</span> <span class="nx">done</span> <span class="o">=</span> <span class="nx">tasks</span><span class="p">.</span><span class="nx">filter</span><span class="p">((</span><span class="nx">task</span><span class="p">)</span> <span class="o">=></span>   <span class="nx">task</span><span class="p">.</span><span class="nx">done</span><span class="p">);</span>
+<span class="kd">let</span> <span class="nx">todo</span> <span class="o">=</span> <span class="nx">tasks</span><span class="p">.</span><span class="nx">filter</span><span class="p">((</span><span class="nx">task</span><span class="p">)</span> <span class="o">=></span> <span class="o">!</span> <span class="nx">task</span><span class="p">.</span><span class="nx">done</span><span class="p">);</span>
+
+<span class="c1">// You can also use an attribute name only.</span>
+<span class="kd">let</span> <span class="nx">done</span> <span class="o">=</span> <span class="nx">tasks</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="dl">'</span><span class="s1">done</span><span class="dl">'</span><span class="p">);</span></code></pre></figure>
+
+<h3 id="collection-where">where</h3>
+
+<p>Returns the models for which the given predicate returns <code class="language-plaintext highlighter-rouge">true</code> for, or models
+that match attributes in an object. This is very similar to <code class="language-plaintext highlighter-rouge">filter</code>, but doesn’t
+create a new collection, it only returns an array of models.</p>
+
+<h3 id="collection-index-of">indexOf</h3>
+
+<p>Returns the first index of a given model or attribute criteria, or <code class="language-plaintext highlighter-rouge">-1</code> if a model
+could not be found. See <a href="https://lodash.com/docs/#findIndex">_.findIndex</a>.</p>
+
+<p><br><br></p>
+
+<p><a href="#introduction">Back to the top</a></p>
+
+            </article>
+        </main>
+
+        <script type="text/javascript" src="js/gumshoe.min.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+
+
+
+</body></html>
+

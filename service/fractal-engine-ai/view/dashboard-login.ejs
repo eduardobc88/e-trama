@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <title>
+      <%= title %>
+    </title>
+    <meta charset="utf-8">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" sizes="152x152" href="<%- serviceStaticPath -%>assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="<%- serviceStaticPath -%>assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<%- serviceStaticPath -%>assets/favicon-16x16.png">
+    <!--<link rel="manifest" href="<%- serviceStaticPath -%>assets/site.webmanifest">-->
+    <link rel="mask-icon" href="<%- serviceStaticPath -%>assets/safari-pinned-tab.svg" color="#ffffff">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link
+      href="<%- serviceStaticPath -%>css/admin-login.css"
+      rel="stylesheet">
+  </head>
+  <body>
+    <div id="header">
+    </div>
+    <div class="wrapper">
+      <div class="login-form-wrapper login-form">
+        <div id="content-wrapper">
+          <img
+            id="app-logo"
+            src="<%- serviceStaticPath -%>assets/logo.png"/>
+          <% if (error_message != '') { %>
+            <p id="error-msg">
+              <%= error_message %>
+            </p>
+          <% } %>
+          <form
+            id="login-form"
+            action="/"
+            method="POST"
+            autocomplete="new-password">
+            <input
+              type="hidden"
+              spellcheck="false"
+              autocomplete="new-password"
+              autocorrect="off"
+              autocapitalize="off"
+              name="_csrf"
+              value="<%- csrfToken -%>"/>
+            <div class="input-text">
+              <input
+                id="user_name"
+                type="text"
+                name="user_name"
+                spellcheck="false"
+                autocomplete="new-password"
+                autocorrect="off"
+                autocapitalize="off"
+                onfocus="onInputFocus(this)"
+                onfocusout="onInputFocus(this)"/>
+              <label>usuario</label>
+              <span id="user_name_hint" class="hint">YOUR USER NAME</span>
+              <span id="user_name_error" class="error"></span>
+            </div>
+            <div class="input-text">
+              <input
+                id="user_pass"
+                class="input-text"
+                type="password"
+                name="user_pass"
+                spellcheck="false"
+                autocomplete="new-password"
+                autocorrect="off"
+                autocapitalize="off"
+                onfocus="onInputFocus(this)"
+                onfocusout="onInputFocus(this)"/>
+                <label>contraseña</label>
+                <span id="user_pass_hint" class="hint">YOUR PASSWORD</span>
+                <span id="user_pass_error" class="error"></span>
+            </div>
+            <button
+              class="button"
+              type="submit">
+              inicio
+            </button>
+            <div id="links-wrapper">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div id="footer">
+      <span>
+        Development by
+      </span>
+      <div
+        class="github-widget"
+        data-github="eduardobc88">
+      </div>
+      <span>
+        version 1.0.0
+      </span>
+    </div>
+    <script src='<%- serviceStaticPath -%>js/dashboard-login.js' charset="utf-8"></script>
+    <script src="<%- serviceStaticPath -%>js/github-widget.js"></script>
+  </body>
+</html>

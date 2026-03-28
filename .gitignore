@@ -1,0 +1,31 @@
+# EDITOR
+.nova
+
+# LOGS
+logs
+*.log
+
+# NPM
+node_modules
+.npm
+package-lock.json
+
+# ENVIRONTMENT
+.env
+
+# MACOS
+*.DS_Store
+.DS_Store
+
+# DATABASE
+database
+
+# DOCKER ENVIRONMENT FILES
+docker/development/environment-vars.env
+docker/staging/environment-vars.env
+docker/production/environment-vars.env
+
+# STATIC FILES
+upload/
+static/dashboard/fractal-engine-ai/dist/
+service/fractal-engine-ai/view/dashboard-index.ejs

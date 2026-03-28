@@ -1,0 +1,31 @@
+services:
+  fractal-engine-ai-base:
+    image: fractal-engine-ai-node-img:latest
+    volumes:
+      - ../../dashboard/:/dashboard/
+      - ../../service/:/service/
+    working_dir: /
+  fractal-migrations:
+    extends:
+      service: fractal-engine-ai-base
+    env_file:
+      - ../development/environment-vars.env
+    networks:
+      - fractal-engine-ai-network
+    build:
+      target: $MIGRATION_ARGS
+    command: >
+      bin/sh -c "
+        cd service;
+        cd fractal;
+        node migration.js $MIGRATION_ARGS;
+      "
+  fractal-finish:
+    extends:
+      service: fractal-engine-ai-base
+    command: exit
+
+networks:
+  ffractal-engine-ai-network:
+    name: fractal-engine-ai-network
+    external: true

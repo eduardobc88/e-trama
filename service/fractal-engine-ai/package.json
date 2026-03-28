@@ -1,0 +1,42 @@
+{
+  "name": "fractal",
+  "version": "1.0.0",
+  "description": "FRACTAL SERVICE",
+  "scripts": {
+    "production": "node_modules/pm2/bin/pm2 start ecosystem.config.js --env production && node_modules/pm2/bin/pm2 logs",
+    "development": "node_modules/pm2/bin/pm2 start ecosystem.config.js --env development --watch && node_modules/pm2/bin/pm2 logs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "https://github.com/eduardobc88",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/cookie": "^11.0.2",
+    "@fastify/cors": "^10.0.1",
+    "@fastify/csrf-protection": "^7.1.0",
+    "@fastify/formbody": "^8.0.2",
+    "@fastify/helmet": "^13.0.1",
+    "@fastify/jwt": "^9.1.0",
+    "@fastify/multipart": "^9.0.3",
+    "@fastify/reply-from": "^12.2.0",
+    "@fastify/session": "^11.1.0",
+    "@fastify/static": "^8.2.0",
+    "@fastify/url-data": "^6.0.3",
+    "@fastify/view": "^11.1.0",
+    "bcrypt": "^6.0.0",
+    "ejs": "^3.1.10",
+    "express-mysql-session": "^3.0.3",
+    "fastify": "^5.4.0",
+    "google-auth-library": "^10.2.0",
+    "googleapis": "^154.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mysql-migrations": "^1.0.7",
+    "mysql2": "^3.14.2",
+    "node-cron": "^4.2.1",
+    "node-datetime": "^2.1.2",
+    "node-gyp": "^11.2.0",
+    "nodemailer": "^7.0.5",
+    "pump": "^3.0.3",
+    "sharp": "^0.34.3",
+    "slugify": "^1.6.6"
+  }
+}

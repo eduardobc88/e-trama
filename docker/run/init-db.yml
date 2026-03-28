@@ -1,0 +1,20 @@
+services:
+  fractal-engine-ai-init:
+    image: fractal-engine-ai-mysql-img
+    volumes:
+      - ../../fixtures/:/fixtures:ro
+    working_dir: /fixtures
+    networks:
+      - fractal-engine-ai-network
+    command: >
+      /bin/sh -c "mysql -h fractal-engine-ai-db-service -u root -p fractal-engine-ai < fractal-engine-ai.sql;"
+  fractal-finish:
+    extends:
+      service: fractal-engine-ai-init
+    command: exit
+
+
+networks:
+  fractal-engine-ai-network:
+    name: fractal-engine-ai-network
+    external: true

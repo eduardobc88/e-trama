@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <title>
+      <%= title %>
+    </title>
+    <meta charset="utf-8">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" sizes="152x152" href="/static/assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/assets/favicon-16x16.png">
+    <!--<link rel="manifest" href="/static/assets/site.webmanifest">-->
+    <link rel="mask-icon" href="/static/assets/safari-pinned-tab.svg" color="#212121">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap" rel="stylesheet">
+    <link
+      href="/static/css/registry.css"
+      rel="stylesheet">
+  </head>
+  <body>
+    <div id="header">
+    </div>
+    <div class="wrapper">
+      <div class="login-form-wrapper login-form">
+        <div id="content-wrapper">
+          <img
+            id="app-logo"
+            src="/static/assets/fractal-engine-ai-logo.png"/>
+          <h1>
+            registro
+          </h1>
+          <% if (error_message != '') { %>
+            <p id="error-msg">
+              <%= error_message %>
+            </p>
+          <% } %>
+          <form
+            id="registry-form"
+            action="/registry/"
+            enctype="multipart/form-data"
+            method="POST"
+            autocomplete="new-password">
+            <input
+              type="hidden"
+              name="_csrf"
+              value="<%- csrfToken -%>"/>
+            <div class="input-text zone">
+              <input
+                id="card"
+                type="file"
+                name="card"
+                class="file-input"
+                autocomplete="new-password"
+                onfocus="onInputFocus(this)"
+                onfocusout="onInputFocus(this)"/>
+              <div>
+                <label id="card_file_name">SELECCIONA UN ARCHIVO</label>
+              </div>
+              <span id="card_hint" class="hint">FOTO DE LA INE</span>
+              <span id="card_error" class="error"></span>
+            </div>
+            <div class="input-text">
+              <input
+                id="name"
+                type="text"
+                name="name"
+                autocomplete="new-password"
+                onfocus="onInputFocus(this)"
+                onfocusout="onInputFocus(this)"/>
+              <label>nombre</label>
+              <span id="name_hint" class="hint">tu nombre</span>
+              <span id="name_error" class="error"></span>
+            </div>
+            <div class="input-text">
+              <input
+                id="paternal_surname"
+                type="text"
+                name="paternal_surname"
+                class="required"
+                autocomplete="new-password"
+                onfocus="onInputFocus(this)"
+                onfocusout="onInputFocus(this)"/>
+              <label>apellido paterno</label>
+              <span id="paternal_surname_hint" class="hint">tu primer apellido</span>
+              <span id="paternal_surname_error" class="error"></span>
+            </div>
+            <div class="input-text">
+              <input
+                id="maternal_surname"
+                type="text"
+                name="maternal_surname"
+                class="required"
+                autocomplete="new-password"
+                onfocus="onInputFocus(this)"
+                onfocusout="onInputFocus(this)"/>
+              <label>apellido materno</label>
+              <span id="maternal_surname_hint" class="hint">tu segundo apellido</span>
+              <span id="maternal_surname_error" class="error"></span>
+            </div>
+            <div class="input-text">
+              <input
+                id="phone"
+                type="number"
+                name="phone"
+                 class="required"
+                autocomplete="new-password"
+                onfocus="onInputFocus(this)"
+                onfocusout="onInputFocus(this)"/>
+              <label>teléfono</label>
+              <span id="phone_hint" class="hint">número de 10 digitos</span>
+              <span id="phone_error" class="error"></span>
+            </div>
+            <div class="input-select">
+              <select
+                id="state"
+                name="state_id"
+                class="required"
+                onchange="onChangeSelect(this)">
+                <option value="0" default>selecciona un estado</option>
+                <% stateItems.forEach(function(i){ %>
+                 <option value="<%= i.id %>">
+                    <%= i.name %>
+                 </option>
+                <% }); %>
+              </select>
+              <label>estado</label>
+              <span id="state_hint" class="hint">tu estado</span>
+              <span id="state_error" class="error"></span>
+            </div>
+            <div class="input-select">
+              <select
+                id="town"
+                name="town_id"
+                class="required"
+                onchange="onChangeSelect(this)">
+              </select>
+              <label>municipio</label>
+              <span id="town_hint" class="hint">tu municipio</span>
+              <span id="town_error" class="error"></span>
+            </div>
+            <div class="input-text">
+              <input
+                id="section"
+                type="number"
+                name="section"
+                class="required"
+                autocomplete="new-password"
+                onfocus="onInputFocus(this)"
+                onfocusout="onInputFocus(this)"/>
+              <label>sección</label>
+              <span id="section_hint" class="hint">númerico</span>
+              <span id="section_error" class="error"></span>
+            </div>
+            <div class="input-text">
+              <input
+                id="address"
+                type="text"
+                name="address"
+                class="required"
+                autocomplete="new-password"
+                onfocus="onInputFocus(this)"
+                onfocusout="onInputFocus(this)"/>
+              <label>dirección</label>
+              <span id="address_hint" class="hint">tu dirección</span>
+              <span id="address_error" class="error"></span>
+            </div>
+            <button
+              class="button"
+              type="submit">
+              enviar
+            </button>
+            <div id="links-wrapper">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div id="footer">
+      <span>
+        Development by
+      </span>
+      <div
+        class="github-widget"
+        data-github="eduardobc88">
+      </div>
+      <span>
+        version 1.0.0
+      </span>
+    </div>
+    <script src='/static/js/registry.js' charset="utf-8"></script>
+    <script src="/static/js/github-widget.js"></script>
+  </body>
+</html>

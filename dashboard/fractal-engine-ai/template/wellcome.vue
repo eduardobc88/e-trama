@@ -104,25 +104,13 @@
       v-if="sectionActive === 'blocks' && competitivityBlockCollection.getModels().length">
       <ListTable
         v-bind:collection="competitivityBlockCollection"
-        v-bind:onClickRow="() => {}"
-        v-bind:navigationBefore="() => {}"
-        v-bind:navigationNext="() => {}"
-        v-bind:currentPage="1"
-        v-bind:totalPages="1"
-        v-bind:itemsSkipped="0"
-        v-bind:totalItems="competitivityBlockCollection.getModels().length"
-        v-bind:rowButtons="[]"
-        v-bind:fileImageKey="{
-          letter: 'name',
-        }"
-        v-bind:isLoading="isLoading"
-        v-bind:model="competitivityBlockModel"
-        v-bind:modelPrefix="'block'"
-        v-bind:modelDefaultProps="competitivityBlockDefaultProps"
         v-bind:identifier="'id'"
-        v-bind:hideActions="true"
-        propColor="block"
-        tableBodyHeight="300px"/>
+        v-bind:isLoading="isLoading"
+        v-bind:isOverBody="true"
+        v-bind:model="competitivityBlockModel"
+        v-bind:modelDefaultProps="competitivityBlockDefaultProps"
+        v-bind:modelKey="{ letter: 'name' }"
+        v-bind:onlyWrapper="true"/>
     </div>
     <div
       v-if="sectionActive === 'results' && townSelected !== null">
@@ -144,7 +132,7 @@
                 }"
                 v-on:click="onClickPoliticPlotParty(party)">
                 <img
-                  v-bind:src="`/static/assets/icons/${ party.icon }`"/>
+                  v-bind:src="`/static/dashboard/fractal-engine-ai/assets/icons/${ party.icon }`"/>
               </div>
             </template>
           </div>
@@ -166,7 +154,7 @@
                 }"
                 v-on:click="onClickPoliticPlotParty(party)">
                 <img
-                  v-bind:src="`/static/assets/icons/${ party.icon }`"/>
+                  v-bind:src="`/static/dashboard/fractal-engine-ai/assets/icons/${ party.icon }`"/>
               </div>
             </template>
           </div>
@@ -183,8 +171,7 @@
             <span>gráfica para: </span>{{ `${ ((townSelected !== null)?townSelected.winner.name:'') }` }}
           </div>
         </div>
-        <div
-          ref="gd">
+        <div ref="gd">
         </div>
         <div class="item-definition center">
           <div class="text">
@@ -220,55 +207,29 @@
           v-bind:chartOptions="chartOptions"/>
       </template>
       <template #ganados>
-        <div
-          ref="plotTownWinner">
+        <div ref="plotTownWinner">
         </div>
         <ListTable
           v-if="partyTownWinnerCollection.getModels().length"
           v-bind:collection="partyTownWinnerCollection"
-          v-bind:onClickRow="() => {}"
-          v-bind:navigationBefore="() => {}"
-          v-bind:navigationNext="() => {}"
-          v-bind:currentPage="1"
-          v-bind:totalPages="1"
-          v-bind:itemsSkipped="0"
-          v-bind:totalItems="partyTownWinnerCollection.getModels().length"
-          v-bind:rowButtons="[]"
-          v-bind:fileImageKey="{
-            letter: 'municipio',
-          }"
+          v-bind:identifier="'id'"
           v-bind:isLoading="isLoading"
+          v-bind:isOverBody="true"
           v-bind:model="partyTownWinnerModel"
-          modelPrefix="model"
           v-bind:modelDefaultProps="partyTownWinnerDefaultProps"
-          identifier="id"
-          v-bind:hideActions="true"
-          propColor=""
-          v-bind:noBoxShadow="false"
-          tableBodyHeight="300px"/>
+          v-bind:modelKey="{ letter: 'municipio' }"
+          v-bind:onlyWrapper="true"/>
       </template>
       <template #resultados>
         <ListTable
           v-bind:collection="resultCollection"
-          v-bind:onClickRow="() => {}"
-          v-bind:navigationBefore="() => {}"
-          v-bind:navigationNext="() => {}"
-          v-bind:currentPage="1"
-          v-bind:totalPages="1"
-          v-bind:itemsSkipped="0"
-          v-bind:totalItems="resultCollection.getModels().length"
-          v-bind:rowButtons="[]"
-          v-bind:fileImageKey="{
-            letter: 'name',
-          }"
-          v-bind:isLoading="isLoading"
-          v-bind:model="resultModel"
-          v-bind:modelPrefix="'result'"
-          v-bind:modelDefaultProps="resultDefaultProps"
           v-bind:identifier="'id'"
-          v-bind:hideActions="true"
-          v-bind:noBoxShadow="false"
-          tableBodyHeight="300px"/>
+          v-bind:isLoading="isLoading"
+          v-bind:isOverBody="true"
+          v-bind:model="resultModel"
+          v-bind:modelDefaultProps="resultDefaultProps"
+          v-bind:modelKey="{ letter: 'name' }"
+          v-bind:onlyWrapper="true"/>
       </template>
     </NavigationTab>
     <NavigationTab
@@ -280,25 +241,13 @@
           v-if="candidateTabIcons[0].show">
           <ListTable
             v-bind:collection="candidatePresidenteCollection"
-            v-bind:onClickRow="() => {}"
-            v-bind:navigationBefore="() => {}"
-            v-bind:navigationNext="() => {}"
-            v-bind:currentPage="1"
-            v-bind:totalPages="1"
-            v-bind:itemsSkipped="0"
-            v-bind:totalItems="candidatePresidenteCollection.getModels().length"
-            v-bind:rowButtons="[]"
-            v-bind:fileImageKey="{
-              letter: 'nombre',
-            }"
-            v-bind:isLoading="isLoading"
-            v-bind:model="candidateModel"
-            v-bind:modelPrefix="'result'"
-            v-bind:modelDefaultProps="candidateDefaultProps"
             v-bind:identifier="'id'"
-            v-bind:hideActions="true"
-            v-bind:noBoxShadow="false"
-            tableBodyHeight="300px"/>
+            v-bind:isLoading="isLoading"
+            v-bind:isOverBody="true"
+            v-bind:model="candidateModel"
+            v-bind:modelDefaultProps="candidateDefaultProps"
+            v-bind:modelKey="{ letter: 'nombre' }"
+            v-bind:onlyWrapper="true"/>
         </template>
       </template>
       <template #diputados>
@@ -306,25 +255,13 @@
           v-if="candidateTabIcons[1].show">
           <ListTable
             v-bind:collection="candidateDiputadoCollection"
-            v-bind:onClickRow="() => {}"
-            v-bind:navigationBefore="() => {}"
-            v-bind:navigationNext="() => {}"
-            v-bind:currentPage="1"
-            v-bind:totalPages="1"
-            v-bind:itemsSkipped="0"
-            v-bind:totalItems="candidateDiputadoCollection.getModels().length"
-            v-bind:rowButtons="[]"
-            v-bind:fileImageKey="{
-              letter: 'nombre',
-            }"
-            v-bind:isLoading="isLoading"
-            v-bind:model="candidateModel"
-            v-bind:modelPrefix="'result'"
-            v-bind:modelDefaultProps="candidateDefaultProps"
             v-bind:identifier="'id'"
-            v-bind:hideActions="true"
-            v-bind:noBoxShadow="false"
-            tableBodyHeight="300px"/>
+            v-bind:isLoading="isLoading"
+            v-bind:isOverBody="true"
+            v-bind:model="candidateModel"
+            v-bind:modelDefaultProps="candidateDefaultProps"
+            v-bind:modelKey="{ letter: 'nombre' }"
+            v-bind:onlyWrapper="true"/>
         </template>
       </template>
       <template #síndicos>
@@ -332,25 +269,13 @@
           v-if="candidateTabIcons[2].show">
           <ListTable
             v-bind:collection="candidateSindicoCollection"
-            v-bind:onClickRow="() => {}"
-            v-bind:navigationBefore="() => {}"
-            v-bind:navigationNext="() => {}"
-            v-bind:currentPage="1"
-            v-bind:totalPages="1"
-            v-bind:itemsSkipped="0"
-            v-bind:totalItems="candidateSindicoCollection.getModels().length"
-            v-bind:rowButtons="[]"
-            v-bind:fileImageKey="{
-              letter: 'nombre',
-            }"
-            v-bind:isLoading="isLoading"
-            v-bind:model="candidateModel"
-            v-bind:modelPrefix="'result'"
-            v-bind:modelDefaultProps="candidateDefaultProps"
             v-bind:identifier="'id'"
-            v-bind:hideActions="true"
-            v-bind:noBoxShadow="false"
-            tableBodyHeight="300px"/>
+            v-bind:isLoading="isLoading"
+            v-bind:isOverBody="true"
+            v-bind:model="candidateModel"
+            v-bind:modelDefaultProps="candidateDefaultProps"
+            v-bind:modelKey="{ letter: 'nombre' }"
+            v-bind:onlyWrapper="true"/>
         </template>
       </template>
       <template #regidores>
@@ -358,25 +283,13 @@
           v-if="candidateTabIcons[3].show">
           <ListTable
             v-bind:collection="candidateRegidorCollection"
-            v-bind:onClickRow="() => {}"
-            v-bind:navigationBefore="() => {}"
-            v-bind:navigationNext="() => {}"
-            v-bind:currentPage="1"
-            v-bind:totalPages="1"
-            v-bind:itemsSkipped="0"
-            v-bind:totalItems="candidateRegidorCollection.getModels().length"
-            v-bind:rowButtons="[]"
-            v-bind:fileImageKey="{
-              letter: 'municipio',
-            }"
-            v-bind:isLoading="isLoading"
-            v-bind:model="candidateModel"
-            v-bind:modelPrefix="'result'"
-            v-bind:modelDefaultProps="candidateDefaultProps"
             v-bind:identifier="'id'"
-            v-bind:hideActions="true"
-            v-bind:noBoxShadow="false"
-            tableBodyHeight="300px"/>
+            v-bind:isLoading="isLoading"
+            v-bind:isOverBody="true"
+            v-bind:model="candidateModel"
+            v-bind:modelDefaultProps="candidateDefaultProps"
+            v-bind:modelKey="{ letter: 'nombre' }"
+            v-bind:onlyWrapper="true"/>
         </template>
       </template>
       <template `#${ candidateTabIcons[4].slot_name }`>
@@ -384,25 +297,13 @@
           v-if="candidateTabIcons[4].show">
           <ListTable
             v-bind:collection="candidateRegidorGroupCollection"
-            v-bind:onClickRow="() => {}"
-            v-bind:navigationBefore="() => {}"
-            v-bind:navigationNext="() => {}"
-            v-bind:currentPage="1"
-            v-bind:totalPages="1"
-            v-bind:itemsSkipped="0"
-            v-bind:totalItems="candidateRegidorGroupCollection.getModels().length"
-            v-bind:rowButtons="[]"
-            v-bind:fileImageKey="{
-              letter: 'municipio',
-            }"
-            v-bind:isLoading="isLoading"
-            v-bind:model="regidorModel"
-            v-bind:modelPrefix="'result'"
-            v-bind:modelDefaultProps="candidateRegidorDefaultProps"
             v-bind:identifier="'id'"
-            v-bind:hideActions="true"
-            v-bind:noBoxShadow="false"
-            tableBodyHeight="300px"/>
+            v-bind:isLoading="isLoading"
+            v-bind:isOverBody="true"
+            v-bind:model="candidateModel"
+            v-bind:modelDefaultProps="candidateDefaultProps"
+            v-bind:modelKey="{ letter: 'nombre' }"
+            v-bind:onlyWrapper="true"/>
         </template>
       </template>
       <template #base>
@@ -410,25 +311,13 @@
           v-if="candidateTabIcons[5].show">
           <ListTable
             v-bind:collection="candidateBaseCollection"
-            v-bind:onClickRow="() => {}"
-            v-bind:navigationBefore="() => {}"
-            v-bind:navigationNext="() => {}"
-            v-bind:currentPage="1"
-            v-bind:totalPages="1"
-            v-bind:itemsSkipped="0"
-            v-bind:totalItems="candidateBaseCollection.getModels().length"
-            v-bind:rowButtons="[]"
-            v-bind:fileImageKey="{
-              letter: 'municipio',
-            }"
-            v-bind:isLoading="isLoading"
-            v-bind:model="baseModel"
-            v-bind:modelPrefix="'result'"
-            v-bind:modelDefaultProps="candidateBaseDefaultProps"
             v-bind:identifier="'id'"
-            v-bind:hideActions="true"
-            v-bind:noBoxShadow="false"
-            tableBodyHeight="300px"/>
+            v-bind:isLoading="isLoading"
+            v-bind:isOverBody="true"
+            v-bind:model="candidateModel"
+            v-bind:modelDefaultProps="candidateDefaultProps"
+            v-bind:modelKey="{ letter: 'nombre' }"
+            v-bind:onlyWrapper="true"/>
         </template>
       </template>
       <template `#${ candidateTabIcons[6].slot_name }`>
@@ -810,9 +699,14 @@ import {
 } from 'geojson2svg'
 import Plotly from 'plotly.js-dist-min'
 
+import {
+  parse,
+  range,
+  compile,
+} from 'mathjs'
+
 import map from "../resource/lib/map"
 
-import BarChart from '../component/chart/bar-chart.vue'
 import Button from '../component/button.vue'
 import Checkbox from '../component/checkbox.vue'
 import Grid from '../component/grid.vue'
@@ -821,10 +715,20 @@ import ListTable from '../component/list-table.vue'
 import LoadingBar from '../component/loading-bar.vue'
 import NavigationTab from '../component/navigation-tab.vue'
 import Widget from '../component/widget.vue'
+import BarChart from '../component/chart/bar-chart.vue'
+
 
 export default {
   components: {
+    BarChart,
+    Button,
     Checkbox,
+    Grid,
+    InputText,
+    ListTable,
+    LoadingBar,
+    NavigationTab,
+    Widget,
   },
   data () {
     return {
@@ -1873,7 +1777,11 @@ export default {
             textposition: 'bottom center',
           })
         }
-        Plotly.newPlot(this.$refs.gd, partyData, partyStyle, { editable: false })
+        Plotly.newPlot(
+          this.$refs['gd'],
+          partyData,
+          partyStyle,
+          { editable: false })
         // NOTE: RENDER FOR TOWN WINNER
         let plotTownWinnerStyle = {
           yaxis: {
@@ -1903,7 +1811,7 @@ export default {
           title: partyTownWinnerName.replaceAll(',', ', '),
         }
         Plotly.newPlot(
-          this.$refs.plotTownWinner,
+          this.$refs['plotTownWinner'],
           partyTownWinnerVotesData,
           plotTownWinnerStyle,
           { editable: false })
@@ -1919,7 +1827,7 @@ export default {
         this.townSelected = this.svgItems[index]
         this.generateChart()
         setTimeout(this.renderPlot, 50)
-        this.$eventHub.$emit('town-selected', this.townSelected)
+        this.$emitter.emit('town-selected', this.townSelected)
       } else if (this.sectionActive === 'blocks') {
         let townId = this.svgItems[index].winner.id
         let townResultData = this.svgItems[index]
@@ -2063,10 +1971,10 @@ export default {
         modalModel: this.townSelected.winner,
         modalId: this.townSelected.winner.id,
       }
-      this.$eventHub.$emit('card-modal', this.cardModalData)
+      this.$emitter.emit('card-modal', this.cardModalData)
     },
     hideCard () {
-      this.$eventHub.$emit('card-modal', null)
+      this.$emitter.emit('card-modal', null)
     },
     showCandidateCard (type) {
       let model = null
@@ -2107,10 +2015,10 @@ export default {
         modalCollection: collection,
         modalId: this.townSelected.winner.id,
       }
-      this.$eventHub.$emit('candidate-modal', this.candidateModalData)
+      this.$emitter.emit('candidate-modal', this.candidateModalData)
     },
     hideCandidateCard () {
-      this.$eventHub.$emit('candidate-modal', null)
+      this.$emitter.emit('candidate-modal', null)
     },
   },
 }

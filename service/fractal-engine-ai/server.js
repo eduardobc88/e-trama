@@ -46,6 +46,8 @@ import MODULE_SESSION from './module/session/index.js'
 import MODULE_SETTINGS from './module/settings/index.js'
 import MODULE_USER from './module/user/index.js'
 import MODULE_WEBSITE from './module/website/index.js'
+import MODULE_RESULT from './module/result/index.js'
+import MODULE_CANDIDATE from './module/candidate/index.js'
 
 
 // NOTE: SET CONFIGURATIONS
@@ -183,6 +185,8 @@ FASTIFY_INSTANCE.register(MODULE_SEARCH)
 FASTIFY_INSTANCE.register(MODULE_SESSION)
 FASTIFY_INSTANCE.register(MODULE_USER)
 FASTIFY_INSTANCE.register(MODULE_WEBSITE)
+FASTIFY_INSTANCE.register(MODULE_RESULT)
+FASTIFY_INSTANCE.register(MODULE_CANDIDATE)
 
 
 // NOTE: INIT CUSTOM MODULES

@@ -23,4 +23,10 @@ export default {
   CustomEntityRecordMC: (await import('./model/custom-entity-record-mc.vue')).default,
   CustomFieldMC: (await import('./model/custom-field-mc.vue')).default,
   CustomListMC: (await import('./model/custom-list-mc.vue')).default,
+  // NOTE: START ELECTORAL
+  ResultMC: (await import('./model/result-mc.vue')).default,
+  CompetitivityBlockMC: (await import('./model/competitivity-block-mc.vue')).default,
+  CandidateMC: (await import('./model/candidate-mc.vue')).default,
+  RegidorMC: (await import('./model/regidor-mc.vue')).default,
+  CandidateBaseMC: (await import('./model/candidate-base-mc.vue')).default,
 }

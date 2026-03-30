@@ -48,6 +48,7 @@ import MODULE_USER from './module/user/index.js'
 import MODULE_WEBSITE from './module/website/index.js'
 import MODULE_RESULT from './module/result/index.js'
 import MODULE_CANDIDATE from './module/candidate/index.js'
+import MODULE_CARD from './module/card/index.js'
 
 
 // NOTE: SET CONFIGURATIONS
@@ -187,6 +188,7 @@ FASTIFY_INSTANCE.register(MODULE_USER)
 FASTIFY_INSTANCE.register(MODULE_WEBSITE)
 FASTIFY_INSTANCE.register(MODULE_RESULT)
 FASTIFY_INSTANCE.register(MODULE_CANDIDATE)
+FASTIFY_INSTANCE.register(MODULE_CARD)
 
 
 // NOTE: INIT CUSTOM MODULES

@@ -91,6 +91,15 @@
         v-bind:closeFileModal="fileModalData.closeFileModal"
         v-bind:onFileSelect="fileModalData.onFileSelect"/>
     </transition>
+    <transition name="dropdown-transition" mode="out-in">
+      <CardModal
+        v-if="cardModalData"
+        v-bind:modalTitle="cardModalData.modalTitle"
+        v-bind:modalDescription="cardModalData.modalDescription"
+        v-bind:modalAccept="cardModalData.modalAccept"
+        v-bind:modalModel="cardModalData.modalModel"
+        v-bind:modalId="cardModalData.modalId"/>
+    </transition>
     <div
       id="ribbon-status"
       v-if="statusMessages.length && userProfileLoaded">
@@ -140,6 +149,7 @@ import RibbonStatus from '../component/ribbon-status.vue'
 import SidebarActivity from './index/sidebar-activity.vue'
 import SidebarMenu from './index/sidebar-menu.vue'
 import SplashScreen from './splash-screen.vue'
+import CardModal from '../component/card-modal.vue'
 
 let windowIntervalRemove = null
 
@@ -158,6 +168,7 @@ export default {
     SidebarActivity,
     SidebarMenu,
     SplashScreen,
+    CardModal,
   },
   data () {
     return {
@@ -189,6 +200,7 @@ export default {
       confirmationModalData: null,
       inputModalData: null,
       previewFileModalData: null,
+      cardModalData: null,
       fileModalData: null,
       statusMessages: [],
       ribbonTimeOut: 5000,
@@ -349,6 +361,9 @@ export default {
     })
     this.$emitter.on('file-modal', ObjectData => {
       this.fileModalData = ObjectData
+    })
+    this.$emitter.on('card-modal', ObjectData => {
+      this.cardModalData = ObjectData
     })
     this.$emitter.on('preview-file-modal', ObjectData => {
       this.previewFileModalData = ObjectData

@@ -705,7 +705,7 @@ import {
   compile,
 } from 'mathjs'
 
-import map from "../resource/lib/map"
+//import map from "../resource/lib/map"
 
 import Button from '../component/button.vue'
 import Checkbox from '../component/checkbox.vue'
@@ -845,7 +845,7 @@ export default {
       },
       // NOTE: start map
       svgStr: '',
-      geojsonData: map.geojsonData,
+      geojsonData: geojsonData,
       svgItems: [],
       // NOTE: end map
       townSelected: null,

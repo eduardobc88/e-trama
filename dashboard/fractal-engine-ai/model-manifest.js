@@ -29,4 +29,5 @@ export default {
   CandidateMC: (await import('./model/candidate-mc.vue')).default,
   RegidorMC: (await import('./model/regidor-mc.vue')).default,
   CandidateBaseMC: (await import('./model/candidate-base-mc.vue')).default,
+  CardMC: (await import('./model/card-mc.vue')).default,
 }

@@ -109,7 +109,7 @@ export default {
   position: relative;
 }
 
-#table-body > div:nth-child(even) {
+#table-body > div:nth-child(odd) {
   background-color: var(--main-table-bg-row);
 }
 

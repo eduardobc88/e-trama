@@ -1,4 +1,4 @@
-exports.geojsonData = {
+const geojsonData = {
         "type": "FeatureCollection",
         "crs": {
           "type": "name",

@@ -1,22 +1,17 @@
-<template>
-  <div id="modal-box-wrapper">
-    <div
-      id="box-content"
-      v-window-resize="onResizeWindow">
+<template lang="html">
+  <div class="modal-box-wrapper">
+    <div class="box-content">
       <SectionHeader
+        v-if="modalTitle"
+        v-bind:sectionIcon="'info'"
         v-bind:sectionTitle="modalTitle"
         v-bind:sectionDescription="modalDescription"
-        customPaddingStyle="0 6px"
-        customMarginStyle="6px 0"
         v-bind:highlight="true"
-        v-bind:expanded="true"/>
-        <perfect-scrollbar
-          class="scroll-area">
-           <div
-            id="content"
-            v-bind:style="{
-              height: `${ windowHeight }px`,
-            }">
+        v-bind:expanded="true"
+        v-bind:isLoading="false"/>
+      <perfect-scrollbar class="scroll-area">
+        <div id="content">
+          <div id="info">
             <div class="key-value">
               <p class="key">
                 nombre del enlace:
@@ -49,24 +44,28 @@
                 {{ card.get('phone') }}
               </p>
             </div>
+            <hr />
             <Table
               title="autoridades"
               description="listado de autoridades"
               v-bind:tableHeaderItems="['nombre', 'posición']"
               v-bind:tableItemProps="['name', 'position']"
               v-bind:items="card.get('town_authority_list_json')"/>
+            <hr />
             <Table
               title="posibles candidatos"
               description="listado de posibles candidatos"
               v-bind:tableHeaderItems="['nombre', 'posición']"
               v-bind:tableItemProps="['name', 'position']"
               v-bind:items="card.get('possible_candidate_list_json')"/>
+            <hr />
             <Table
               title="actores políticos"
               description="listado de actores políticos"
               v-bind:tableHeaderItems="['nombre', 'posición', 'abr']"
               v-bind:tableItemProps="['name', 'position', 'abr']"
               v-bind:items="card.get('town_actor_list_json')"/>
+            <hr />
             <Table
               title="grupos"
               description="listado de grupos"
@@ -81,12 +80,14 @@
                 {{ card.get('group_description') }}
               </p>
             </div>
+            <hr />
             <Table
               title="consejo"
               description="listado de consejeros"
               v-bind:tableHeaderItems="['nombre', 'posición', 'abr']"
               v-bind:tableItemProps="['name', 'position', 'abr']"
               v-bind:items="card.get('advice_list_json')"/>
+            <hr />
             <Table
               title="numeralia"
               description="listado de numeralia"
@@ -94,15 +95,16 @@
               v-bind:tableItemProps="['cot', 'total_promoted', 'total_committees', 'total_committes_members']"
               v-bind:items="card.get('numerals_list_json')"/>
           </div>
-        </perfect-scrollbar>
-        <div class="buttons-wrapper">
-          <Button
-            buttonIcon="done"
-            v-bind:buttonAction="onAccept"
-            style="margin-left: 4px;">
-            {{ $t('accept') }}
-          </Button>
         </div>
+      </perfect-scrollbar>
+      <div class="buttons-wrapper">
+        <Button
+          buttonIcon="done"
+          v-bind:buttonAction="onAccept"
+          style="margin-left: 5px;">
+          {{ $t('accept') }}
+        </Button>
+      </div>
     </div>
   </div>
 </template>
@@ -121,7 +123,7 @@ export default {
     'modalAccept',
     'modalModel',
     'modalId',
-    ],
+  ],
   components: {
     Button,
     SectionHeader,
@@ -162,8 +164,13 @@ export default {
 
 <style scoped lang="css">
 
-#modal-box-wrapper {
-  background-color: var(--main-notification-bkg);
+hr {
+  border: 0;
+  margin: 40px 0 5px 0;
+}
+
+.modal-box-wrapper {
+  background: var(--main-notification-bkg);
   bottom: 0;
   display: flex;
   height: 100%;
@@ -173,34 +180,87 @@ export default {
   right: 0;
   top: 0;
   width: 100%;
-  z-index: 5;
+  z-index: 10;
 }
 
-#box-content {
+.box-content {
   align-self: center;
   background-color: var(--main-box-bg-color);
   border-radius: 10px;
   border: var(--main-border);
   box-shadow: var(--main-box-shadow);
-  height: calc(100% - 128px);
   margin: auto;
-  overflow: hidden;
+  max-height: 420px;
+  max-width: 768px;
+  padding: 10px;
   position: relative;
-  transition-duration: 100ms;
-  width: calc(100% - 128px);
+  width: calc(100% - 12px);
 }
 
-#content {
-  padding: 10px;
-  height: 400px;
+.title {
+  color: var(--main-accent-color);
+  font-size: calc(var(--main-accent-font-size) + 4px);
+  font-weight: 600;
+  letter-spacing: 0;
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+}
+
+.description {
+  color: var(--main-secondary-text-color);
+  font-size: calc(var(--main-accent-font-size) + 4px);
+  font-weight: 600;
+  letter-spacing: 0;
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+}
+
+.box-content #content {
+  color: var(--main-secondary-text-color);
+  font-size: var(--main-secundary-font-size);
+  font-weight: 600;
+  letter-spacing: 0;
+  margin: 0px;
+  max-height: 260px;
+  text-transform: uppercase;
+}
+
+.scroll-area {
+  margin: 0 0 10px 0;
 }
 
 .buttons-wrapper {
   bottom: 0;
   display: flex;
   justify-content: flex-end;
-  padding: 10px;
+  padding: 0px;
   right: 0;
+}
+
+.buttons-wrapper .button {
+  background: transparent;
+  border-radius: 10px;
+  border: none;
+  color: #000;
+  color: #444;
+  cursor: pointer;
+  display: block;
+  font-size: var(--main-font-size);
+  font-weight: 600;
+  outline: none;
+  padding: 10px 15px;
+  position: relative;
+  right: 0;
+  text-transform: uppercase;
+}
+
+.buttons-wrapper .button:last-child {
+  color: var(--main-accent-color);
+  margin-left: 10px;
+}
+
+.buttons-wrapper .button:hover {
+  background-color: var(--main-hover-color);
 }
 
 .key-value {
@@ -218,7 +278,7 @@ export default {
 }
 
 .key-value > .value {
-  color: var(--main-text-color);
+  color: var(--main-secondary-text-color);
   font-size: var(--main-secundary-font-size);
   font-weight: 600;
   padding: 0 4px;

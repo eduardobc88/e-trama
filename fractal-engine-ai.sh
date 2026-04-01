@@ -32,6 +32,7 @@ fractal_engine_ai_help()
 
 fractal_engine_ai_build()
 {
+  mkdir database;
   echo "$NAME : BUILD";
   base_dir=./docker/;
   mkdir -p ${base_dir}../upload/1/;

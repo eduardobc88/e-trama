@@ -27,28 +27,7 @@ import LIB_PUSH_NOTIFICATION from './lib/push-notification.js'
 
 
 // NOTE: NATIVE MODULES
-import MODULE_AREA from './module/area/index.js'
-import MODULE_CATEGORY from './module/category/index.js'
-import MODULE_CUSTOM_ENTITY_RECORD from './module/custom-entity-record/index.js'
-import MODULE_CUSTOM_ENTITY from './module/custom-entity/index.js'
-import MODULE_CUSTOM_FIELD from './module/custom-field/index.js'
-import MODULE_CUSTOM_LIST from './module/custom-list/index.js'
-import MODULE_FEEDBACK from './module/feedback/index.js'
-import MODULE_FILE from './module/file/index.js'
-import MODULE_LANGUAGE from './module/language/index.js'
-import MODULE_NOTIFICATION from './module/notification/index.js'
-import MODULE_POST from './module/post/index.js'
-import MODULE_PROFILE from './module/profile/index.js'
-import MODULE_RESOURCE from './module/resource/index.js'
-import MODULE_ROLE from './module/role/index.js'
-import MODULE_SEARCH from './module/search/index.js'
-import MODULE_SESSION from './module/session/index.js'
-import MODULE_SETTINGS from './module/settings/index.js'
-import MODULE_USER from './module/user/index.js'
-import MODULE_WEBSITE from './module/website/index.js'
-import MODULE_RESULT from './module/result/index.js'
-import MODULE_CANDIDATE from './module/candidate/index.js'
-import MODULE_CARD from './module/card/index.js'
+import MODULE_MANIFEST from './module-manifest.js'
 
 
 // NOTE: SET CONFIGURATIONS
@@ -166,29 +145,9 @@ FASTIFY_INSTANCE.register(FASTIFY_SESSION, {
 })
 
 
-// NOTE: REGISTER MODULES
-FASTIFY_INSTANCE.register(MODULE_SETTINGS, { setSettings: true })
-FASTIFY_INSTANCE.register(MODULE_AREA)
-FASTIFY_INSTANCE.register(MODULE_CATEGORY)
-FASTIFY_INSTANCE.register(MODULE_CUSTOM_ENTITY)
-FASTIFY_INSTANCE.register(MODULE_CUSTOM_ENTITY_RECORD)
-FASTIFY_INSTANCE.register(MODULE_CUSTOM_FIELD)
-FASTIFY_INSTANCE.register(MODULE_CUSTOM_LIST)
-FASTIFY_INSTANCE.register(MODULE_FEEDBACK)
-FASTIFY_INSTANCE.register(MODULE_FILE)
-FASTIFY_INSTANCE.register(MODULE_LANGUAGE)
-FASTIFY_INSTANCE.register(MODULE_NOTIFICATION)
-FASTIFY_INSTANCE.register(MODULE_POST)
-FASTIFY_INSTANCE.register(MODULE_PROFILE)
-FASTIFY_INSTANCE.register(MODULE_RESOURCE)
-FASTIFY_INSTANCE.register(MODULE_ROLE)
-FASTIFY_INSTANCE.register(MODULE_SEARCH)
-FASTIFY_INSTANCE.register(MODULE_SESSION)
-FASTIFY_INSTANCE.register(MODULE_USER)
-FASTIFY_INSTANCE.register(MODULE_WEBSITE)
-FASTIFY_INSTANCE.register(MODULE_RESULT)
-FASTIFY_INSTANCE.register(MODULE_CANDIDATE)
-FASTIFY_INSTANCE.register(MODULE_CARD)
+//// NOTE: REGISTER MODULES
+for (let moduleName of Object.keys(MODULE_MANIFEST))
+  FASTIFY_INSTANCE.register(MODULE_MANIFEST[moduleName])
 
 
 // NOTE: INIT CUSTOM MODULES
@@ -295,8 +254,7 @@ FASTIFY_INSTANCE.setNotFoundHandler(async (req, res) => {
 
 
 // NOTE: SERVER LISTENER
-
-const start = async () => {
+const START = async () => {
   const FASTIFY_LISTEN_OPTIONS = {
     port: SERVICE_CONFIG.port,
     host: SERVICE_CONFIG.ipAddressToListen,
@@ -309,4 +267,4 @@ const start = async () => {
   }
 }
 
-start()
+START()

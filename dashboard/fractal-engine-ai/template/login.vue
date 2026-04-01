@@ -133,7 +133,7 @@ export default {
         this.loadUserProfile()
       } catch (err) {
         this.loginError = true
-        this.loginErrorMessage = err
+        this.loginErrorMessage = err.response.data.status_msg
       }
     },
     async loadUserProfile () {

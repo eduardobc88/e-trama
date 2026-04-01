@@ -289,7 +289,7 @@ export default {
       this.$config.dashboard_full_content = newValue
     },
     isLightTheme (newValue, oldValue) {
-      this.setMaterialYouTheme(this.route.meta.description)
+      this.setMaterialYouTheme(this.route.meta.title)
       this.$config.is_light_theme = this.isLightTheme
       this.$emitter.emit('dashboard-change-theme', '')
     },
@@ -298,7 +298,7 @@ export default {
     this.initAxiosListenEvent()
     this.getLanguages()
     this.router.afterEach((to, from) => {
-      this.setMaterialYouTheme(to.meta.description)
+      this.setMaterialYouTheme(to.meta.title)
     })
     this.$emitter.on('app-show-splash-screen', data => {
       this.clearUserProfile()
@@ -313,19 +313,21 @@ export default {
       if (data.initial) {
         setTimeout(this.hideSplashScreen, 3000)
         this.setThemeOS()
-        this.setMaterialYouTheme('')
+        setTimeout(() => {
+          this.setMaterialYouTheme(this.route.meta.title)
+        }, 4000)
       }
     })
     this.$emitter.on('app-user-profile-updated', data => {
       this.setThemeOS()
-      this.setMaterialYouTheme(this.route.meta.description)
+      this.setMaterialYouTheme(this.route.meta.title)
     })
     this.$emitter.on('dashboard-show-login', () => {
       this.setThemeOS()
       setTimeout(() => {
         this.hideSplashScreen()
         this.userProfileLoaded = false
-      }, 3000)
+      }, 1000)
       this.showLogin = true
     })
     this.$emitter.on('dashboard-hide-login', () => {

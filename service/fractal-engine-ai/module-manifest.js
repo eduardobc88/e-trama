@@ -18,4 +18,8 @@ export default {
   MODULE_SETTINGS: (await import('./module/settings/index.js')).default,
   MODULE_USER: (await import('./module/user/index.js')).default,
   MODULE_WEBSITE: (await import('./module/website/index.js')).default,
+  // NOTE: ELECTORAL
+  MODULE_RESULT: (await import('./module/result/index.js')).default,
+  MODULE_CANDIDATE: (await import('./module/candidate/index.js')).default,
+  MODULE_CARD: (await import('./module/card/index.js')).default,
 }

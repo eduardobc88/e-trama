@@ -110,7 +110,8 @@
         v-bind:model="competitivityBlockModel"
         v-bind:modelDefaultProps="competitivityBlockDefaultProps"
         v-bind:modelKey="{ letter: 'name' }"
-        v-bind:onlyWrapper="true"/>
+        v-bind:onlyWrapper="true"
+        propColor="block"/>
     </div>
     <div
       v-if="sectionActive === 'results' && townSelected !== null">

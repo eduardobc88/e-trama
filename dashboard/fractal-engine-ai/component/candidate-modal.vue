@@ -11,90 +11,15 @@
         v-bind:isLoading="false"/>
       <perfect-scrollbar class="scroll-area">
         <div id="content">
-          <div id="info">
-            <div class="key-value">
-              <p class="key">
-                nombre del enlace:
-              </p>
-              <p class="value">
-                {{ card.get('link_name') }}
-              </p>
-            </div>
-            <div class="key-value">
-              <p class="key">
-                distrito local:
-              </p>
-              <p class="value">
-                {{ card.get('local_district') }}
-              </p>
-            </div>
-            <div class="key-value">
-              <p class="key">
-                distrito federal:
-              </p>
-              <p class="value">
-                {{ card.get('federal_district') }}
-              </p>
-            </div>
-            <div class="key-value">
-              <p class="key">
-                teléfono:
-              </p>
-              <p class="value">
-                {{ card.get('phone') }}
-              </p>
-            </div>
-            <hr />
-            <Table
-              title="autoridades"
-              description="listado de autoridades"
-              v-bind:tableHeaderItems="['nombre', 'posición']"
-              v-bind:tableItemProps="['name', 'position']"
-              v-bind:items="card.get('town_authority_list_json')"/>
-            <hr />
-            <Table
-              title="posibles candidatos"
-              description="listado de posibles candidatos"
-              v-bind:tableHeaderItems="['nombre', 'posición']"
-              v-bind:tableItemProps="['name', 'position']"
-              v-bind:items="card.get('possible_candidate_list_json')"/>
-            <hr />
-            <Table
-              title="actores políticos"
-              description="listado de actores políticos"
-              v-bind:tableHeaderItems="['nombre', 'posición', 'abr']"
-              v-bind:tableItemProps="['name', 'position', 'abr']"
-              v-bind:items="card.get('town_actor_list_json')"/>
-            <hr />
-            <Table
-              title="grupos"
-              description="listado de grupos"
-              v-bind:tableHeaderItems="['nombre', 'representante']"
-              v-bind:tableItemProps="['name', 'representative']"
-              v-bind:items="card.get('group_list_json')"/>
-            <div class="key-value">
-              <p class="key">
-                descripción del grupo:
-              </p>
-              <p class="value">
-                {{ card.get('group_description') }}
-              </p>
-            </div>
-            <hr />
-            <Table
-              title="consejo"
-              description="listado de consejeros"
-              v-bind:tableHeaderItems="['nombre', 'posición', 'abr']"
-              v-bind:tableItemProps="['name', 'position', 'abr']"
-              v-bind:items="card.get('advice_list_json')"/>
-            <hr />
-            <Table
-              title="numeralia"
-              description="listado de numeralia"
-              v-bind:tableHeaderItems="['cot', 'promovidos', 'comites', 'miembros']"
-              v-bind:tableItemProps="['cot', 'total_promoted', 'total_committees', 'total_committes_members']"
-              v-bind:items="card.get('numerals_list_json')"/>
-          </div>
+          <ListTable
+            v-bind:collection="modalCollection"
+            v-bind:identifier="'id'"
+            v-bind:isLoading="isLoading"
+            v-bind:isOverBody="true"
+            v-bind:model="modalModel"
+            v-bind:modelDefaultProps="defaultProps"
+            v-bind:modelKey="{ letter: 'nombre' }"
+            v-bind:onlyWrapper="true"/>
         </div>
       </perfect-scrollbar>
       <div class="buttons-wrapper">
@@ -112,9 +37,9 @@
 <script>
 import Button from './button.vue'
 import SectionHeader from './section-header.vue'
-import Table from './table.vue'
 import Widget from './widget.vue'
 import Grid from './grid.vue'
+import ListTable from './list-table.vue'
 
 export default {
   props: [
@@ -122,19 +47,34 @@ export default {
     'modalDescription',
     'modalAccept',
     'modalModel',
+    'modalCollection',
     'modalId',
-  ],
+    ],
   components: {
     Button,
     SectionHeader,
-    Table,
     Grid,
     Widget,
+    ListTable,
   },
   data () {
     return {
-      card: new this.$model.CardMC.model(),
       windowHeight: 0,
+      defaultProps: [
+        'id',
+        'no_lista',
+        'distrito_local',
+        'bloque',
+        'municipio',
+        'nombre',
+        'felefono',
+        'posible_cargo',
+        'genero',
+        'acc_afirmativa',
+        'observaciones',
+        'referente',
+        'tipo',
+      ],
     }
   },
   created () {
@@ -144,8 +84,7 @@ export default {
   methods: {
     async setup () {
       try {
-        this.card.set('id', this.modalId)
-        await this.card.fetchByTown()
+
       } catch (err) {
         console.error(err)
       } finally {
@@ -156,7 +95,7 @@ export default {
       this.modalAccept()
     },
     onResizeWindow () {
-      this.windowHeight = parseInt(window.innerHeight) - 220
+      this.windowHeight = parseInt(window.innerHeight) - 196
     },
   },
 }
@@ -190,7 +129,7 @@ hr {
   border: var(--main-border);
   box-shadow: var(--main-box-shadow);
   margin: auto;
-  max-height: 420px;
+  max-height: 520px;
   max-width: 1024px;
   padding: 10px;
   position: relative;
@@ -221,7 +160,7 @@ hr {
   font-weight: 600;
   letter-spacing: 0;
   margin: 0px;
-  max-height: 260px;
+  max-height: 420px;
   text-transform: uppercase;
 }
 

@@ -739,7 +739,7 @@ export default {
 
 .tile-color {
   align-self: center;
-  border-radius: 10px;
+  border-radius: 5px;
   height: 16px;
   width: 16px;
 }

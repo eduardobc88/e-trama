@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "...",
   "scripts": {
-    "development": "NODE_OPTIONS=--max-old-space-size=512 webpack --config webpack-config.js -w --mode=development",
-    "production": "NODE_OPTIONS=--max-old-space-size=512 webpack --config webpack-config.js --mode=production"
+    "development": "NODE_OPTIONS=--max-old-space-size=600 webpack --config webpack-config.js -w --mode=development",
+    "production": "NODE_OPTIONS=--max-old-space-size=600 webpack --config webpack-config.js --mode=production"
   },
   "author": "https://github.com/eduardobc88",
   "license": "ISC",

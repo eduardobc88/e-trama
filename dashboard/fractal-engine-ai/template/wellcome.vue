@@ -187,6 +187,15 @@
           <div class="text">
             <span>factor de correlación = </span>{{ plotExpression.fc }}
           </div>
+          <div class="text">
+            <span>ssr = </span>{{ plotExpression.ssr }}
+          </div>
+          <div class="text">
+            <span>sst = </span>{{ plotExpression.sst }}
+          </div>
+          <div class="text">
+            <span>r2 = </span>{{ plotExpression.r2 }}
+          </div>
           <p class="accent">
             {{ plotExpression.percent }}
           </p>
@@ -1546,7 +1555,7 @@ export default {
       let Σy = 0
       let Σxe2 = 0
       for (let i in parties) {
-        let x = parseInt(i) + 1
+        let x = parseInt(i)
         let y = parseInt(parties[i].total)
         Σxy = Σxy + (x * y)
         Σx = Σx + x
@@ -1560,7 +1569,30 @@ export default {
         m: m,
         b: b,
         n: n,
+        x̄: Σx / n,
+        ȳ: Σy / n,
       }
+    },
+    getR2 (parties, resultLine) {
+      // NOTE: R2 = SSR/SST
+      // NOTE: 1 - SST = Σ(Yi - Ȳ)^2
+      // NOTE: 2 - SSR = Σ(Ŷi - Ȳ)^2
+      let result = {
+        sst: 0,
+        ssr: 0,
+        r2: 0,
+      }
+      let ŷi = []
+      for (let i in parties) {
+        let x = parseInt(i)
+        let y = parseInt(parties[i].total)
+        result.sst = result.sst + Math.pow(y - resultLine.ȳ, 2)
+        ŷi.push(resultLine.m * x + resultLine.b)
+      }
+      for (let i in ŷi)
+        result.ssr = result.ssr + Math.pow(ŷi[i] - resultLine.ȳ, 2)
+      result.r2 = result.ssr / result.sst
+      return result
     },
     linearRegression (parties) {
       let m = 0
@@ -1678,6 +1710,7 @@ export default {
           return Number(m['total'])
         }, 'desc')
         let resultLine = this.leastSquaresLinearRegression(parties)
+        let resultR2 = this.getR2(parties, resultLine)
         let fxExpression = `${ resultLine.m }x + ${ resultLine.b }`
         let fc = (resultLine.m * 100) / resultLine.b
         let p = ''
@@ -1701,6 +1734,9 @@ export default {
           fc: fc,
           fcColor: fcColor,
           percent: `${ p }%`,
+          r2: resultR2.r2,
+          ssr: resultR2.ssr,
+          sst: resultR2.sst,
         }
         let expr = compile(fxExpression)
         let xValues = range((resultLine.n * 3) * -1, (resultLine.n * 3), 1).toArray()

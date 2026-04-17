@@ -1,5 +1,5 @@
 import SESSION from '../../lib/session.js'
-import CONTROLLER from './CONTROLLER.js'
+import CONTROLLER from './controller.js'
 
 
 const ROUTES = [

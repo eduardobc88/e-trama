@@ -18,7 +18,7 @@
   "workbench.activityBar.location": "top",
   "window.autoDetectColorScheme": true,
   "workbench.preferredLightColorTheme": "Xcode Classic Light",
-  "workbench.preferredDarkColorTheme": "Xcode Default Dark",
+  "workbench.preferredDarkColorTheme": "Jetbrains Fleet",
   "workbench.preferredHighContrastColorTheme": "Xcode Default Dark",
   "workbench.preferredHighContrastLightColorTheme": "Xcode Classic Light"
 }

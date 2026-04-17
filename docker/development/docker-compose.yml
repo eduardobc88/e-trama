@@ -17,6 +17,7 @@ services:
     restart: always
     hostname: fractal-engine-ai-db-service
     container_name: fractal-engine-ai-db-service
+    user: "1000:1000" # NOTE: IS THE USER ID FROM OS USE TO BE 1000:1000 IN MACOS AND LINUX, REMOVE FOR PRODUCTION AND --user=root TOO
     networks:
       - fractal-engine-ai-network
     ports:
@@ -28,6 +29,7 @@ services:
       MYSQL_DATABASE: fractal-engine-ai
       TZ: America/Mexico_City
     command:
+      --user=root
       --sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
     tty: true
   fractal-engine-ai-proxy-service:

@@ -20,7 +20,7 @@
               {{ getTabIcon(slotName) }}
             </i>
             <span>
-              {{ $t(slotName) }}
+              {{ $t(slotName.replace('_', ' ')) }}
             </span>
           </div>
         </div>
@@ -67,6 +67,7 @@ export default {
 
   },
   props: [
+    'name',
     'isEmbededModal',
     'isTop',
     'initialTabIndex',
@@ -97,6 +98,10 @@ export default {
   methods: {
     onClickTab (tabIndex) {
       this.index = tabIndex
+      this.$emitter.emit('navigation-tab-click', {
+        name: this.name,
+        slot: this.tabIcons[tabIndex].slot_name,
+      })
     },
     isTabActive (tabIndex) {
       if (this.index === tabIndex)

@@ -302,7 +302,7 @@
             v-bind:onlyWrapper="true"/>
         </template>
       </template>
-      <template `#${ candidateTabIcons[4].slot_name }`>
+      <template #regidores_prioridad>
         <template
           v-if="candidateTabIcons[4].show">
           <ListTable
@@ -310,9 +310,9 @@
             v-bind:identifier="'id'"
             v-bind:isLoading="isLoading"
             v-bind:isOverBody="true"
-            v-bind:model="candidateModel"
-            v-bind:modelDefaultProps="candidateDefaultProps"
-            v-bind:modelKey="{ letter: 'nombre' }"
+            v-bind:model="regidorModel"
+            v-bind:modelDefaultProps="candidateRegidorDefaultProps"
+            v-bind:modelKey="{ letter: 'municipio' }"
             v-bind:onlyWrapper="true"/>
         </template>
       </template>
@@ -330,7 +330,7 @@
             v-bind:onlyWrapper="true"/>
         </template>
       </template>
-      <template `#${ candidateTabIcons[6].slot_name }`>
+      <template #acciones_afirmativas>
         <template
           v-if="candidateTabIcons[6].show">
           <div id="blocks">
@@ -907,7 +907,7 @@ export default {
           show: false,
         },
         {
-          slot_name: 'regidores prioridad',
+          slot_name: 'regidores_prioridad',
           slot_icon: 'group',
           show: false,
         },
@@ -917,7 +917,7 @@ export default {
           show: false,
         },
         {
-          slot_name: 'acciones afirmativas',
+          slot_name: 'acciones_afirmativas',
           slot_icon: 'category',
           show: false,
         },

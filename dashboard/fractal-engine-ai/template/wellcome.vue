@@ -1,5 +1,8 @@
 <template lang="html">
   <div id="wrapper">
+    <GoogleMap
+      :GMMapType="1"
+      :GMOnClick="GMOnClick"/>
     <div>
       <div
         id="sections">
@@ -716,9 +719,9 @@ import {
 } from 'mathjs'
 
 //import map from "../resource/lib/map"
-
 import Button from '../component/button.vue'
 import Checkbox from '../component/checkbox.vue'
+import GoogleMap from '../component/google-map.vue'
 import Grid from '../component/grid.vue'
 import InputText from '../component/input-text.vue'
 import ListTable from '../component/list-table.vue'
@@ -733,6 +736,7 @@ export default {
     BarChart,
     Button,
     Checkbox,
+    GoogleMap,
     Grid,
     InputText,
     ListTable,
@@ -1108,6 +1112,9 @@ export default {
     },
     removeModelEventListener () {
 
+    },
+    GMOnClick (data) {
+      console.log('== GMOnClick ==', data)
     },
     async setup () {
       try {

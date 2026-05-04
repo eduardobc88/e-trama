@@ -1,6 +1,6 @@
 {
 	"editor.bracketPairColorization.independentColorPoolPerBracketType": true,
-	"editor.fontSize": 12,
+	"editor.fontSize": 13,
 	"editor.lineHeight": 1.7,
 	"workbench.colorTheme": "Moegi Black",
 	"editor.autoIndent": "none",
@@ -17,7 +17,7 @@
   "workbench.auxiliaryActivityBar.location": "top",
   "workbench.activityBar.location": "top",
   "window.autoDetectColorScheme": true,
-  "workbench.preferredLightColorTheme": "Vitesse Light",
+  "workbench.preferredLightColorTheme": "Xcode 11 Default Light",
   "workbench.preferredDarkColorTheme": "Xcode 11 Default Dark",
   "workbench.preferredHighContrastColorTheme": "Xcode Default Dark",
   "workbench.preferredHighContrastLightColorTheme": "Xcode Classic Light"

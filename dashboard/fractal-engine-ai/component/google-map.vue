@@ -17,9 +17,10 @@
 
 <script setup>
 import {
-  ref,
+  getCurrentInstance,
   onMounted,
-  getCurrentInstance
+  ref,
+  watch
 } from 'vue'
 import {
   setOptions,
@@ -34,13 +35,22 @@ const INSTANCE = getCurrentInstance()
 const GLOBAL = INSTANCE.appContext.config.globalProperties
 
 const props = defineProps({
-  GMMapType: Number, // NOTE: 1- GEOJSON_MUNICIPIO, 2- GEOJSON_DISTRITO_FEDERAL, 3- GEOJSON_DISTRITO_LOCAL, 4- GEOJSON_SECCION
+  GMFeatures: Array, // NOTE: 1- GEOJSON_MUNICIPIO, 2- GEOJSON_DISTRITO_FEDERAL, 3- GEOJSON_DISTRITO_LOCAL, 4- GEOJSON_SECCION
   GMOnClick: Function,
 })
 
 const mapRef = ref(null)
 const loading = ref(false)
 let map = null
+let markers = []
+
+
+watch(() => props.GMFeatures, newData => {
+  loadGeoJSON({
+    features: props.GMFeatures,
+    type: 'FeatureCollection'
+  })
+})
 
 
 onMounted (async () => {
@@ -50,9 +60,17 @@ onMounted (async () => {
     zoom: 10,
     mapId: 'DEMO_MAP_ID', // Requerido para 3D y estilos avanzados
   })
-  setTimeout(() => {
-    loadGeoJSON(GEOJSON_MUNICIPIO)
-  }, 1000)
+  loadGeoJSON({
+    features: props.GMFeatures,
+    type: 'FeatureCollection'
+  })
+  //setTimeout(() => {
+  //  console.log('== GMFeatures ==', props.GMFeatures)
+  //  loadGeoJSON({
+  //    features: props.GMFeatures,
+  //    type: 'FeatureCollection'
+  //  })
+  //}, 5000)
   //setTimeout(() => {
   //  loadGeoJSON(GEOJSON_DISTRITO_FEDERAL)
   //}, 10000)
@@ -77,17 +95,46 @@ const loadGeoJSON = async (geoJSON) => {
     const bounds = new google.maps.LatLngBounds()
     features.forEach(feature => {
       processConfiguration(feature.getGeometry(), bounds.extend, bounds)
+      setMarker(feature)
     })
     map.fitBounds(bounds)
     removeEvents()
     setEvents()
     setStyles()
-    console.log(`${features.length} elements added to map`);
+    console.log(`${features.length} elements added to map`)
   } catch (err) {
     console.error('== loadGeoJSON ==', err)
   } finally {
     loading.value = false
   }
+}
+
+const setMarker = feature => {
+  let bounds = new google.maps.LatLngBounds()
+  feature.getGeometry().forEachLatLng((latlng) => {
+    bounds.extend(latlng);
+  })
+  let marker = new google.maps.Marker({
+    position: bounds.getCenter(),
+    map: map,
+    icon: {
+      url: '',
+      size: new google.maps.Size(0, 0)
+    },
+    label: {
+      text: feature.nh.nombre,
+      color: '#eeeeee',
+      fontSize: '12px',
+      fontWeight: 'bold'
+    },
+  })
+  markers.push(marker)
+}
+
+const showMarker = isVisible => {
+  markers.forEach(marker => {
+    marker.setVisible(isVisible)
+  })
 }
 
 const processConfiguration = (geometry, callback, thisArg) => {
@@ -106,7 +153,9 @@ const setStyles = () => {
   map.data.setStyle({})
   map.data.setStyle(feature => {
     return {
-      fillColor: feature.getProperty('color') || GLOBAL.$getHexColor(feature.nh.name, true, 100, 50, 100),
+      fillColor: feature.nh.data.color,
+      fillOpacity: 0.7,
+      strokeColor: '#222222',
       strokeWeight: 1,
       visible: true,
     }

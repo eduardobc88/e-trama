@@ -1,7 +1,7 @@
 <template lang="html">
   <div id="wrapper">
     <GoogleMap
-      :GMMapType="1"
+      :GMFeatures="googleMapFeatures"
       :GMOnClick="GMOnClick"/>
     <div>
       <div
@@ -746,6 +746,7 @@ export default {
   },
   data () {
     return {
+      googleMapFeatures: [],
       isLoading: false,
       sectionActive: 'results', // NOTE: 'results', 'blocks'
       showBlocksInMap: false,
@@ -1083,25 +1084,25 @@ export default {
   created () {
     this.generateSVGMap()
     this.setup()
-    this.$emitter.on('app-toggle-full-content', () => {
-      this.chartAKey = this.$uuid.v1()
-    })
-    this.$emitter.on('navigation-tab-click', (data) => {
-      if (data.name === 'results') {
-        this.chartAKey = this.$uuid.v1()
-        setTimeout(this.renderPlot, 10)
-      } else if (data.name === 'candidates') {
-        for (let i in this.candidateTabIcons) {
-          let t = this.candidateTabIcons[i]
-          this.candidateTabIcons[i].show = false
-          if (t.slot_name === data.slot)
-            this.candidateTabIcons[i].show = true
-        }
-      }
-    })
-    let partiesData = JSON.stringify(this.parties)
-    this.plotPartiesA = JSON.parse(partiesData)
-    this.plotPartiesB = JSON.parse(partiesData)
+    //this.$emitter.on('app-toggle-full-content', () => {
+    //  this.chartAKey = this.$uuid.v1()
+    //})
+    //this.$emitter.on('navigation-tab-click', (data) => {
+    //  if (data.name === 'results') {
+    //    this.chartAKey = this.$uuid.v1()
+    //    setTimeout(this.renderPlot, 10)
+    //  } else if (data.name === 'candidates') {
+    //    for (let i in this.candidateTabIcons) {
+    //      let t = this.candidateTabIcons[i]
+    //      this.candidateTabIcons[i].show = false
+    //      if (t.slot_name === data.slot)
+    //        this.candidateTabIcons[i].show = true
+    //    }
+    //  }
+    //})
+    //let partiesData = JSON.stringify(this.parties)
+    //this.plotPartiesA = JSON.parse(partiesData)
+    //this.plotPartiesB = JSON.parse(partiesData)
   },
   beforeDestroy () {
 
@@ -1120,12 +1121,12 @@ export default {
       try {
         this.isLoading = true
         this.resultCollection.set('state', 'michoacán')
-        this.candidateBaseCollection.set('type', 'base')
+        //this.candidateBaseCollection.set('type', 'base')
         await this.resultCollection.fetch()
-        await this.candidateBaseCollection.fetch()
+        //await this.candidateBaseCollection.fetch()
         this.setMapData()
-        this.filterCollections()
-        this.generateCandidateBlocks()
+        //this.filterCollections()
+        //this.generateCandidateBlocks()
       } catch (err) {
         console.error(err)
       } finally {
@@ -1203,8 +1204,10 @@ export default {
 //      this.generateSVGMap()
     },
     setMapData () {
-      for (let i in this.svgItems) {
-        let iName = this.removeAccents(this.geojsonData.features[i].properties.name).toLowerCase()
+      let features = []
+      for (let i in GEOJSON_MUNICIPIO.features) {
+        let feature = {}
+        let iName = this.removeAccents(GEOJSON_MUNICIPIO.features[i].properties.nombre).toLowerCase()
         let models = this.resultCollection.filter(m => {
           let mName = this.removeAccents(m.get('name')).toLowerCase()
           return (mName === iName)
@@ -1219,12 +1222,13 @@ export default {
         for (let ld of localDistrict)
           this.localDistrictColor[ld - 1].active = true
         let localDistrictColor = this.localDistrictColor[localDistrict[0] - 1].color
-        this.svgItems[i].winner = {
+        feature = GEOJSON_MUNICIPIO.features[i]
+        feature.properties.data = {
           id: id,
           name: rName,
           coa_total: 0,
           single_total: 0,
-          data: rModel,
+          model: rModel,
           coa: '',
           party: '',
           block: '#888888',
@@ -1250,16 +1254,18 @@ export default {
           }
         }
         // NOTE: CHECK IF IS PARTY AND SET DATA
-        this.svgItems[i].winner.party = singleKey
-        this.svgItems[i].winner.color = this.colors[singleKey]
+        feature.properties.data.party = singleKey
+        feature.properties.data.color = this.colors[singleKey]
         if (coaKey.includes(singleKey) && coaTotalVotes > singleTotalVotes) {
-          this.svgItems[i].winner.coa = 'coa'
-          this.svgItems[i].winner.party = coaKey.toString()
-          this.svgItems[i].winner.color = this.colors[coaKey]
+          feature.properties.data.coa = 'coa'
+          feature.properties.data.party = coaKey.toString()
+          feature.properties.data.color = this.colors[coaKey]
         }
-        this.svgItems[i].winner.coa_total = coaTotalVotes
-        this.svgItems[i].winner.single_total = singleTotalVotes
+        feature.properties.data.coa_total = coaTotalVotes
+        feature.properties.data.single_total = singleTotalVotes
+        features.push(feature)
       }
+      this.googleMapFeatures = features
     },
     generateCandidateBlocks () {
       let blockAData = {

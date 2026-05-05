@@ -204,9 +204,13 @@ const onMarkerDragEnd = (e) => {
   PROPS.GMOnMarkerDragEnd({
     lat: lat,
     lng: lng,
-    marker: e.marker,
+    marker: e.marker, // TODO: is undefined then use AdvancedMarkerElement for create markers
     allMarkers: userMarkers
   })
+}
+
+const onMarkerClick = function (e) {
+  markerSelected = this
 }
 
 const addUserMarker = (e) => {
@@ -220,6 +224,7 @@ const addUserMarker = (e) => {
     draggable: isUserMarkersDraggable,
     title: 'DRAG ME',
   })
+  marker.addListener('click', onMarkerClick)
   userMarkers.push(marker)
   PROPS.GMOnMarkerAdded({
     lat: e.latLng.lat(),
@@ -237,6 +242,7 @@ const setDefaultUIButtons = () => {
   addCustomUIButton('ENABLE USER MARKERS', 'TOP_RIGHT', toggleEnableUserMarkers)
   addCustomUIButton('DRAG USER MARKERS', 'TOP_RIGHT', toggleUserMarkersDraggable)
   addCustomUIButton('REMOVE USER MARKERS', 'TOP_RIGHT', removeUserMarkers)
+  addCustomUIButton('REMOVE USER MARKER', 'TOP_RIGHT', removeUserMarker)
 }
 
 const removeUserMarkers = () => {
@@ -247,9 +253,10 @@ const removeUserMarkers = () => {
   PROPS.GMOnMarkerAdded({})
 }
 
-const removeUserMarker = (marker) => {
-  marker.setMap(null)
-  userMarkers = userMarkers.filter(m => m !== marker)
+const removeUserMarker = () => {
+  markerSelected.setMap(null)
+  userMarkers = userMarkers.filter(m => m !== markerSelected)
+  markerSelected = null
   PROPS.GMOnMarkerAdded({})
 }
 

@@ -3,19 +3,24 @@
     id="box-wrapper">
     <div class="map-container">
       <div
-        ref="mapRef"
+        ref="MAP_REF"
         class="google-map">
       </div>
       <div
-        v-if="loading"
+        v-if="LOADING_REF"
         class="loader">
-          loading...
+          LOADING_REF...
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
+// TODO: SHOW DIVISION FEATURES ACCORDING TO ZOOM
+// TODO: LET USER PUT MARKERS AND RETURN MARKERS INFO
+// TODO: TRACE ROUTE BETWEEN TWO POINTS AND RETURN ROUTE INFO
+// NOTE: GMFeatures USE THE GLOBAL GEOJSON VARS: GEOJSON_SECCION, GEOJSON_DISTRITO_LOCAL, GEOJSON_DISTRITO_FEDERAL, GEOJSON_MUNICIPIO
+
 import {
   getCurrentInstance,
   onMounted,
@@ -28,91 +33,153 @@ import {
 } from "@googlemaps/js-api-loader"
 
 
-setOptions({ key: 'AIzaSyB4KbCGbEFrsYLxaAxORNNJVq_ob1Or7fY' })
+// NOTE: INITIALIZE
 
-
+setOptions({
+  key: 'AIzaSyB4KbCGbEFrsYLxaAxORNNJVq_ob1Or7fY',
+})
 const INSTANCE = getCurrentInstance()
 const GLOBAL = INSTANCE.appContext.config.globalProperties
 
-const props = defineProps({
-  GMFeatures: Array, // NOTE: 1- GEOJSON_MUNICIPIO, 2- GEOJSON_DISTRITO_FEDERAL, 3- GEOJSON_DISTRITO_LOCAL, 4- GEOJSON_SECCION
-  GMOnClick: Function,
+
+// NOTE: COMPONENT PROPERTIES
+
+const PROPS = defineProps({
+  GMFeatures: {
+    type: Array,
+    default: []
+  },
+  GMFeatureOnClick: {
+    type: Function,
+    default: () => {}
+  },
+  GMOnMarkerAdded: {
+    type: Function,
+    default: () => {}
+  },
+  GMOnMarkerDragEnd: {
+    type: Function,
+    default: () => {}
+  },
+  GMOnRouteCalculated: { // NOTE: NOT IMPLEMENTED
+    type: Function,
+    default: () => {}
+  },
 })
 
-const mapRef = ref(null)
-const loading = ref(false)
+
+// NOTE: REACTIVE VARIABLES
+
+const MAP_REF = ref(null)
+const LOADING_REF = ref(false)
+
+
+// NOTE: VARIABLES
+
 let map = null
-let markers = []
+let features = []
+let featureMarkers = []
+let userMarkers = []
+let isFeatureLabelsVisible = false
+let isUserMarkersEnabled = false
+let isUserMarkersDraggable = false
+let isUserMarkersVisible = false
+let markerSelected = null
 
 
-watch(() => props.GMFeatures, newData => {
+// NOTE: LIFE CYCLE COMPONENT METHODS
+
+watch(() => PROPS.GMFeatures, newData => {
   loadGeoJSON({
-    features: props.GMFeatures,
+    features: PROPS.GMFeatures,
     type: 'FeatureCollection'
   })
 })
 
-
 onMounted (async () => {
   const { Map } = await importLibrary('maps')
-  map = new Map(mapRef.value, {
+  map = new Map(MAP_REF.value, {
     center: { lat: 19.4326, lng: -99.1332 },
     zoom: 10,
     mapId: 'DEMO_MAP_ID', // Requerido para 3D y estilos avanzados
   })
   loadGeoJSON({
-    features: props.GMFeatures,
+    features: PROPS.GMFeatures,
     type: 'FeatureCollection'
   })
-  //setTimeout(() => {
-  //  console.log('== GMFeatures ==', props.GMFeatures)
-  //  loadGeoJSON({
-  //    features: props.GMFeatures,
-  //    type: 'FeatureCollection'
-  //  })
-  //}, 5000)
-  //setTimeout(() => {
-  //  loadGeoJSON(GEOJSON_DISTRITO_FEDERAL)
-  //}, 10000)
-  //setTimeout(() => {
-  //  loadGeoJSON(GEOJSON_DISTRITO_LOCAL)
-  //}, 15000)
-  //setTimeout(() => {
-  //  loadGeoJSON(GEOJSON_SECCION)
-  //}, 20000)
 })
+
+
+// NOTE: METHODS
 
 const loadGeoJSON = async (geoJSON) => {
   if (!map || !geoJSON)
     return
 
-  loading.value = true
+  LOADING_REF.value = true
   map.data.forEach((feature) => {
     map.data.remove(feature)
   })
   try {
-    const features = map.data.addGeoJson(geoJSON)
-    const bounds = new google.maps.LatLngBounds()
+    features = map.data.addGeoJson(geoJSON)
     features.forEach(feature => {
-      processConfiguration(feature.getGeometry(), bounds.extend, bounds)
-      setMarker(feature)
+      setFeatureMarker(feature)
     })
-    map.fitBounds(bounds)
-    removeEvents()
-    setEvents()
-    setStyles()
-    console.log(`${features.length} elements added to map`)
+    setMapCenterByFeatures()
+    removeMapListeners()
+    setMapListeners()
+    setFeatureStyles()
+    setDefaultUIButtons()
+    console.log(`== loadGeoJSON ==: ${ features.length } features added to map`)
   } catch (err) {
     console.error('== loadGeoJSON ==', err)
   } finally {
-    loading.value = false
+    LOADING_REF.value = false
   }
 }
 
-const setMarker = feature => {
+const setMapCenterByFeatures = () => {
+  let bounds = new google.maps.LatLngBounds()
+  features.forEach(feature => {
+    calcBounds(feature.getGeometry(), bounds.extend, bounds)
+  })
+  map.fitBounds(bounds)
+}
+
+const setFeatureStyles = () => {
+  map.data.setStyle({})
+  map.data.setStyle(feature => {
+    return {
+      fillColor: feature.nh.data.color,
+      fillOpacity: 0.7,
+      strokeColor: '#222222',
+      strokeWeight: 1,
+      visible: true,
+    }
+  })
+}
+
+const setMapListeners = () => {
+  map.data.addListener('click', addUserMarker)
+  map.addListener('click', addUserMarker)
+}
+
+const removeMapListeners = () => {
+  google.maps.event.clearListeners(map.data, 'click')
+}
+
+const setMapCenterByUserMarkers = () => {
+  let bounds = new google.maps.LatLngBounds()
+  userMarkers.forEach(marker => {
+    calcBounds(marker.getPosition(), bounds.extend, bounds)
+  })
+  map.fitBounds(bounds)
+}
+
+const setFeatureMarker = feature => {
   let bounds = new google.maps.LatLngBounds()
   feature.getGeometry().forEachLatLng((latlng) => {
-    bounds.extend(latlng);
+    bounds.extend(latlng)
   })
   let marker = new google.maps.Marker({
     position: bounds.getCenter(),
@@ -128,47 +195,120 @@ const setMarker = feature => {
       fontWeight: 'bold'
     },
   })
-  markers.push(marker)
+  featureMarkers.push(marker)
 }
 
-const showMarker = isVisible => {
-  markers.forEach(marker => {
-    marker.setVisible(isVisible)
+const onMarkerDragEnd = (e) => {
+  const lat = e.latLng.lat()
+  const lng = e.latLng.lng()
+  PROPS.GMOnMarkerDragEnd({
+    lat: lat,
+    lng: lng,
+    marker: e.marker,
+    allMarkers: userMarkers
   })
 }
 
-const processConfiguration = (geometry, callback, thisArg) => {
+const addUserMarker = (e) => {
+  PROPS.GMFeatureOnClick(e)
+  if (!isUserMarkersEnabled)
+    return
+
+  const marker = new google.maps.Marker({
+    position: e.latLng,
+    map: map,
+    draggable: isUserMarkersDraggable,
+    title: 'DRAG ME',
+  })
+  userMarkers.push(marker)
+  PROPS.GMOnMarkerAdded({
+    lat: e.latLng.lat(),
+    lng: e.latLng.lng(),
+    marker: marker,
+    allMarkers: userMarkers
+  })
+}
+
+const setDefaultUIButtons = () => {
+  addCustomUIButton('CENTER ON FEATURES', 'TOP_RIGHT', setMapCenterByFeatures)
+  addCustomUIButton('CENTER ON USER MARKERS', 'TOP_RIGHT', setMapCenterByUserMarkers)
+  addCustomUIButton('SHOW FEATURE LABELS', 'TOP_RIGHT', toggleFeatureLabels)
+  addCustomUIButton('SHOW USER MARKERS', 'TOP_RIGHT', toggleUserMarkers)
+  addCustomUIButton('ENABLE USER MARKERS', 'TOP_RIGHT', toggleEnableUserMarkers)
+  addCustomUIButton('DRAG USER MARKERS', 'TOP_RIGHT', toggleUserMarkersDraggable)
+  addCustomUIButton('REMOVE USER MARKERS', 'TOP_RIGHT', removeUserMarkers)
+}
+
+const removeUserMarkers = () => {
+  userMarkers.forEach(marker => {
+    marker.setMap(null)
+  })
+  userMarkers = []
+  PROPS.GMOnMarkerAdded({})
+}
+
+const removeUserMarker = (marker) => {
+  marker.setMap(null)
+  userMarkers = userMarkers.filter(m => m !== marker)
+  PROPS.GMOnMarkerAdded({})
+}
+
+const toggleFeatureLabels = () => {
+  isFeatureLabelsVisible = !isFeatureLabelsVisible
+  featureMarkers.forEach(marker => {
+    marker.setVisible(isFeatureLabelsVisible)
+  })
+}
+
+const toggleUserMarkers = () => {
+  isUserMarkersVisible = !isUserMarkersVisible
+  userMarkers.forEach(marker => {
+    marker.setVisible(isUserMarkersVisible)
+  })
+}
+
+const toggleEnableUserMarkers = () => {
+  isUserMarkersEnabled = !isUserMarkersEnabled
+}
+
+const toggleUserMarkersDraggable = () => {
+  isUserMarkersDraggable = !isUserMarkersDraggable
+  userMarkers.forEach(marker => {
+    marker.setDraggable(isUserMarkersDraggable)
+    marker.addListener('dragend', onMarkerDragEnd)
+  })
+}
+
+const addCustomUIButton = (text, position, callback) => {
+  // NOTE: POSITION USE:
+  //TOP: TOP_LEFT, TOP_CENTER, TOP_RIGHT
+  //LATERALS: LEFT_TOP, RIGHT_TOP, LEFT_CENTER, RIGHT_CENTER
+  //BOTTOM: BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT
+  const controlDiv = document.createElement('div')
+  const controlUI = document.createElement('button')
+  controlUI.style.backgroundColor = '#fff'
+  controlUI.style.border = '2px solid #fff'
+  controlUI.style.padding = '5px 10px'
+  controlUI.style.cursor = 'pointer'
+  controlUI.style.margin = '5px'
+  controlUI.textContent = text
+  controlDiv.appendChild(controlUI)
+  controlUI.addEventListener('click', callback)
+  map.controls[google.maps.ControlPosition[position]].push(controlDiv)
+}
+
+const calcBounds = (geometry, callback, thisArg) => {
   if (geometry instanceof google.maps.LatLng) {
     callback.call(thisArg, geometry)
   } else if (geometry instanceof google.maps.Data.Point) {
     callback.call(thisArg, geometry.get())
   } else {
     geometry.getArray().forEach(g => {
-      processConfiguration(g, callback, thisArg)
+      calcBounds(g, callback, thisArg)
     })
   }
 }
 
-const setStyles = () => {
-  map.data.setStyle({})
-  map.data.setStyle(feature => {
-    return {
-      fillColor: feature.nh.data.color,
-      fillOpacity: 0.7,
-      strokeColor: '#222222',
-      strokeWeight: 1,
-      visible: true,
-    }
-  })
-}
-
-const setEvents = () => {
-  map.data.addListener('click', props.GMOnClick)
-}
-
-const removeEvents = () => {
-  google.maps.event.clearListeners(map.data, 'click')
-}
 </script>
 
 <style scoped lang="css">
@@ -204,3 +344,4 @@ const removeEvents = () => {
 }
 
 </style>
+

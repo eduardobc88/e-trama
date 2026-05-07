@@ -6,7 +6,7 @@
         console.log('== GMFeatureOnClick ==: feature selected', data)
       }"
       :GMOnMarker="(data) => {
-        console.log('== GMOnMarker ==: marker: ', data)
+        console.log('== GMOnMarker ==: markers: ', data)
       }"
       :GMOnRouteCalculated="(data) => {
         console.log('== GMOnRouteCalculated ==: route calculated', data)

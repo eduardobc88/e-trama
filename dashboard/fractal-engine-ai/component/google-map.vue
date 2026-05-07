@@ -58,7 +58,7 @@ const PROPS = defineProps({
     type: Function,
     default: () => {}
   },
-  GMOnRouteCalculated: { // NOTE: NOT IMPLEMENTED
+  GMOnRouteCalculated: {
     type: Function,
     default: () => {}
   },
@@ -186,7 +186,7 @@ const setFeatureMarker = async feature => {
   labelDiv.textContent = feature.nh.nombre
   labelDiv.style.fontSize = '12px'
   labelDiv.style.fontWeight = 'bold'
-  labelDiv.style.color = '#222222'
+  labelDiv.style.color = '#ffffff'
   labelDiv.style.background = feature.nh.data.color
   labelDiv.style.padding = '5px'
   labelDiv.style.borderRadius = '5px'
@@ -254,6 +254,10 @@ const setDefaultUIButtons = () => {
   addCustomUIButton('DRAG USER MARKERS', 'TOP_RIGHT', toggleUserMarkersDraggable)
   addCustomUIButton('REMOVE USER MARKERS', 'TOP_RIGHT', removeUserMarkers)
   addCustomUIButton('REMOVE USER MARKER', 'TOP_RIGHT', removeUserMarker)
+  addCustomUIButton('GENERATE ROUTE', 'BOTTOM_CENTER', () => {
+    generateRoute(userMarkers, true)
+  })
+
 }
 
 const removeUserMarkers = () => {
@@ -345,6 +349,37 @@ const toggleUserMarkersDraggable = () => {
     marker.gmpDraggable = isUserMarkersDraggable
     marker.addListener('dragend', () => onMarkerDragEnd(marker))
   })
+}
+
+const generateRoute = async (markers = [], isOptimized = false) => {
+  let result = null
+  try {
+    const {
+      DirectionsService,
+      DirectionsRenderer,
+    } = await importLibrary('routes')
+    const directionsService = new DirectionsService()
+    const directionsRenderer = new DirectionsRenderer({
+      suppressMarkers: true,
+      map: map,
+    })
+    const request = {
+      origin: markers[0].position,
+      destination: markers[markers.length - 1].position,
+      waypoints: markers.slice(1, -1).map(marker => ({
+        location: marker.position,
+        stopover: true,
+      })),
+      travelMode: google.maps.TravelMode.WALKING,
+      optimizeWaypoints: isOptimized,
+    }
+    result = await directionsService.route(request)
+    directionsRenderer.setDirections(result)
+  } catch (err) {
+    console.error('== generateRoute ==', err)
+  } finally {
+    PROPS.GMOnRouteCalculated(result)
+  }
 }
 
 const addCustomUIButton = (text, position, callback) => {

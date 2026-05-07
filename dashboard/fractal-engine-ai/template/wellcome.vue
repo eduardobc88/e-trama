@@ -5,14 +5,11 @@
       :GMFeatureOnClick="(data) => {
         console.log('== GMFeatureOnClick ==: feature selected', data)
       }"
-      :GMOnMarkerAdded="(data) => {
-        console.log('== GMOnMarkerAdded ==: marker added', data)
+      :GMOnMarker="(data) => {
+        console.log('== GMOnMarker ==: marker: ', data)
       }"
       :GMOnRouteCalculated="(data) => {
         console.log('== GMOnRouteCalculated ==: route calculated', data)
-      }"
-      :GMOnMarkerDragEnd="(data) => {
-        console.log('== GMOnMarkerDragEnd ==: marker drag end', data)
       }"/>
     <div>
       <div

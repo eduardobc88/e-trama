@@ -204,7 +204,7 @@ export default {
       language: new this.$model.LanguageMC.model(),
       languages: new this.$model.LanguageMC.collection(),
       windowHeight: 0,
-      breakWidth: 1025,
+      breakWidth: 1280,
       headerButtonActive: true,
       routerViewWidth: 0,
       routerViewHeight: 0,

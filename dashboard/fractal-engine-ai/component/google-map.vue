@@ -79,9 +79,10 @@ let featureMarkers = []
 let userMarkers = []
 let isFeatureLabelsVisible = true
 let isUserMarkersEnabled = false
-let isUserMarkersDraggable = false
+let isUserMarkersDraggable = true
 let isUserMarkersVisible = true
 let markerSelected = null
+let isFeaturesVisible = true
 
 
 // NOTE: LIFE CYCLE COMPONENT METHODS
@@ -149,7 +150,7 @@ const setFeatureStyles = () => {
   map.data.setStyle(feature => {
     return {
       fillColor: feature.nh.data.color,
-      fillOpacity: 0.7,
+      fillOpacity: 0.3,
       strokeColor: '#222222',
       strokeWeight: 1,
       visible: true,
@@ -206,7 +207,7 @@ const setFeatureMarker = async feature => {
   featureMarkers.push(marker)
 }
 
-const onMarkerDragEnd = (marker) => {
+const onMarkerDragEnd = marker => {
   PROPS.GMOnMarker({
     event: 'drag-end',
     marker: marker,
@@ -214,8 +215,13 @@ const onMarkerDragEnd = (marker) => {
   })
 }
 
-const onMarkerClick = function (e) {
-  markerSelected = this
+const onMarkerClick = marker => {
+  markerSelected = marker
+  PROPS.GMOnMarker({
+    event: 'clicked',
+    marker: marker,
+    markers: userMarkers,
+  })
 }
 
 const addUserMarker = async (e) => {
@@ -231,12 +237,13 @@ const addUserMarker = async (e) => {
   const aleatoryDropDownTime = (Math.random() * (1.0 - 0.4) + 0.4).toFixed(2)
   pin.element.style.animation = `drop-down ${ aleatoryDropDownTime }s ease-in-out forwards`
   let marker = new AdvancedMarkerElement({
-    position: e.latLng,
-    map: map,
-    gmpDraggable: true,
     content: pin.element,
+    gmpDraggable: isUserMarkersDraggable,
+    map: map,
+    position: e.latLng,
   })
-  marker.addListener('click', onMarkerClick)
+  marker.addListener('click', () => onMarkerClick(marker))
+  marker.addListener('dragend', () => onMarkerDragEnd(marker))
   userMarkers.push(marker)
   PROPS.GMOnMarker({
     event: 'added',
@@ -246,18 +253,16 @@ const addUserMarker = async (e) => {
 }
 
 const setDefaultUIButtons = () => {
-  addCustomUIButton('CENTER ON FEATURES', 'TOP_RIGHT', setMapCenterByFeatures)
-  addCustomUIButton('CENTER ON USER MARKERS', 'TOP_RIGHT', setMapCenterByUserMarkers)
-  addCustomUIButton('SHOW FEATURE LABELS', 'TOP_RIGHT', toggleFeatureLabels)
-  addCustomUIButton('SHOW USER MARKERS', 'TOP_RIGHT', toggleUserMarkers)
-  addCustomUIButton('ENABLE USER MARKERS', 'TOP_RIGHT', toggleEnableUserMarkers)
-  addCustomUIButton('DRAG USER MARKERS', 'TOP_RIGHT', toggleUserMarkersDraggable)
-  addCustomUIButton('REMOVE USER MARKERS', 'TOP_RIGHT', removeUserMarkers)
-  addCustomUIButton('REMOVE USER MARKER', 'TOP_RIGHT', removeUserMarker)
-  addCustomUIButton('GENERATE ROUTE', 'BOTTOM_CENTER', () => {
-    generateRoute(userMarkers, true)
-  })
-
+  addCustomUIButtonIcon('center_focus_strong', 'BOTTOM_CENTER', setMapCenterByFeatures)
+  addCustomUIButtonIcon('strategy', 'BOTTOM_CENTER', toggleFeatureLabels)
+  addCustomUIButtonIcon('globe_location_pin', 'BOTTOM_CENTER', toggleUserMarkers)
+  addCustomUIButtonIcon('add_location_alt', 'BOTTOM_CENTER', toggleEnableUserMarkers)
+  addCustomUIButtonIcon('move', 'BOTTOM_CENTER', toggleUserMarkersDraggable)
+  addCustomUIButtonIcon('location_off', 'BOTTOM_CENTER', removeUserMarkers)
+  addCustomUIButtonIcon('wrong_location', 'BOTTOM_CENTER', removeUserMarker)
+  addCustomUIButtonIcon('filter_center_focus', 'BOTTOM_CENTER', setMapCenterByUserMarkers)
+  addCustomUIButtonIcon('route', 'BOTTOM_CENTER', () => generateRoute(userMarkers, true))
+  addCustomUIButtonIcon('layers', 'BOTTOM_CENTER', toggleFeatures)
 }
 
 const removeUserMarkers = () => {
@@ -271,7 +276,7 @@ const removeUserMarkers = () => {
   })
   userMarkers = []
   PROPS.GMOnMarker({
-    event: 'remove-all',
+    event: 'removed-all',
     markers: userMarkers,
   })
 }
@@ -282,7 +287,7 @@ const removeUserMarker = () => {
     markerSelected.content.style.animation = 'none'
     userMarkers = userMarkers.filter(m => m !== markerSelected)
     PROPS.GMOnMarker({
-      event: 'remove',
+      event: 'removed',
       marker: markerSelected,
       markers: userMarkers,
     })
@@ -382,7 +387,38 @@ const generateRoute = async (markers = [], isOptimized = false) => {
   }
 }
 
-const addCustomUIButton = (text, position, callback) => {
+const toggleFeatures = () => {
+  isFeaturesVisible = !isFeaturesVisible
+  features.forEach(feature => {
+    map.data.overrideStyle(feature, { visible: isFeaturesVisible })
+  })
+}
+
+const addCustomUIButtonIcon = (iconName, position, callback) => {
+  // NOTE: POSITION USE:
+  // TOP: TOP_LEFT, TOP_CENTER, TOP_RIGHT
+  // LATERALS: LEFT_TOP, RIGHT_TOP, LEFT_CENTER, RIGHT_CENTER
+  // BOTTOM: BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT
+  const controlDiv = document.createElement('div')
+  const controlUI = document.createElement('button')
+  const icon = document.createElement('i')
+  icon.textContent = iconName
+  icon.classList.add('material-symbols-rounded')
+  icon.classList.add('icon')
+  icon.style.color = '#555555'
+  controlUI.style.backgroundColor = '#fff'
+  controlUI.style.border = '2px solid #fff'
+  controlUI.style.padding = '5px 10px'
+  controlUI.style.cursor = 'pointer'
+  controlUI.style.margin = '10px 5px'
+  controlUI.style.boxShadow = '0 1px 2px rgba(0, 0, 0, 0.3)'
+  controlUI.appendChild(icon)
+  controlDiv.appendChild(controlUI)
+  controlUI.addEventListener('click', callback)
+  map.controls[google.maps.ControlPosition[position]].push(controlDiv)
+}
+
+const addCustomUIButtonText = (text, position, callback) => {
   // NOTE: POSITION USE:
   // TOP: TOP_LEFT, TOP_CENTER, TOP_RIGHT
   // LATERALS: LEFT_TOP, RIGHT_TOP, LEFT_CENTER, RIGHT_CENTER
@@ -419,7 +455,6 @@ const calcFeatureBounds = (geometry, callback, thisArg) => {
   background-color: var(--main-box-bg-color);
   border-radius: 10px;
   box-shadow: var(--main-box-shadow);
-  margin: 0 6px;
   position: relative;
   transition-duration: 500ms;
   overflow: hidden;
@@ -428,7 +463,7 @@ const calcFeatureBounds = (geometry, callback, thisArg) => {
 .map-container {
   position: relative;
   width: 100%;
-  height: 420px;
+  height: 480px;
 }
 
 .google-map {

@@ -291,7 +291,7 @@ export default {
       window.open(fileURL, '_blank')
     },
     getStyles (file) {
-      let url = `/static/dashboard/fractal-engine-ai/assets/placeholder-file.jpeg`
+      let url = `/static/dashboard/fractal-engine-ai/assets/placeholder-file.png`
       if (file.isImage())
         url = `/upload/${ file.get('area_id') }/${ file.get('file_name') }`
       let style = ''

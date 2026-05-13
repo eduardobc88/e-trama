@@ -198,7 +198,6 @@ export default {
 
 #wrapper {
   position: relative;
-  max-width: 480px;
 }
 
 #wrapper.full-width {
@@ -234,6 +233,7 @@ export default {
 }
 
 #content {
+  display: block;
   padding: 10px;
   position: static;
 }

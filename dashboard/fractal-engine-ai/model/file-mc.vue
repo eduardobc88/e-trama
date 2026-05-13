@@ -51,7 +51,7 @@ class FileModel extends BaseModel {
     return url
   }
   getPreviewURL (size) {
-    let url = `/static/dashboard/fractal-engine-ai/assets/placeholder-file.jpeg`
+    let url = `/static/dashboard/fractal-engine-ai/assets/placeholder-file.png`
     if (this.isImage()) {
       let fileName = this.get('file_name')
       url = `/upload/${ this.get('area_id') }/${fileName}`

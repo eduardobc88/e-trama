@@ -10,6 +10,7 @@ export default {
     'profile',
   ],
   app_upload_file_url: '/fractal-engine-ai-service/api/v1/file',
+  app_static_path: '/static/dashboard/fractal-engine-ai',
   app_dashboard_type: location.hostname.split('.')[0],
   user_data: {},
   dashboard_full_content: false,

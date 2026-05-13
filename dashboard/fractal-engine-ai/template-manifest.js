@@ -24,4 +24,6 @@ export default {
   SplashScreenIndex: () => import('./template/splash-screen.vue'),
   UserRecord: () => import('./template/user/index.vue'),
   WellcomeIndex: () => import('./template/wellcome.vue'),
+  // CUSTOM
+  MappingIndex: () => import('./template/mapping/index.vue'),
 }

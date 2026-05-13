@@ -3,6 +3,11 @@
     id="box-wrapper">
     <div class="map-container">
       <div
+        v-if="PROPS.GMTitle !== ''"
+        class="title">
+        {{ PROPS.GMTitle }}
+      </div>
+      <div
         ref="map_ref"
         class="google-map">
       </div>
@@ -16,10 +21,6 @@
 </template>
 
 <script setup>
-// TODO: SHOW DIVISION FEATURES ACCORDING TO ZOOM
-// TODO: LET USER PUT MARKERS AND RETURN MARKERS INFO
-// TODO: TRACE ROUTE BETWEEN TWO POINTS AND RETURN ROUTE INFO
-// NOTE: GMFeatures USE THE GLOBAL GEOJSON VARS: GEOJSON_SECCION, GEOJSON_DISTRITO_LOCAL, GEOJSON_DISTRITO_FEDERAL, GEOJSON_MUNICIPIO
 
 import {
   getCurrentInstance,
@@ -46,21 +47,25 @@ const GLOBAL = INSTANCE.appContext.config.globalProperties
 // NOTE: COMPONENT PROPERTIES
 
 const PROPS = defineProps({
+  GMTitle: {
+    type: String,
+    default: ''
+  },
   GMFeatures: {
     type: Array,
-    default: []
+    default: [],
   },
   GMFeatureOnClick: {
     type: Function,
-    default: () => {}
+    default: () => {},
   },
   GMOnMarker: {
     type: Function,
-    default: () => {}
+    default: () => {},
   },
   GMOnRouteCalculated: {
     type: Function,
-    default: () => {}
+    default: () => {},
   },
 })
 
@@ -102,6 +107,7 @@ onMounted (async () => {
     mapId: MAP_ID,
     zoomControl: true,
     gestureHandling: 'cooperative',
+    mapTypeControl: false,
   })
   loadGeoJSON({
     features: PROPS.GMFeatures,
@@ -159,8 +165,14 @@ const setFeatureStyles = () => {
 }
 
 const setMapListeners = () => {
-  map.data.addListener('click', addUserMarker)
-  map.addListener('click', addUserMarker)
+  map.data.addListener('click', event => {
+    if (isUserMarkersEnabled)
+      addUserMarker(event)
+    onFeatureClick(event)
+  })
+  map.addListener('click', event => {
+    addUserMarker(event)
+  })
 }
 
 const removeMapListeners = () => {
@@ -202,7 +214,7 @@ const setFeatureMarker = async feature => {
   marker.content.addEventListener('animationend', () => {
     marker.content.style.animation = 'none'
   }, { once: true })
-  const aleatoryDropDownTime = (Math.random() * (1.0 - 0.4) + 0.4).toFixed(2)
+  const aleatoryDropDownTime = (Math.random() * (1.0 - 0.1) + 0.1).toFixed(2)
   marker.content.style.animation = `drop-down ${ aleatoryDropDownTime }s ease-in-out forwards`
   featureMarkers.push(marker)
 }
@@ -224,8 +236,14 @@ const onMarkerClick = marker => {
   })
 }
 
-const addUserMarker = async (e) => {
-  PROPS.GMFeatureOnClick(e)
+const onFeatureClick = event => {
+  PROPS.GMFeatureOnClick({
+    event: 'clicked',
+    feature: event.feature,
+  })
+}
+
+const addUserMarker = async e => {
   if (!isUserMarkersEnabled)
     return
 
@@ -234,7 +252,7 @@ const addUserMarker = async (e) => {
     PinElement,
   } = await importLibrary('marker')
   const pin = new PinElement()
-  const aleatoryDropDownTime = (Math.random() * (1.0 - 0.4) + 0.4).toFixed(2)
+  const aleatoryDropDownTime = (Math.random() * (1.0 - 0.1) + 0.1).toFixed(2)
   pin.element.style.animation = `drop-down ${ aleatoryDropDownTime }s ease-in-out forwards`
   let marker = new AdvancedMarkerElement({
     content: pin.element,
@@ -271,7 +289,7 @@ const removeUserMarkers = () => {
       marker.map = null
       marker.content.style.animation = 'none'
     }, { once: true })
-    let aleatoryDropDownTime = (Math.random() * (1.0 - 0.4) + 0.4).toFixed(2)
+    let aleatoryDropDownTime = (Math.random() * (1.0 - 0.1) + 0.1).toFixed(2)
     marker.content.style.animation = `drop-up ${ aleatoryDropDownTime }s ease-in-out forwards`
   })
   userMarkers = []
@@ -293,7 +311,7 @@ const removeUserMarker = () => {
     })
     markerSelected = null
   }, { once: true })
-  let aleatoryDropDownTime = (Math.random() * (1.0 - 0.4) + 0.4).toFixed(2)
+  let aleatoryDropDownTime = (Math.random() * (1.0 - 0.1) + 0.1).toFixed(2)
   markerSelected.content.style.animation = `drop-up ${ aleatoryDropDownTime }s ease-in-out forwards`
 }
 
@@ -306,7 +324,7 @@ const toggleFeatureLabels = () => {
       marker.content.addEventListener('animationend', () => {
         marker.content.style.animation = 'none'
       }, { once: true })
-      let aleatoryDropDownTime = (Math.random() * (1.0 - 0.4) + 0.4).toFixed(2)
+      let aleatoryDropDownTime = (Math.random() * (1.0 - 0.1) + 0.1).toFixed(2)
       marker.content.style.animation = `drop-down ${ aleatoryDropDownTime }s ease-in-out forwards`
     })
     return
@@ -316,7 +334,7 @@ const toggleFeatureLabels = () => {
       marker.map = null
       marker.content.style.animation = 'none'
     }, { once: true })
-    let aleatoryDropDownTime = (Math.random() * (1.0 - 0.4) + 0.4).toFixed(2)
+    let aleatoryDropDownTime = (Math.random() * (1.0 - 0.1) + 0.1).toFixed(2)
     marker.content.style.animation = `drop-up ${ aleatoryDropDownTime }s ease-in-out forwards`
   })
 }
@@ -329,7 +347,7 @@ const toggleUserMarkers = () => {
       marker.content.addEventListener('animationend', () => {
         marker.content.style.animation = 'none'
       }, { once: true })
-      let aleatoryDropDownTime = (Math.random() * (1.0 - 0.4) + 0.4).toFixed(2)
+      let aleatoryDropDownTime = (Math.random() * (1.0 - 0.1) + 0.1).toFixed(2)
       marker.content.style.animation = `drop-down ${ aleatoryDropDownTime }s ease-in-out forwards`
     })
     return
@@ -339,7 +357,7 @@ const toggleUserMarkers = () => {
       marker.map = null
       marker.content.style.animation = 'none'
     }, { once: true })
-    let aleatoryDropDownTime = (Math.random() * (1.0 - 0.4) + 0.4).toFixed(2)
+    let aleatoryDropDownTime = (Math.random() * (1.0 - 0.1) + 0.1).toFixed(2)
     marker.content.style.animation = `drop-up ${ aleatoryDropDownTime }s ease-in-out forwards`
   })
 }
@@ -368,6 +386,9 @@ const generateRoute = async (markers = [], isOptimized = false) => {
       suppressMarkers: true,
       map: map,
     })
+    directionsRenderer.setMap(null)
+    if (!markers.length)
+      throw 'no markers'
     const request = {
       origin: markers[0].position,
       destination: markers[markers.length - 1].position,
@@ -405,13 +426,7 @@ const addCustomUIButtonIcon = (iconName, position, callback) => {
   icon.textContent = iconName
   icon.classList.add('material-symbols-rounded')
   icon.classList.add('icon')
-  icon.style.color = '#555555'
-  controlUI.style.backgroundColor = '#fff'
-  controlUI.style.border = '2px solid #fff'
-  controlUI.style.padding = '5px 10px'
-  controlUI.style.cursor = 'pointer'
-  controlUI.style.margin = '10px 5px'
-  controlUI.style.boxShadow = '0 1px 2px rgba(0, 0, 0, 0.3)'
+  controlUI.classList.add('gm-btn-icon')
   controlUI.appendChild(icon)
   controlDiv.appendChild(controlUI)
   controlUI.addEventListener('click', callback)
@@ -466,6 +481,18 @@ const calcFeatureBounds = (geometry, callback, thisArg) => {
   height: 480px;
 }
 
+.title {
+  color: #FFFFFF;
+  font-weight: bold;
+  left: 10px;
+  margin: auto;
+  pointer-events: none;
+  position: absolute; 
+  text-shadow: 0px 5px 20px rgba(0, 0, 0, 1);
+  top: 10px;
+  z-index: 10;
+}
+
 .google-map {
   width: 100%;
   height: 100%;
@@ -492,6 +519,28 @@ const calcFeatureBounds = (geometry, callback, thisArg) => {
 @keyframes drop-up {
   from { transform: translateY(0); opacity: 1; }
   to { transform: translateY(-500px); opacity: 0; }
+}
+
+.gm-btn-icon {
+  background-color: #fff;
+  border: 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  color: #666666;
+  cursor: pointer;
+  margin: 24px 5px;
+  padding: 5px 10px;
+}
+
+.gm-btn-icon:hover {
+  color: #333333;
+}
+
+.gm-btn-icon:active {
+  color: #000000;
+}
+
+.gm-btn-icon:disabled {
+  cursor: not-allowed;
 }
 
 </style>

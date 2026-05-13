@@ -1,16 +1,5 @@
 <template lang="html">
   <div id="wrapper">
-    <GoogleMap
-      :GMFeatures="googleMapFeatures"
-      :GMFeatureOnClick="(data) => {
-        console.log('== GMFeatureOnClick ==: feature selected', data)
-      }"
-      :GMOnMarker="(data) => {
-        console.log('== GMOnMarker ==: markers: ', data)
-      }"
-      :GMOnRouteCalculated="(data) => {
-        console.log('== GMOnRouteCalculated ==: route calculated', data)
-      }"/>
     <div>
       <div
         id="sections">
@@ -729,7 +718,6 @@ import {
 //import map from "../resource/lib/map"
 import Button from '../component/button.vue'
 import Checkbox from '../component/checkbox.vue'
-import GoogleMap from '../component/google-map.vue'
 import Grid from '../component/grid.vue'
 import InputText from '../component/input-text.vue'
 import ListTable from '../component/list-table.vue'
@@ -744,7 +732,6 @@ export default {
     BarChart,
     Button,
     Checkbox,
-    GoogleMap,
     Grid,
     InputText,
     ListTable,
@@ -754,7 +741,6 @@ export default {
   },
   data () {
     return {
-      googleMapFeatures: [],
       isLoading: false,
       sectionActive: 'results', // NOTE: 'results', 'blocks'
       showBlocksInMap: false,
@@ -1092,25 +1078,25 @@ export default {
   created () {
     this.generateSVGMap()
     this.setup()
-    //this.$emitter.on('app-toggle-full-content', () => {
-    //  this.chartAKey = this.$uuid.v1()
-    //})
-    //this.$emitter.on('navigation-tab-click', (data) => {
-    //  if (data.name === 'results') {
-    //    this.chartAKey = this.$uuid.v1()
-    //    setTimeout(this.renderPlot, 10)
-    //  } else if (data.name === 'candidates') {
-    //    for (let i in this.candidateTabIcons) {
-    //      let t = this.candidateTabIcons[i]
-    //      this.candidateTabIcons[i].show = false
-    //      if (t.slot_name === data.slot)
-    //        this.candidateTabIcons[i].show = true
-    //    }
-    //  }
-    //})
-    //let partiesData = JSON.stringify(this.parties)
-    //this.plotPartiesA = JSON.parse(partiesData)
-    //this.plotPartiesB = JSON.parse(partiesData)
+    this.$emitter.on('app-toggle-full-content', () => {
+      this.chartAKey = this.$uuid.v1()
+    })
+    this.$emitter.on('navigation-tab-click', (data) => {
+      if (data.name === 'results') {
+        this.chartAKey = this.$uuid.v1()
+        setTimeout(this.renderPlot, 10)
+      } else if (data.name === 'candidates') {
+        for (let i in this.candidateTabIcons) {
+          let t = this.candidateTabIcons[i]
+          this.candidateTabIcons[i].show = false
+          if (t.slot_name === data.slot)
+            this.candidateTabIcons[i].show = true
+        }
+      }
+    })
+    let partiesData = JSON.stringify(this.parties)
+    this.plotPartiesA = JSON.parse(partiesData)
+    this.plotPartiesB = JSON.parse(partiesData)
   },
   beforeDestroy () {
 
@@ -1126,12 +1112,12 @@ export default {
       try {
         this.isLoading = true
         this.resultCollection.set('state', 'michoacán')
-        //this.candidateBaseCollection.set('type', 'base')
+        this.candidateBaseCollection.set('type', 'base')
         await this.resultCollection.fetch()
-        //await this.candidateBaseCollection.fetch()
+        await this.candidateBaseCollection.fetch()
         this.setMapData()
-        //this.filterCollections()
-        //this.generateCandidateBlocks()
+        this.filterCollections()
+        this.generateCandidateBlocks()
       } catch (err) {
         console.error(err)
       } finally {
@@ -1206,13 +1192,11 @@ export default {
       this.candidateRegidorGroupCollection.add(regidoresGroup)
     },
     onResizeWindow () {
-//      this.generateSVGMap()
+      this.generateSVGMap()
     },
     setMapData () {
-      let features = []
-      for (let i in GEOJSON_MUNICIPIO.features) {
-        let feature = {}
-        let iName = this.removeAccents(GEOJSON_MUNICIPIO.features[i].properties.nombre).toLowerCase()
+      for (let i in this.svgItems) {
+        let iName = this.removeAccents(this.geojsonData.features[i].properties.name).toLowerCase()
         let models = this.resultCollection.filter(m => {
           let mName = this.removeAccents(m.get('name')).toLowerCase()
           return (mName === iName)
@@ -1227,13 +1211,12 @@ export default {
         for (let ld of localDistrict)
           this.localDistrictColor[ld - 1].active = true
         let localDistrictColor = this.localDistrictColor[localDistrict[0] - 1].color
-        feature = GEOJSON_MUNICIPIO.features[i]
-        feature.properties.data = {
+        this.svgItems[i].winner = {
           id: id,
           name: rName,
           coa_total: 0,
           single_total: 0,
-          model: rModel,
+          data: rModel,
           coa: '',
           party: '',
           block: '#888888',
@@ -1259,18 +1242,16 @@ export default {
           }
         }
         // NOTE: CHECK IF IS PARTY AND SET DATA
-        feature.properties.data.party = singleKey
-        feature.properties.data.color = this.colors[singleKey]
+        this.svgItems[i].winner.party = singleKey
+        this.svgItems[i].winner.color = this.colors[singleKey]
         if (coaKey.includes(singleKey) && coaTotalVotes > singleTotalVotes) {
-          feature.properties.data.coa = 'coa'
-          feature.properties.data.party = coaKey.toString()
-          feature.properties.data.color = this.colors[coaKey]
+          this.svgItems[i].winner.coa = 'coa'
+          this.svgItems[i].winner.party = coaKey.toString()
+          this.svgItems[i].winner.color = this.colors[coaKey]
         }
-        feature.properties.data.coa_total = coaTotalVotes
-        feature.properties.data.single_total = singleTotalVotes
-        features.push(feature)
+        this.svgItems[i].winner.coa_total = coaTotalVotes
+        this.svgItems[i].winner.single_total = singleTotalVotes
       }
-      this.googleMapFeatures = features
     },
     generateCandidateBlocks () {
       let blockAData = {

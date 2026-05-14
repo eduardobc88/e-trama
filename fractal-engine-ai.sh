@@ -25,6 +25,7 @@ fractal_engine_ai_help()
   echo "";
   echo "== MIGRATIONS ==";
   echo "init-db                 RUN CONTAINER FOR MIGRATE FIXTURES";
+  echo "backup-db               RUN CONTAINER FOR BACKUP DB";
   echo "add-migration <migration-name>    ADD NEW MIGRATION FILE UNDER /migrations DIRECTORY";
   echo "run-migrations          RUN MIGRATIONS UNDER /migrations DIRECTORY";
   echo "================";
@@ -179,6 +180,16 @@ fractal_engine_ai_init_db()
   echo "$NAME : INIT DB FINISHED";
 }
 
+fractal_engine_ai_backup_db()
+{
+  echo "$NAME : BACKUP DB";
+  echo "";
+  base_dir=./docker/run/;
+  MIGRATION_ARGS="up --migrate-all" docker compose -f ${base_dir}backup-db.yml run --rm fractal-engine-ai-init;
+  echo "";
+  echo "$NAME : BACKUP DB FINISHED";
+}
+
 fractal_dashboard_logs()
 {
   echo "$NAME :  DASHBOARD LOGS";
@@ -239,6 +250,9 @@ run-migrations)
   ;;
 init-db)
   fractal_engine_ai_init_db;
+  ;;
+backup-db)
+  fractal_engine_ai_backup_db;
   ;;
 dashboard-logs)
   fractal_dashboard_logs;

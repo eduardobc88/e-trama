@@ -20,5 +20,6 @@
   "workbench.preferredLightColorTheme": "Xcode 11 Default Light",
   "workbench.preferredDarkColorTheme": "Xcode 11 Default Dark",
   "workbench.preferredHighContrastColorTheme": "Xcode Default Dark",
-  "workbench.preferredHighContrastLightColorTheme": "Xcode Classic Light"
+  "workbench.preferredHighContrastLightColorTheme": "Xcode 11 Default Light",
+  "workbench.iconTheme": "eyecons"
 }

@@ -26,7 +26,7 @@ import {
   getCurrentInstance,
   onMounted,
   ref,
-  watch
+  watch,
 } from 'vue'
 import {
   setOptions,

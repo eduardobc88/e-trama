@@ -120,7 +120,6 @@ import {
   getCurrentInstance,
   onMounted,
   ref,
-  watch,
 } from 'vue'
 
 import BarChart from '../../component/chart/bar-chart.vue'

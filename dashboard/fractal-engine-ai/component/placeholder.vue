@@ -26,6 +26,7 @@ const placeHolder = {
   file: `${ GLOBAL.$config.app_static_path }/assets/placeholder-file.png`,
   list: `${ GLOBAL.$config.app_static_path }/assets/placeholder-list.png`,
   table: `${ GLOBAL.$config.app_static_path }/assets/placeholder-table.png`,
+  scatter: `${ GLOBAL.$config.app_static_path }/assets/placeholder-scatter.png`,
 }
 
 onMounted (async () => {

@@ -324,7 +324,7 @@ export default {
       })
       this.getNotifications()
       if (data.initial) {
-        setTimeout(this.hideSplashScreen, 3000)
+        setTimeout(this.hideSplashScreen, 4000)
         this.setThemeOS()
         setTimeout(() => {
           this.setMaterialYouTheme(this.route.meta.title)
@@ -340,7 +340,7 @@ export default {
       setTimeout(() => {
         this.hideSplashScreen()
         this.userProfileLoaded = false
-      }, 1000)
+      }, 3000)
       this.showLogin = true
     })
     this.$emitter.on('dashboard-hide-login', () => {

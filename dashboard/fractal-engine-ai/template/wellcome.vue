@@ -1726,6 +1726,10 @@ export default {
           fcColor = 2
         else if (fc > 20)
           fcColor = 3
+
+
+
+
         this.plotExpression = {
           m: resultLine.m,
           b: resultLine.b,

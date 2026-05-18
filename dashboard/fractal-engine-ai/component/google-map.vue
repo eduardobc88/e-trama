@@ -75,6 +75,18 @@ const PROPS = defineProps({
     type: String,
     default: '',
   },
+  GMOnZoomChanged: {
+    type: Function,
+    default: () => {},
+  },
+  GMOnBoundsChanged: {
+    type: Function,
+    default: () => {},
+  },
+  GMOnCenterChanged: {
+    type: Function,
+    default: () => {},
+  },
 })
 
 
@@ -180,6 +192,27 @@ const setMapListeners = () => {
   })
   map.addListener('click', event => {
     addUserMarker(event)
+  })
+  map.addListener('zoom_changed', () => {
+    PROPS.GMOnZoomChanged({
+      zoom: map.getZoom(),
+      center: map.getCenter(),
+      bounds: map.getBounds(),
+    })
+  })
+  map.addListener('bounds_changed', () => {
+    PROPS.GMOnBoundsChanged({
+      zoom: map.getZoom(),
+      center: map.getCenter(),
+      bounds: map.getBounds(),
+    })
+  })
+  map.addListener('center_changed', () => {
+    PROPS.GMOnCenterChanged({
+      zoom: map.getZoom(),
+      center: map.getCenter(),
+      bounds: map.getBounds(),
+    })
   })
 }
 

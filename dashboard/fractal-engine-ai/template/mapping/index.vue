@@ -5,6 +5,9 @@
       :GMFeatures="googleMapFeatures"
       :GMFeatureOnClick="GMFeatureOnClick"
       :GMOnMarker="GMOnMarker"
+      :GMOnZoomChanged="GMOnZoomChanged"
+      :GMOnBoundsChanged="GMOnBoundsChanged"
+      :GMOnCenterChanged="GMOnCenterChanged"
       :GMOnRouteCalculated="GMOnRouteCalculated"
       :GMFeatureLabelKey="'seccion'"
       :GMFeatureColorKey="'color'"/>
@@ -329,6 +332,7 @@ const setupMapSection = () => {
       coa: '',
       party: '',
       seccion: feature.properties.seccion,
+      zoom: 10,
     }
     // NOTE: GET THE MAYOR FOR COA AND SINGLE PARTIES
     let coaTotalVotes = 0
@@ -402,6 +406,18 @@ const GMOnMarker = data => {
 
 const GMOnRouteCalculated = data => {
   console.log('== GMOnRouteCalculated ==: ', data)
+}
+
+const GMOnZoomChanged = data => {
+  console.log('== GMOnZoomChanged ==: ', data)
+}
+
+const GMOnBoundsChanged = data => {
+  console.log('== GMOnBoundsChanged ==: ', data)
+}
+
+const GMOnCenterChanged = data => {
+  console.log('== GMOnCenterChanged ==: ', data)
 }
 
 </script>

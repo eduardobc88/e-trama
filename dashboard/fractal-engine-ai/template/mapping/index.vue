@@ -5,7 +5,9 @@
       :GMFeatures="googleMapFeatures"
       :GMFeatureOnClick="GMFeatureOnClick"
       :GMOnMarker="GMOnMarker"
-      :GMOnRouteCalculated="GMOnRouteCalculated"/>
+      :GMOnRouteCalculated="GMOnRouteCalculated"
+      :GMFeatureLabelKey="'seccion'"
+      :GMFeatureColorKey="'color'"/>
     <GridSpace
       gridTemplateColumns="1fr 2fr">
       <template #slota>
@@ -234,7 +236,8 @@ const setup = async () => {
     isLoading.value = true
     resultCollection.set('state', 'michoacán')
     await resultCollection.fetch()
-    setupMap()
+    //setupMap()
+    setupMapSection()
   } catch (err) {
     console.error(err)
   } finally {
@@ -266,6 +269,66 @@ const setupMap = () => {
       model: rModel,
       coa: '',
       party: '',
+    }
+    // NOTE: GET THE MAYOR FOR COA AND SINGLE PARTIES
+    let coaTotalVotes = 0
+    let coaKey = ''
+    let singleTotalVotes = 0
+    let singleKey = ''
+    for (let p of parties) {
+      for (let k of Object.keys(rModel.attributes)) {
+        // NOTE: COA
+        if (k.includes('_') && k.includes(p.abr) && parseInt(rModel.get(k)) > coaTotalVotes) {
+          coaTotalVotes = parseInt(rModel.get(k))
+          coaKey = k
+        }
+        // NOTE: SINGLE
+        if (k === p.abr && parseInt(rModel.get(k)) > singleTotalVotes) {
+          singleTotalVotes = parseInt(rModel.get(k))
+          singleKey = k
+        }
+      }
+    }
+    // NOTE: CHECK IF IS PARTY AND SET DATA
+    feature.properties.data.party = singleKey
+    feature.properties.data.color = colors[singleKey]
+    if (coaKey.includes(singleKey) && coaTotalVotes > singleTotalVotes) {
+      feature.properties.data.coa = 'coa'
+      feature.properties.data.party = coaKey.toString()
+      feature.properties.data.color = colors[coaKey]
+    }
+    feature.properties.data.coa_total = coaTotalVotes
+    feature.properties.data.single_total = singleTotalVotes
+    features.push(feature)
+  }
+  googleMapFeatures.value = features
+}
+
+const setupMapSection = () => {
+  let features = []
+  for (let i in GEOJSON_SECCION.features) {
+    let feature = {}
+    let townId = parseInt(GEOJSON_SECCION.features[i].properties.municipio)
+    let models = resultCollection.filter(m => {
+      let id = parseInt(m.get('id'))
+      return (townId === id)
+    })
+    if (!models.getModels().length)
+      continue
+
+    let rModel = models.getModels()[0]
+    let id = rModel.get('town_id')
+    let rName = rModel.get('name')
+    feature = GEOJSON_SECCION.features[i]
+    feature.properties.data = {
+      id: id,
+      name: rName,
+      coa_total: 0,
+      single_total: 0,
+      model: rModel,
+      coa: '',
+      party: '',
+      seccion: feature.properties.seccion,
     }
     // NOTE: GET THE MAYOR FOR COA AND SINGLE PARTIES
     let coaTotalVotes = 0

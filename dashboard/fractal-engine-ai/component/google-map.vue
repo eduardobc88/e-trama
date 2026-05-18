@@ -67,6 +67,14 @@ const PROPS = defineProps({
     type: Function,
     default: () => {},
   },
+  GMFeatureLabelKey: {
+    type: String,
+    default: '',
+  },
+  GMFeatureColorKey: {
+    type: String,
+    default: '',
+  },
 })
 
 
@@ -196,20 +204,20 @@ const setFeatureMarker = async feature => {
     AdvancedMarkerElement,
   } = await importLibrary('marker')
   let labelDiv = document.createElement('div')
-  labelDiv.textContent = feature.nh.nombre
+  labelDiv.textContent = feature.nh.data[PROPS.GMFeatureLabelKey]
   labelDiv.style.fontSize = '12px'
   labelDiv.style.fontWeight = 'bold'
   labelDiv.style.color = '#ffffff'
-  labelDiv.style.background = feature.nh.data.color
+  labelDiv.style.background = feature.nh.data[PROPS.GMFeatureColorKey]
   labelDiv.style.padding = '5px'
   labelDiv.style.borderRadius = '5px'
-  labelDiv.style.border = `1px solid ${ feature.nh.data.color }`
+  labelDiv.style.border = `1px solid ${ feature.nh.data[PROPS.GMFeatureColorKey] }`
   labelDiv.style.boxShadow = `0 3px 4px 2px rgba(0, 0, 0, 0.2)`
   let marker = new AdvancedMarkerElement({
     position: bounds.getCenter(),
     map: map,
     content: labelDiv,
-    title: feature.nh.nombre,
+    title: feature.nh.data[PROPS.GMFeatureLabelKey].toString(),
   })
   marker.content.addEventListener('animationend', () => {
     marker.content.style.animation = 'none'

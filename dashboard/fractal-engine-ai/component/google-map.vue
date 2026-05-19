@@ -13,8 +13,8 @@
       </div>
       <div
         v-if="isLoading"
-        class="loader">
-        cargando...
+        id="loader">
+        <p>cargando...</p>
       </div>
     </div>
   </div>
@@ -136,6 +136,7 @@ onMounted (async () => {
 })
 
 const initMap = async () => {
+  isLoading.value = true
   const { Map } = await importLibrary('maps')
   map = new Map(map_ref.value, {
     center: { lat: 19.7294854, lng: -101.1763666 },
@@ -584,14 +585,23 @@ const debounceZoomChanged = _.debounce(handleZoomChanged, 1000, { 'trailing': tr
   height: 100%;
 }
 
-.loader { 
+#loader { 
+  bottom: 0;
+  display: flex;
+  left: 0; 
+  margin: auto;
   position: absolute;
-  top: 10px;
-  left: 10px; 
-  background: white;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  right: 0;
+  top: 0;
+}
+
+#loader > p {
+  color: #FFFFFF;
+  font-weight: bold;
+  margin: auto;
+  text-align: center;
+  text-shadow: 0px 5px 20px rgba(0, 0, 0, 1);
+  text-transform: uppercase;
 }
 
 </style>

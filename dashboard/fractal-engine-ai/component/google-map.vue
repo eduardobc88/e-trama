@@ -52,8 +52,8 @@ const PROPS = defineProps({
     default: ''
   },
   GMFeatures: {
-    type: Array,
-    default: [],
+    type: Object,
+    default: {},
   },
   GMFeatureOnClick: {
     type: Function,
@@ -75,6 +75,22 @@ const PROPS = defineProps({
     type: String,
     default: '',
   },
+  GMOnZoomChanged: {
+    type: Function,
+    default: () => {},
+  },
+  GMOnBoundsChanged: {
+    type: Function,
+    default: () => {},
+  },
+  GMOnCenterChanged: {
+    type: Function,
+    default: () => {},
+  },
+  GMZoomFeatures: {
+    type: Number,
+    default: 0,
+  },
 })
 
 
@@ -87,6 +103,7 @@ const isLoading = ref(false)
 // NOTE: VARIABLES
 
 let map = null
+let showZoomFeatures = ref(0)
 let features = []
 let featureMarkers = []
 let userMarkers = []
@@ -101,47 +118,65 @@ let isFeaturesVisible = true
 // NOTE: LIFE CYCLE COMPONENT METHODS
 
 watch(() => PROPS.GMFeatures, newData => {
+  throttleLoadGeoJSON({
+    features: PROPS.GMFeatures[showZoomFeatures.value],
+    type: 'FeatureCollection'
+  })
+})
+
+watch(showZoomFeatures, newData => {
   loadGeoJSON({
-    features: PROPS.GMFeatures,
+    features: PROPS.GMFeatures[newData],
     type: 'FeatureCollection'
   })
 })
 
 onMounted (async () => {
+  initMap()
+})
+
+const initMap = async () => {
   const { Map } = await importLibrary('maps')
   map = new Map(map_ref.value, {
-    center: { lat: 19.4326, lng: -99.1332 },
-    zoom: 10,
+    center: { lat: 19.7294854, lng: -101.1763666 },
+    zoom: PROPS.GMZoomFeatures,
     mapId: MAP_ID,
     zoomControl: true,
     gestureHandling: 'cooperative',
     mapTypeControl: false,
   })
-  loadGeoJSON({
-    features: PROPS.GMFeatures,
-    type: 'FeatureCollection'
+  setMapListeners()
+  showZoomFeatures.value = PROPS.GMZoomFeatures
+}
+
+const resetMap = () => {
+  map.data.forEach((feature) => {
+    map.data.remove(feature)
   })
-})
+  featureMarkers.forEach(feature => {
+    feature.setMap(null)
+  })
+  features = []
+  featureMarkers = []
+}
 
 
 // NOTE: METHODS
 
-const loadGeoJSON = async (geoJSON) => {
+const loadGeoJSON = async geoJSON => {
   if (!map || !geoJSON)
+    return
+  
+  if (!geoJSON.features.length)
     return
 
   isLoading.value = true
-  map.data.forEach((feature) => {
-    map.data.remove(feature)
-  })
   try {
+    resetMap()
     features = map.data.addGeoJson(geoJSON)
     features.forEach(feature => {
       setFeatureMarker(feature)
     })
-    setMapCenterByFeatures()
-    removeMapListeners()
-    setMapListeners()
     setFeatureStyles()
     setDefaultUIButtons()
   } catch (err) {
@@ -181,10 +216,48 @@ const setMapListeners = () => {
   map.addListener('click', event => {
     addUserMarker(event)
   })
+  map.addListener('zoom_changed', debounceZoomChanged)
+  map.addListener('bounds_changed', () => {
+    PROPS.GMOnBoundsChanged({
+      zoom: map.getZoom(),
+      center: map.getCenter(),
+      bounds: map.getBounds(),
+    })
+  })
+  map.addListener('center_changed', () => {
+    PROPS.GMOnCenterChanged({
+      zoom: map.getZoom(),
+      center: map.getCenter(),
+      bounds: map.getBounds(),
+    })
+  })
+}
+
+const handleZoomChanged = () => {
+  let zoomNumber = Math.round(map.getZoom())
+  let fixedZoomNumber = -1
+  for (let key of Object.keys(PROPS.GMFeatures)) {
+    let zoomKey = parseInt(key)
+    if (zoomNumber <= zoomKey)
+      fixedZoomNumber = zoomKey
+    if (fixedZoomNumber >= 0 && showZoomFeatures.value !== fixedZoomNumber) {
+      showZoomFeatures.value = fixedZoomNumber
+      break
+    }
+  }
+  PROPS.GMOnZoomChanged({
+    zoom: Math.round(map.getZoom()),
+    center: map.getCenter(),
+    bounds: map.getBounds(),
+  })
 }
 
 const removeMapListeners = () => {
   google.maps.event.clearListeners(map.data, 'click')
+  google.maps.event.clearListeners(map, 'click')
+  google.maps.event.clearListeners(map, 'zoom_changed')
+  google.maps.event.clearListeners(map, 'bounds_changed')
+  google.maps.event.clearListeners(map, 'center_changed')
 }
 
 const setMapCenterByUserMarkers = () => {
@@ -222,7 +295,7 @@ const setFeatureMarker = async feature => {
   marker.content.addEventListener('animationend', () => {
     marker.content.style.animation = 'none'
   }, { once: true })
-  const aleatoryDropDownTime = (Math.random() * (1.0 - 0.1) + 0.1).toFixed(2)
+  const aleatoryDropDownTime = (Math.random() * (0.4 - 0.1) + 0.1).toFixed(2)
   marker.content.style.animation = `drop-down ${ aleatoryDropDownTime }s ease-in-out forwards`
   featureMarkers.push(marker)
 }
@@ -260,7 +333,7 @@ const addUserMarker = async e => {
     PinElement,
   } = await importLibrary('marker')
   const pin = new PinElement()
-  const aleatoryDropDownTime = (Math.random() * (1.0 - 0.1) + 0.1).toFixed(2)
+  const aleatoryDropDownTime = (Math.random() * (0.4 - 0.1) + 0.1).toFixed(2)
   pin.element.style.animation = `drop-down ${ aleatoryDropDownTime }s ease-in-out forwards`
   let marker = new AdvancedMarkerElement({
     content: pin.element,
@@ -279,6 +352,7 @@ const addUserMarker = async e => {
 }
 
 const setDefaultUIButtons = () => {
+  map.controls[google.maps.ControlPosition['BOTTOM_CENTER']] = []
   addCustomUIButtonIcon('center_focus_strong', 'BOTTOM_CENTER', setMapCenterByFeatures)
   addCustomUIButtonIcon('strategy', 'BOTTOM_CENTER', toggleFeatureLabels)
   addCustomUIButtonIcon('globe_location_pin', 'BOTTOM_CENTER', toggleUserMarkers)
@@ -297,7 +371,7 @@ const removeUserMarkers = () => {
       marker.map = null
       marker.content.style.animation = 'none'
     }, { once: true })
-    let aleatoryDropDownTime = (Math.random() * (1.0 - 0.1) + 0.1).toFixed(2)
+    let aleatoryDropDownTime = (Math.random() * (0.4 - 0.1) + 0.1).toFixed(2)
     marker.content.style.animation = `drop-up ${ aleatoryDropDownTime }s ease-in-out forwards`
   })
   userMarkers = []
@@ -319,7 +393,7 @@ const removeUserMarker = () => {
     })
     markerSelected = null
   }, { once: true })
-  let aleatoryDropDownTime = (Math.random() * (1.0 - 0.1) + 0.1).toFixed(2)
+  let aleatoryDropDownTime = (Math.random() * (0.4 - 0.1) + 0.1).toFixed(2)
   markerSelected.content.style.animation = `drop-up ${ aleatoryDropDownTime }s ease-in-out forwards`
 }
 
@@ -332,7 +406,7 @@ const toggleFeatureLabels = () => {
       marker.content.addEventListener('animationend', () => {
         marker.content.style.animation = 'none'
       }, { once: true })
-      let aleatoryDropDownTime = (Math.random() * (1.0 - 0.1) + 0.1).toFixed(2)
+      let aleatoryDropDownTime = (Math.random() * (0.4 - 0.1) + 0.1).toFixed(2)
       marker.content.style.animation = `drop-down ${ aleatoryDropDownTime }s ease-in-out forwards`
     })
     return
@@ -342,7 +416,7 @@ const toggleFeatureLabels = () => {
       marker.map = null
       marker.content.style.animation = 'none'
     }, { once: true })
-    let aleatoryDropDownTime = (Math.random() * (1.0 - 0.1) + 0.1).toFixed(2)
+    let aleatoryDropDownTime = (Math.random() * (0.4 - 0.1) + 0.1).toFixed(2)
     marker.content.style.animation = `drop-up ${ aleatoryDropDownTime }s ease-in-out forwards`
   })
 }
@@ -355,7 +429,7 @@ const toggleUserMarkers = () => {
       marker.content.addEventListener('animationend', () => {
         marker.content.style.animation = 'none'
       }, { once: true })
-      let aleatoryDropDownTime = (Math.random() * (1.0 - 0.1) + 0.1).toFixed(2)
+      let aleatoryDropDownTime = (Math.random() * (0.4 - 0.1) + 0.1).toFixed(2)
       marker.content.style.animation = `drop-down ${ aleatoryDropDownTime }s ease-in-out forwards`
     })
     return
@@ -365,7 +439,7 @@ const toggleUserMarkers = () => {
       marker.map = null
       marker.content.style.animation = 'none'
     }, { once: true })
-    let aleatoryDropDownTime = (Math.random() * (1.0 - 0.1) + 0.1).toFixed(2)
+    let aleatoryDropDownTime = (Math.random() * (0.4 - 0.1) + 0.1).toFixed(2)
     marker.content.style.animation = `drop-up ${ aleatoryDropDownTime }s ease-in-out forwards`
   })
 }
@@ -470,6 +544,10 @@ const calcFeatureBounds = (geometry, callback, thisArg) => {
     })
   }
 }
+
+// NOTE: DEBOUNCE FUNCTIONS
+const debounceZoomChanged = _.debounce(handleZoomChanged, 1000, { 'trailing': true })
+
 
 </script>
 

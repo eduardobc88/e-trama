@@ -187,12 +187,17 @@ const loadGeoJSON = async geoJSON => {
   }
 }
 
-const setMapCenterByFeatures = () => {
+const setMapCenterByFeatures = (type = 'fitBounds') => {
   let bounds = new google.maps.LatLngBounds()
   features.forEach(feature => {
     calcFeatureBounds(feature.getGeometry(), bounds.extend, bounds)
   })
-  map.fitBounds(bounds)
+  if (type === 'fitBounds') {
+    map.fitBounds(bounds)
+    return
+  }
+  if (type === 'setCenter')
+    map.setCenter(bounds.getCenter())
 }
 
 const setFeatureStyles = () => {
@@ -354,7 +359,7 @@ const addUserMarker = async e => {
 
 const setDefaultUIButtons = () => {
   map.controls[google.maps.ControlPosition['BOTTOM_CENTER']] = []
-  addCustomUIButtonIcon('center_focus_strong', 'BOTTOM_CENTER', setMapCenterByFeatures)
+  addCustomUIButtonIcon('center_focus_strong', 'BOTTOM_CENTER', () => setMapCenterByFeatures('setCenter'))
   addCustomUIButtonIcon('strategy', 'BOTTOM_CENTER', toggleFeatureLabels)
   addCustomUIButtonIcon('globe_location_pin', 'BOTTOM_CENTER', toggleUserMarkers)
   addCustomUIButtonIcon('add_location_alt', 'BOTTOM_CENTER', toggleEnableUserMarkers)
@@ -362,7 +367,7 @@ const setDefaultUIButtons = () => {
   addCustomUIButtonIcon('location_off', 'BOTTOM_CENTER', removeUserMarkers)
   addCustomUIButtonIcon('wrong_location', 'BOTTOM_CENTER', removeUserMarker)
   addCustomUIButtonIcon('filter_center_focus', 'BOTTOM_CENTER', setMapCenterByUserMarkers)
-  addCustomUIButtonIcon('route', 'BOTTOM_CENTER', () => generateRoute(userMarkers, true))
+  addCustomUIButtonIcon('route', 'BOTTOM_CENTER', () => generateRoute(userMarkers))
   addCustomUIButtonIcon('layers', 'BOTTOM_CENTER', toggleFeatures)
 }
 
@@ -457,33 +462,60 @@ const toggleUserMarkersDraggable = () => {
   })
 }
 
-const generateRoute = async (markers = [], isOptimized = false) => {
-  let result = null
+const generateRoute = async (markers = []) => {
+  let result = {}
   try {
-    const {
-      DirectionsService,
-      DirectionsRenderer,
-    } = await importLibrary('routes')
-    const directionsService = new DirectionsService()
-    const directionsRenderer = new DirectionsRenderer({
-      suppressMarkers: true,
-      map: map,
-    })
-    directionsRenderer.setMap(null)
-    if (!markers.length)
+    if (markers.length < 2)
       throw 'no markers'
+    const {
+      Route,
+    } = await importLibrary('routes')
+    const firstMarker = markers[0]
+    const lastMarker = markers[markers.length - 1]
+    const middleMarkers = markers.slice(1, -1)
+    let intermediates = []
+    for (const marker of middleMarkers)
+      intermediates.push({
+        lat: Number(marker.position.lat), 
+        lng: Number(marker.position.lng),
+      })
     const request = {
-      origin: markers[0].position,
-      destination: markers[markers.length - 1].position,
-      waypoints: markers.slice(1, -1).map(marker => ({
-        location: marker.position,
-        stopover: true,
-      })),
+      origin: {
+        lat: Number(firstMarker.position.lat), 
+        lng: Number(firstMarker.position.lng),
+      },
+      destination: {
+        lat: Number(lastMarker.position.lat), 
+        lng: Number(lastMarker.position.lng),
+      },
+      intermediates: intermediates,
       travelMode: google.maps.TravelMode.WALKING,
-      optimizeWaypoints: isOptimized,
+      optimizeWaypointOrder: false,
+      fields: [
+        'path',
+        'distanceMeters',
+        'durationMillis',
+        'legs',
+      ],
     }
-    result = await directionsService.route(request)
-    directionsRenderer.setDirections(result)
+    const { routes } = await Route.computeRoutes(request)
+    if (!routes || routes.length === 0)
+      throw 'no routes'
+    const routeResult = routes[0]
+    const polylines = routeResult.createPolylines()
+    polylines.forEach(polyline => {
+      polyline.setMap(map)
+      polyline.setOptions({
+        strokeColor: '#8055f6',
+        strokeOpacity: 1.0,
+        strokeWidth: 2,
+      })
+    })
+    result = {
+      polylines: polylines,
+      totalWaypoints: intermediates.length + 2,
+      route: routeResult,
+    }
   } catch (err) {
     console.error('== generateRoute ==', err)
   } finally {

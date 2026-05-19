@@ -118,7 +118,7 @@ let isFeaturesVisible = true
 // NOTE: LIFE CYCLE COMPONENT METHODS
 
 watch(() => PROPS.GMFeatures, newData => {
-  throttleLoadGeoJSON({
+  loadGeoJSON({
     features: PROPS.GMFeatures[showZoomFeatures.value],
     type: 'FeatureCollection'
   })
@@ -164,7 +164,7 @@ const resetMap = () => {
 // NOTE: METHODS
 
 const loadGeoJSON = async geoJSON => {
-  if (!map || !geoJSON)
+  if (!map || !geoJSON || !geoJSON.features)
     return
   
   if (!geoJSON.features.length)

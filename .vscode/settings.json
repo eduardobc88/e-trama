@@ -17,8 +17,8 @@
   "workbench.auxiliaryActivityBar.location": "top",
   "workbench.activityBar.location": "top",
   "window.autoDetectColorScheme": true,
-  "workbench.preferredLightColorTheme": "Xcode 11 Default Light",
-  "workbench.preferredDarkColorTheme": "Xcode 11 Default Dark",
+  "workbench.preferredLightColorTheme": "Adwaita Dark & colorful status bar",
+  "workbench.preferredDarkColorTheme": "cursor-less-dark",
   "workbench.preferredHighContrastColorTheme": "Xcode Default Dark",
   "workbench.preferredHighContrastLightColorTheme": "Xcode 11 Default Light",
   "workbench.iconTheme": "eyecons"

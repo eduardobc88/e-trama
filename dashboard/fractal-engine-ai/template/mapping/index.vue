@@ -3,7 +3,7 @@
     <GoogleMap
       :GMTitle="GMTitle"
       :GMFeatures="googleMapFeatures"
-      :GMZoomFeatures="7"
+      :GMZoomFeatures="8"
       :GMFeatureOnClick="GMFeatureOnClick"
       :GMOnMarker="GMOnMarker"
       :GMOnRouteCalculated="GMOnRouteCalculated"
@@ -248,6 +248,7 @@ const setup = async () => {
 }
 
 const setupMapFeatures = () => {
+  let gmFeatures = {}
   let features = []
   for (let i in GEOJSON_DISTRITO_FEDERAL.features) {
     let feature = GEOJSON_DISTRITO_FEDERAL.features[i]
@@ -258,13 +259,13 @@ const setupMapFeatures = () => {
       town_id: '',
       section_id: '',
       label: feature.properties.distrito_f,
-      zoom: 7,
+      zoom: 8,
       color: 'rgba(40, 255, 90, 1)',
       show: true,
     }
     features.push(feature)
   }
-  googleMapFeatures.value[7] = features
+  gmFeatures[8] = features
   features = []
   for (let i in GEOJSON_DISTRITO_LOCAL.features) {
     let feature = GEOJSON_DISTRITO_LOCAL.features[i]
@@ -275,32 +276,16 @@ const setupMapFeatures = () => {
       town_id: '',
       section_id: '',
       label: feature.properties.distrito_l,
-      zoom: 8,
+      zoom: 9,
       color: 'rgba(100, 40, 200, 1)',
       show: true,
     }
     features.push(feature)
   }
-  googleMapFeatures.value[8] = features
-  googleMapFeatures.value[9] = setupTownFeaturesMap()
-  features = []
-  for (let i in GEOJSON_SECCION.features) {
-    let feature = GEOJSON_SECCION.features[i]
-    feature.properties.data = {
-      id: i,
-      district_f_id: feature.properties.distrito_f,
-      district_l_id: feature.properties.distrito_l,
-      town_id: feature.properties.municipio,
-      section_id: feature.properties.seccion,
-      label: feature.properties.seccion,
-      zoom: 10,
-      color: 'rgba(0, 98, 159, 1)',
-      show: true,
-    }
-    features.push(feature)
-  }
-  googleMapFeatures.value[10] = features
-  features = []
+  gmFeatures[9] = features
+  gmFeatures[10] = setupTownFeaturesMap()
+  gmFeatures[11] = setupSectionFeaturesMap()
+  googleMapFeatures.value = gmFeatures
 }
 
 const setupTownFeaturesMap = () => {
@@ -316,7 +301,7 @@ const setupTownFeaturesMap = () => {
       continue
 
     let rModel = models.getModels()[0]
-    feature = GEOJSON_MUNICIPIO.features[i]
+    feature = { ...GEOJSON_MUNICIPIO.features[i] }
     feature.properties.data = {
       id: i,
       district_f_id: GEOJSON_MUNICIPIO.features[i].properties.distrito_f,
@@ -324,11 +309,10 @@ const setupTownFeaturesMap = () => {
       town_id: GEOJSON_MUNICIPIO.features[i].properties.municipio,
       section_id: '',
       label: GEOJSON_MUNICIPIO.features[i].properties.nombre,
-      zoom: 9,
+      zoom: 10,
       color: 'rgba(0, 0, 0, 1)',
       show: true,
     }
-    GEOJSON_MUNICIPIO.features[i].properties.data = {}
     // NOTE: GET THE MAYOR FOR COA AND SINGLE PARTIES
     let coaTotalVotes = 0
     let coaKey = ''
@@ -364,7 +348,7 @@ const setupTownFeaturesMap = () => {
   return features
 }
 
-const setupMapSection = () => {
+const setupSectionFeaturesMap = () => {
   let features = []
   for (let i in GEOJSON_SECCION.features) {
     let feature = {}
@@ -381,15 +365,15 @@ const setupMapSection = () => {
     let rName = rModel.get('name')
     feature = GEOJSON_SECCION.features[i]
     feature.properties.data = {
-      id: id,
-      name: rName,
-      coa_total: 0,
-      single_total: 0,
-      model: rModel,
-      coa: '',
-      party: '',
-      seccion: feature.properties.seccion,
-      zoom: 10,
+      id: i,
+      district_f_id: GEOJSON_SECCION.features[i].properties.distrito_f,
+      district_l_id: GEOJSON_SECCION.features[i].properties.distrito_l,
+      town_id: GEOJSON_SECCION.features[i].properties.municipio,
+      section_id: GEOJSON_SECCION.features[i].properties.seccion,
+      label: GEOJSON_SECCION.features[i].properties.seccion,
+      zoom: 11,
+      color: 'rgba(0, 0, 0, 1)',
+      show: true,
     }
     // NOTE: GET THE MAYOR FOR COA AND SINGLE PARTIES
     let coaTotalVotes = 0
@@ -411,18 +395,19 @@ const setupMapSection = () => {
       }
     }
     // NOTE: CHECK IF IS PARTY AND SET DATA
-    feature.properties.data.party = singleKey
-    feature.properties.data.color = colors[singleKey]
+    GEOJSON_SECCION.features[i].properties.data.party = singleKey
+    GEOJSON_SECCION.features[i].properties.data.color = colors[singleKey]
     if (coaKey.includes(singleKey) && coaTotalVotes > singleTotalVotes) {
-      feature.properties.data.coa = 'coa'
-      feature.properties.data.party = coaKey.toString()
+      GEOJSON_SECCION.features[i].properties.data.coa = 'coa'
+      GEOJSON_SECCION.features[i].properties.data.party = coaKey.toString()
+      GEOJSON_SECCION.features[i].properties.data.color = colors[coaKey]
       feature.properties.data.color = colors[coaKey]
     }
-    feature.properties.data.coa_total = coaTotalVotes
-    feature.properties.data.single_total = singleTotalVotes
+    GEOJSON_SECCION.features[i].properties.data.coa_total = coaTotalVotes
+    GEOJSON_SECCION.features[i].properties.data.single_total = singleTotalVotes
     features.push(feature)
   }
-  googleMapFeatures.value = features
+  return features
 }
 
 const removeAccents = str => {
@@ -430,7 +415,7 @@ const removeAccents = str => {
 }
 
 const GMFeatureOnClick = data => {
-  if (data.feature.nh.data.zoom === 9) {
+  if (data.feature.nh.data.zoom === 10) {
     let featureLabel =googleMapFeatures.value[data.feature.nh.data.zoom][data.feature.nh.data.id].properties.data.label
     let iName = removeAccents(featureLabel).toLowerCase()
     let models = resultCollection.filter(m => {

@@ -223,19 +223,31 @@ const setMapListeners = () => {
     addUserMarker(event)
   })
   map.addListener('zoom_changed', debounceZoomChanged)
-  map.addListener('bounds_changed', () => {
-    PROPS.GMOnBoundsChanged({
-      zoom: map.getZoom(),
-      center: map.getCenter(),
-      bounds: map.getBounds(),
-    })
-  })
+  map.addListener('bounds_changed', () => debounceShowMarkersInBounds)
   map.addListener('center_changed', () => {
     PROPS.GMOnCenterChanged({
       zoom: map.getZoom(),
       center: map.getCenter(),
       bounds: map.getBounds(),
     })
+  })
+}
+
+const showMarkersInBounds = markers => {
+  let bounds = map.getBounds()
+  if (!bounds)
+    return
+
+  markers.forEach((marker) => {
+    if (bounds.contains({ lat: Number(marker.position.lat), lng: Number(marker.position.lng) }))
+      marker.setMap(map)
+    else
+      marker.setMap(null)
+  })
+  PROPS.GMOnBoundsChanged({
+    zoom: map.getZoom(),
+    center: map.getCenter(),
+    bounds: map.getBounds(),
   })
 }
 
@@ -580,6 +592,7 @@ const calcFeatureBounds = (geometry, callback, thisArg) => {
 
 // NOTE: DEBOUNCE FUNCTIONS
 const debounceZoomChanged = _.debounce(handleZoomChanged, 1000, { 'trailing': true })
+const debounceShowMarkersInBounds = _.debounce(showMarkersInBounds, 1000, { 'trailing': true })
 
 
 </script>

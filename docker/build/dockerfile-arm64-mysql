@@ -1,1 +1,1 @@
-FROM arm64v8/mysql AS fractal-engine-ai-mysql-build
+FROM arm64v8/mysql:9.7 AS fractal-engine-ai-mysql-build

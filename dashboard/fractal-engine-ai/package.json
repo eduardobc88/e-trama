@@ -29,6 +29,7 @@
     "date-fns": "^4.1.0",
     "geojson2svg": "^2.0.3",
     "lodash": "^4.17.21",
+    "markdown-it": "^14.2.0",
     "mathjs": "^15.1.1",
     "mitt": "^3.0.1",
     "plotly.js-dist-min": "^3.4.0",

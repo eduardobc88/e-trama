@@ -1,11 +1,24 @@
 <template>
   <div
     id="box-wrapper">
-    <div class="map-container">
+    <div id="map-container">
       <div
         v-if="PROPS.GMTitle !== ''"
         class="title">
         {{ PROPS.GMTitle }}
+      </div>
+      <div
+        v-if="PROPS.GMInfoBoxMarkdownText !== ''"
+        id="info-box">
+        <Widget
+          v-bind:sectionTitle="((PROPS.GMTitle == '')?'title':PROPS.GMTitle)"
+          sectionDescription="description"
+          :width="PROPS.GMInfoBoxWidth"
+          :height="PROPS.GMInfoBoxHeight">
+          <Markdown
+            :MDHeight="`calc(${ PROPS.GMInfoBoxHeight } - 80${ 'px' })`"
+            :MDText="PROPS.GMInfoBoxMarkdownText"/>
+        </Widget>
       </div>
       <div
         ref="map_ref"
@@ -21,6 +34,8 @@
 </template>
 
 <script setup>
+import Markdown from './markdown.vue'
+import Widget from './widget.vue'
 
 import {
   getCurrentInstance,
@@ -47,6 +62,14 @@ const GLOBAL = INSTANCE.appContext.config.globalProperties
 // NOTE: COMPONENT PROPERTIES
 
 const PROPS = defineProps({
+  GMInfoBoxHeight: {
+    type: String,
+    default: '460px'
+  },
+  GMInfoBoxWidth: {
+    type: String,
+    default: '100%'
+  },
   GMTitle: {
     type: String,
     default: ''
@@ -91,6 +114,10 @@ const PROPS = defineProps({
     type: Number,
     default: 0,
   },
+  GMInfoBoxMarkdownText: {
+    type: String,
+    default: '',
+  }
 })
 
 
@@ -145,6 +172,7 @@ const initMap = async () => {
     zoomControl: true,
     gestureHandling: 'cooperative',
     mapTypeControl: false,
+    fullscreenControl: false,
   })
   setMapListeners()
   showZoomFeatures.value = PROPS.GMZoomFeatures
@@ -608,7 +636,7 @@ const debounceShowMarkersInBounds = _.debounce(showMarkersInBounds, 1000, { 'tra
   overflow: hidden;
 }
 
-.map-container {
+#map-container {
   position: relative;
   width: 100%;
   height: 480px;
@@ -648,6 +676,14 @@ const debounceShowMarkersInBounds = _.debounce(showMarkersInBounds, 1000, { 'tra
   text-align: center;
   text-shadow: 0px 5px 20px rgba(0, 0, 0, 1);
   text-transform: uppercase;
+}
+
+#info-box {
+  left: 10px;
+  margin: auto;
+  position: absolute;
+  top: 10px;
+  z-index: 10;
 }
 
 </style>

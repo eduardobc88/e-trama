@@ -240,12 +240,10 @@ const setup = async () => {
   try {
     isLoading.value = true
     resultCollection.set('state', 'michoacán')
-    federalDistrictFeatureCollection.set('feature_type', 'federal-district')
     await resultCollection.fetch()
-    await federalDistrictFeatureCollection.fetchAll()
-    console.log('== federalDistrictFeatureCollection ==', federalDistrictFeatureCollection)
-    //setupMap()
-    //setupMapSection()
+    let response = await fetchFeatures()
+    if (response.error !== null)
+      throw response.error
     setupMapFeatures()
   } catch (err) {
     console.error(err)
@@ -254,52 +252,118 @@ const setup = async () => {
   }
 }
 
+const fetchFeatures = async () => {
+  let response = {
+    error: null,
+  }
+  try {
+    isLoading.value = true
+    federalDistrictFeatureCollection.set('feature_type', 'federal-district')
+    localDistrictFeatureCollection.set('feature_type', 'local-district')
+    townFeatureCollection.set('feature_type', 'town')
+    sectionFeatureCollection.set('feature_type', 'section')
+    await Promise.all([
+      federalDistrictFeatureCollection.fetchAll(),
+      localDistrictFeatureCollection.fetchAll(),
+      townFeatureCollection.fetchAll(),
+      sectionFeatureCollection.fetchAll(),
+    ])
+  } catch (err) {
+    response.error = err.toString()
+    console.error('== fetchFeatures ==', err)
+  } finally {
+    isLoading.value = false
+    return response
+  }
+}
+
 const setupMapFeatures = () => {
   let gmFeatures = {}
   let features = []
-  for (let i in GEOJSON_DISTRITO_FEDERAL.features) {
-    let feature = GEOJSON_DISTRITO_FEDERAL.features[i]
-    feature.properties.data = {
-      id: i,
-      district_f_id: feature.properties.distrito_f,
-      district_l_id: '',
-      town_id: '',
-      section_id: '',
-      label: feature.properties.distrito_f,
-      zoom: 8,
-      color: 'rgba(40, 255, 90, 1)',
-      show: true,
+  for (let m of federalDistrictFeatureCollection.getModels()) {
+    let feature = {
+      geometry: JSON.parse(m.get('geometry')),
+      properties: {
+        id: m.get('id'),
+        district_id: m.get('district_id'),
+        label: `${ m.get('name') } ${ m.get('header') }`,
+        zoom: 8,
+        color: GLOBAL.$getHexColor(`${ m.get('name') } ${m.get('header')}`, true, 20, 50, 100),
+        show: true,
+        header: m.get('header'),
+        description: m.get('description'),
+        model_id: 0,
+      },
+      type: 'Feature',
     }
     features.push(feature)
   }
   gmFeatures[8] = features
   features = []
-  for (let i in GEOJSON_DISTRITO_LOCAL.features) {
-    let feature = GEOJSON_DISTRITO_LOCAL.features[i]
-    feature.properties.data = {
-      id: i,
-      district_f_id: '',
-      district_l_id: feature.properties.distrito_l,
-      town_id: '',
-      section_id: '',
-      label: feature.properties.distrito_l,
-      zoom: 9,
-      color: 'rgba(100, 40, 200, 1)',
-      show: true,
+  for (let m of localDistrictFeatureCollection.getModels()) {
+    let feature = {
+      geometry: JSON.parse(m.get('geometry')),
+      properties: {
+        id: m.get('id'),
+        district_id: m.get('district_id'),
+        label: `${ m.get('name') } ${m.get('header')}`,
+        zoom: 8,
+        color: GLOBAL.$getHexColor(`${ m.get('name') } ${m.get('header')}`, true, 20, 50, 100),
+        show: true,
+        header: m.get('header'),
+        description: m.get('description'),
+        model_id: 0,
+      },
+      type: 'Feature',
     }
     features.push(feature)
   }
   gmFeatures[9] = features
   gmFeatures[10] = setupTownFeaturesMap()
+  //  let feature = {
+  //    geometry: JSON.parse(m.get('geometry')),
+  //    properties: {
+  //      id: m.get('id'),
+  //      section_id: m.get('section_id'),
+  //      town_id: m.get('town_id'),
+  //      district_f_id: m.get('district_f_id'),
+  //      district_l_id: m.get('district_l_id'),
+  //      label: m.get('name'),
+  //      zoom: 11,
+  //      color: 'rgba(30, 150, 220, 1)',
+  //      show: true,
+  //      description: m.get('description'),
+  //      model: {},
+  //    },
+  //    type: 'Feature',
+  //  }
+  //  features.push(feature)
+  //}
+  //gmFeatures[11] = features
   gmFeatures[11] = setupSectionFeaturesMap()
   googleMapFeatures.value = gmFeatures
 }
 
 const setupTownFeaturesMap = () => {
   let features = []
-  for (let i in GEOJSON_MUNICIPIO.features) {
-    let feature = {}
-    let iName = removeAccents(GEOJSON_MUNICIPIO.features[i].properties.nombre).toLowerCase()
+    for (let m of townFeatureCollection.getModels()) {
+    let feature = {
+      geometry: JSON.parse(m.get('geometry')),
+      properties: {
+        id: m.get('id'),
+        town_id: m.get('town_id'),
+        district_f_id: m.get('district_f_id'),
+        district_l_id: m.get('district_l_id'),
+        label: m.get('name'),
+        zoom: 10,
+        color: 'rgba(200, 90, 90, 1)',
+        show: true,
+        description: m.get('description'),
+        model_id: 0,
+      },
+      type: 'Feature',
+    }
+    let iName = removeAccents(feature.properties.label).toLowerCase()
     let models = resultCollection.filter(m => {
       let mName = removeAccents(m.get('name')).toLowerCase()
       return (mName === iName)
@@ -308,18 +372,7 @@ const setupTownFeaturesMap = () => {
       continue
 
     let rModel = models.getModels()[0]
-    feature = { ...GEOJSON_MUNICIPIO.features[i] }
-    feature.properties.data = {
-      id: i,
-      district_f_id: GEOJSON_MUNICIPIO.features[i].properties.distrito_f,
-      district_l_id: GEOJSON_MUNICIPIO.features[i].properties.distrito_l,
-      town_id: GEOJSON_MUNICIPIO.features[i].properties.municipio,
-      section_id: '',
-      label: GEOJSON_MUNICIPIO.features[i].properties.nombre,
-      zoom: 10,
-      color: 'rgba(0, 0, 0, 1)',
-      show: true,
-    }
+    feature.properties.model_id = rModel.get('id')
     // NOTE: GET THE MAYOR FOR COA AND SINGLE PARTIES
     let coaTotalVotes = 0
     let coaKey = ''
@@ -340,16 +393,15 @@ const setupTownFeaturesMap = () => {
       }
     }
     // NOTE: CHECK IF IS PARTY AND SET DATA
-    GEOJSON_MUNICIPIO.features[i].properties.data.party = singleKey
-    GEOJSON_MUNICIPIO.features[i].properties.data.color = colors[singleKey]
+    feature.properties.party = singleKey
+    feature.properties.color = colors[singleKey]
     if (coaKey.includes(singleKey) && coaTotalVotes > singleTotalVotes) {
-      GEOJSON_MUNICIPIO.features[i].properties.data.coa = 'coa'
-      GEOJSON_MUNICIPIO.features[i].properties.data.party = coaKey.toString()
-      GEOJSON_MUNICIPIO.features[i].properties.data.color = colors[coaKey]
-      feature.properties.data.color = colors[coaKey]
+      feature.properties.coa = 'coa'
+      feature.properties.party = coaKey.toString()
+      feature.properties.color = colors[coaKey]
     }
-    GEOJSON_MUNICIPIO.features[i].properties.data.coa_total = coaTotalVotes
-    GEOJSON_MUNICIPIO.features[i].properties.data.single_total = singleTotalVotes
+    feature.properties.coa_total = coaTotalVotes
+    feature.properties.single_total = singleTotalVotes
     features.push(feature)
   }
   return features
@@ -357,9 +409,25 @@ const setupTownFeaturesMap = () => {
 
 const setupSectionFeaturesMap = () => {
   let features = []
-  for (let i in GEOJSON_SECCION.features) {
-    let feature = {}
-    let townId = parseInt(GEOJSON_SECCION.features[i].properties.municipio)
+  for (let m of sectionFeatureCollection.getModels()) {
+    let feature = {
+      geometry: JSON.parse(m.get('geometry')),
+      properties: {
+        id: m.get('id'),
+        section_id: m.get('section_id'),
+        town_id: m.get('town_id'),
+        district_f_id: m.get('district_f_id'),
+        district_l_id: m.get('district_l_id'),
+        label: m.get('name'),
+        zoom: 11,
+        color: 'rgba(30, 150, 220, 1)',
+        show: true,
+        description: m.get('description'),
+        model_id: 0,
+      },
+      type: 'Feature',
+    }
+    let townId = parseInt(feature.properties.town_id)
     let models = resultCollection.filter(m => {
       let id = parseInt(m.get('id'))
       return (townId === id)
@@ -368,20 +436,7 @@ const setupSectionFeaturesMap = () => {
       continue
 
     let rModel = models.getModels()[0]
-    let id = rModel.get('town_id')
-    let rName = rModel.get('name')
-    feature = GEOJSON_SECCION.features[i]
-    feature.properties.data = {
-      id: i,
-      district_f_id: GEOJSON_SECCION.features[i].properties.distrito_f,
-      district_l_id: GEOJSON_SECCION.features[i].properties.distrito_l,
-      town_id: GEOJSON_SECCION.features[i].properties.municipio,
-      section_id: GEOJSON_SECCION.features[i].properties.seccion,
-      label: GEOJSON_SECCION.features[i].properties.seccion,
-      zoom: 11,
-      color: 'rgba(0, 0, 0, 1)',
-      show: true,
-    }
+    feature.properties.model_id = rModel.get('id')
     // NOTE: GET THE MAYOR FOR COA AND SINGLE PARTIES
     let coaTotalVotes = 0
     let coaKey = ''
@@ -402,16 +457,15 @@ const setupSectionFeaturesMap = () => {
       }
     }
     // NOTE: CHECK IF IS PARTY AND SET DATA
-    GEOJSON_SECCION.features[i].properties.data.party = singleKey
-    GEOJSON_SECCION.features[i].properties.data.color = colors[singleKey]
+    feature.properties.party = singleKey
+    feature.properties.color = colors[singleKey]
     if (coaKey.includes(singleKey) && coaTotalVotes > singleTotalVotes) {
-      GEOJSON_SECCION.features[i].properties.data.coa = 'coa'
-      GEOJSON_SECCION.features[i].properties.data.party = coaKey.toString()
-      GEOJSON_SECCION.features[i].properties.data.color = colors[coaKey]
-      feature.properties.data.color = colors[coaKey]
+      feature.properties.coa = 'coa'
+      feature.properties.party = coaKey.toString()
+      feature.properties.color = colors[coaKey]
     }
-    GEOJSON_SECCION.features[i].properties.data.coa_total = coaTotalVotes
-    GEOJSON_SECCION.features[i].properties.data.single_total = singleTotalVotes
+    feature.properties.coa_total = coaTotalVotes
+    feature.properties.single_total = singleTotalVotes
     features.push(feature)
   }
   return features
@@ -422,12 +476,10 @@ const removeAccents = str => {
 }
 
 const GMFeatureOnClick = data => {
-  if (data.feature.nh.data.zoom === 10) {
-    let featureLabel =googleMapFeatures.value[data.feature.nh.data.zoom][data.feature.nh.data.id].properties.data.label
-    let iName = removeAccents(featureLabel).toLowerCase()
+  if (data.feature.nh.zoom === 10) {
+    let featureModelId = data.feature.nh.model_id
     let models = resultCollection.filter(m => {
-      let mName = removeAccents(m.get('name')).toLowerCase()
-      return (mName === iName)
+      return (m.get('id') === featureModelId)
     })
     if (!models.getModels().length)
       return

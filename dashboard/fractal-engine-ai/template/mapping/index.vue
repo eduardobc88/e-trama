@@ -139,6 +139,10 @@ let isLoading = ref(false)
 let googleMapFeatures = ref({})
 let townSelected = ref(null)
 let GMTitle = ref('')
+let federalDistrictFeatureCollection = new GLOBAL.$model.FeatureMC.collection()
+let localDistrictFeatureCollection = new GLOBAL.$model.FeatureMC.collection()
+let townFeatureCollection = new GLOBAL.$model.FeatureMC.collection()
+let sectionFeatureCollection = new GLOBAL.$model.FeatureMC.collection()
 let resultCollection = new GLOBAL.$model.ResultMC.collection()
 let colors = {
   pan: '#00579c',
@@ -236,7 +240,10 @@ const setup = async () => {
   try {
     isLoading.value = true
     resultCollection.set('state', 'michoacán')
+    federalDistrictFeatureCollection.set('feature_type', 'federal-district')
     await resultCollection.fetch()
+    await federalDistrictFeatureCollection.fetchAll()
+    console.log('== federalDistrictFeatureCollection ==', federalDistrictFeatureCollection)
     //setupMap()
     //setupMapSection()
     setupMapFeatures()

@@ -320,26 +320,6 @@ const setupMapFeatures = () => {
   }
   gmFeatures[9] = features
   gmFeatures[10] = setupTownFeaturesMap()
-  //  let feature = {
-  //    geometry: JSON.parse(m.get('geometry')),
-  //    properties: {
-  //      id: m.get('id'),
-  //      section_id: m.get('section_id'),
-  //      town_id: m.get('town_id'),
-  //      district_f_id: m.get('district_f_id'),
-  //      district_l_id: m.get('district_l_id'),
-  //      label: m.get('name'),
-  //      zoom: 11,
-  //      color: 'rgba(30, 150, 220, 1)',
-  //      show: true,
-  //      description: m.get('description'),
-  //      model: {},
-  //    },
-  //    type: 'Feature',
-  //  }
-  //  features.push(feature)
-  //}
-  //gmFeatures[11] = features
   gmFeatures[11] = setupSectionFeaturesMap()
   googleMapFeatures.value = gmFeatures
 }

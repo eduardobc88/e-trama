@@ -8,7 +8,10 @@
       :GMOnMarker="GMOnMarker"
       :GMOnRouteCalculated="GMOnRouteCalculated"
       :GMFeatureLabelKey="'label'"
-      :GMFeatureColorKey="'color'"/>
+      :GMFeatureColorKey="'color'"
+      GMInfoBoxHeight="460px"
+      GMInfoBoxWidth="400px"
+      :GMInfoBoxMarkdownText="GMInfoBoxMarkdownText"/>
     <GridSpace
       gridTemplateColumns="1fr 2fr">
       <template #slota>
@@ -229,6 +232,9 @@ let chartOptions = ref({
   responsive: true,
   maintainAspectRatio: false,
 })
+
+// NOTE: MAP COMPONENT PROPERTIES
+let GMInfoBoxMarkdownText = ref('')
 
 
 onMounted (async () => {
@@ -470,6 +476,7 @@ const GMFeatureOnClick = data => {
       data: {},
     }
     GMTitle.value = townSelected.value.model.get('name')
+    GMInfoBoxMarkdownText.value = data.feature.nh.description
     generateChart()
   }
 }

@@ -13,8 +13,8 @@
       </div>
       <div
         v-if="isLoading"
-        class="loader">
-        cargando...
+        id="loader">
+        <p>cargando...</p>
       </div>
     </div>
   </div>
@@ -52,8 +52,8 @@ const PROPS = defineProps({
     default: ''
   },
   GMFeatures: {
-    type: Array,
-    default: [],
+    type: Object,
+    default: {},
   },
   GMFeatureOnClick: {
     type: Function,
@@ -67,6 +67,30 @@ const PROPS = defineProps({
     type: Function,
     default: () => {},
   },
+  GMFeatureLabelKey: {
+    type: String,
+    default: '',
+  },
+  GMFeatureColorKey: {
+    type: String,
+    default: '',
+  },
+  GMOnZoomChanged: {
+    type: Function,
+    default: () => {},
+  },
+  GMOnBoundsChanged: {
+    type: Function,
+    default: () => {},
+  },
+  GMOnCenterChanged: {
+    type: Function,
+    default: () => {},
+  },
+  GMZoomFeatures: {
+    type: Number,
+    default: 0,
+  },
 })
 
 
@@ -79,6 +103,7 @@ const isLoading = ref(false)
 // NOTE: VARIABLES
 
 let map = null
+let showZoomFeatures = ref(0)
 let features = []
 let featureMarkers = []
 let userMarkers = []
@@ -94,46 +119,65 @@ let isFeaturesVisible = true
 
 watch(() => PROPS.GMFeatures, newData => {
   loadGeoJSON({
-    features: PROPS.GMFeatures,
+    features: PROPS.GMFeatures[showZoomFeatures.value],
+    type: 'FeatureCollection'
+  })
+})
+
+watch(showZoomFeatures, newData => {
+  loadGeoJSON({
+    features: PROPS.GMFeatures[newData],
     type: 'FeatureCollection'
   })
 })
 
 onMounted (async () => {
+  initMap()
+})
+
+const initMap = async () => {
+  isLoading.value = true
   const { Map } = await importLibrary('maps')
   map = new Map(map_ref.value, {
-    center: { lat: 19.4326, lng: -99.1332 },
-    zoom: 10,
+    center: { lat: 19.7294854, lng: -101.1763666 },
+    zoom: PROPS.GMZoomFeatures,
     mapId: MAP_ID,
     zoomControl: true,
     gestureHandling: 'cooperative',
     mapTypeControl: false,
   })
-  loadGeoJSON({
-    features: PROPS.GMFeatures,
-    type: 'FeatureCollection'
+  setMapListeners()
+  showZoomFeatures.value = PROPS.GMZoomFeatures
+}
+
+const resetMap = () => {
+  map.data.forEach((feature) => {
+    map.data.remove(feature)
   })
-})
+  featureMarkers.forEach(feature => {
+    feature.setMap(null)
+  })
+  features = []
+  featureMarkers = []
+}
 
 
 // NOTE: METHODS
 
-const loadGeoJSON = async (geoJSON) => {
-  if (!map || !geoJSON)
+const loadGeoJSON = async geoJSON => {
+  if (!map || !geoJSON || !geoJSON.features)
+    return
+  
+  if (!geoJSON.features.length)
     return
 
   isLoading.value = true
-  map.data.forEach((feature) => {
-    map.data.remove(feature)
-  })
   try {
+    resetMap()
     features = map.data.addGeoJson(geoJSON)
     features.forEach(feature => {
       setFeatureMarker(feature)
     })
-    setMapCenterByFeatures()
-    removeMapListeners()
-    setMapListeners()
     setFeatureStyles()
     setDefaultUIButtons()
   } catch (err) {
@@ -143,19 +187,24 @@ const loadGeoJSON = async (geoJSON) => {
   }
 }
 
-const setMapCenterByFeatures = () => {
+const setMapCenterByFeatures = (type = 'fitBounds') => {
   let bounds = new google.maps.LatLngBounds()
   features.forEach(feature => {
     calcFeatureBounds(feature.getGeometry(), bounds.extend, bounds)
   })
-  map.fitBounds(bounds)
+  if (type === 'fitBounds') {
+    map.fitBounds(bounds)
+    return
+  }
+  if (type === 'setCenter')
+    map.setCenter(bounds.getCenter())
 }
 
 const setFeatureStyles = () => {
   map.data.setStyle({})
   map.data.setStyle(feature => {
     return {
-      fillColor: feature.nh.data.color,
+      fillColor: feature.nh[PROPS.GMFeatureColorKey],
       fillOpacity: 0.3,
       strokeColor: '#222222',
       strokeWeight: 1,
@@ -173,10 +222,60 @@ const setMapListeners = () => {
   map.addListener('click', event => {
     addUserMarker(event)
   })
+  map.addListener('zoom_changed', debounceZoomChanged)
+  map.addListener('bounds_changed', () => debounceShowMarkersInBounds)
+  map.addListener('center_changed', () => {
+    PROPS.GMOnCenterChanged({
+      zoom: map.getZoom(),
+      center: map.getCenter(),
+      bounds: map.getBounds(),
+    })
+  })
+}
+
+const showMarkersInBounds = markers => {
+  let bounds = map.getBounds()
+  if (!bounds)
+    return
+
+  markers.forEach((marker) => {
+    if (bounds.contains({ lat: Number(marker.position.lat), lng: Number(marker.position.lng) }))
+      marker.setMap(map)
+    else
+      marker.setMap(null)
+  })
+  PROPS.GMOnBoundsChanged({
+    zoom: map.getZoom(),
+    center: map.getCenter(),
+    bounds: map.getBounds(),
+  })
+}
+
+const handleZoomChanged = () => {
+  let zoomNumber = Math.round(map.getZoom())
+  let fixedZoomNumber = -1
+  for (let key of Object.keys(PROPS.GMFeatures)) {
+    let zoomKey = parseInt(key)
+    if (zoomNumber <= zoomKey)
+      fixedZoomNumber = zoomKey
+    if (fixedZoomNumber >= 0 && showZoomFeatures.value !== fixedZoomNumber) {
+      showZoomFeatures.value = fixedZoomNumber
+      break
+    }
+  }
+  PROPS.GMOnZoomChanged({
+    zoom: Math.round(map.getZoom()),
+    center: map.getCenter(),
+    bounds: map.getBounds(),
+  })
 }
 
 const removeMapListeners = () => {
   google.maps.event.clearListeners(map.data, 'click')
+  google.maps.event.clearListeners(map, 'click')
+  google.maps.event.clearListeners(map, 'zoom_changed')
+  google.maps.event.clearListeners(map, 'bounds_changed')
+  google.maps.event.clearListeners(map, 'center_changed')
 }
 
 const setMapCenterByUserMarkers = () => {
@@ -196,25 +295,26 @@ const setFeatureMarker = async feature => {
     AdvancedMarkerElement,
   } = await importLibrary('marker')
   let labelDiv = document.createElement('div')
-  labelDiv.textContent = feature.nh.nombre
+  labelDiv.textContent = feature.nh[PROPS.GMFeatureLabelKey]
   labelDiv.style.fontSize = '12px'
   labelDiv.style.fontWeight = 'bold'
   labelDiv.style.color = '#ffffff'
-  labelDiv.style.background = feature.nh.data.color
+  labelDiv.style.textTransform = 'uppercase'
+  labelDiv.style.background = feature.nh[PROPS.GMFeatureColorKey]
   labelDiv.style.padding = '5px'
   labelDiv.style.borderRadius = '5px'
-  labelDiv.style.border = `1px solid ${ feature.nh.data.color }`
+  labelDiv.style.border = `1px solid ${ feature.nh[PROPS.GMFeatureColorKey] }`
   labelDiv.style.boxShadow = `0 3px 4px 2px rgba(0, 0, 0, 0.2)`
   let marker = new AdvancedMarkerElement({
     position: bounds.getCenter(),
     map: map,
     content: labelDiv,
-    title: feature.nh.nombre,
+    title: feature.nh[PROPS.GMFeatureLabelKey].toString(),
   })
   marker.content.addEventListener('animationend', () => {
     marker.content.style.animation = 'none'
   }, { once: true })
-  const aleatoryDropDownTime = (Math.random() * (1.0 - 0.1) + 0.1).toFixed(2)
+  const aleatoryDropDownTime = (Math.random() * (0.4 - 0.1) + 0.1).toFixed(2)
   marker.content.style.animation = `drop-down ${ aleatoryDropDownTime }s ease-in-out forwards`
   featureMarkers.push(marker)
 }
@@ -252,7 +352,7 @@ const addUserMarker = async e => {
     PinElement,
   } = await importLibrary('marker')
   const pin = new PinElement()
-  const aleatoryDropDownTime = (Math.random() * (1.0 - 0.1) + 0.1).toFixed(2)
+  const aleatoryDropDownTime = (Math.random() * (0.4 - 0.1) + 0.1).toFixed(2)
   pin.element.style.animation = `drop-down ${ aleatoryDropDownTime }s ease-in-out forwards`
   let marker = new AdvancedMarkerElement({
     content: pin.element,
@@ -271,7 +371,8 @@ const addUserMarker = async e => {
 }
 
 const setDefaultUIButtons = () => {
-  addCustomUIButtonIcon('center_focus_strong', 'BOTTOM_CENTER', setMapCenterByFeatures)
+  map.controls[google.maps.ControlPosition['BOTTOM_CENTER']] = []
+  addCustomUIButtonIcon('center_focus_strong', 'BOTTOM_CENTER', () => setMapCenterByFeatures('setCenter'))
   addCustomUIButtonIcon('strategy', 'BOTTOM_CENTER', toggleFeatureLabels)
   addCustomUIButtonIcon('globe_location_pin', 'BOTTOM_CENTER', toggleUserMarkers)
   addCustomUIButtonIcon('add_location_alt', 'BOTTOM_CENTER', toggleEnableUserMarkers)
@@ -279,7 +380,7 @@ const setDefaultUIButtons = () => {
   addCustomUIButtonIcon('location_off', 'BOTTOM_CENTER', removeUserMarkers)
   addCustomUIButtonIcon('wrong_location', 'BOTTOM_CENTER', removeUserMarker)
   addCustomUIButtonIcon('filter_center_focus', 'BOTTOM_CENTER', setMapCenterByUserMarkers)
-  addCustomUIButtonIcon('route', 'BOTTOM_CENTER', () => generateRoute(userMarkers, true))
+  addCustomUIButtonIcon('route', 'BOTTOM_CENTER', () => generateRoute(userMarkers))
   addCustomUIButtonIcon('layers', 'BOTTOM_CENTER', toggleFeatures)
 }
 
@@ -289,7 +390,7 @@ const removeUserMarkers = () => {
       marker.map = null
       marker.content.style.animation = 'none'
     }, { once: true })
-    let aleatoryDropDownTime = (Math.random() * (1.0 - 0.1) + 0.1).toFixed(2)
+    let aleatoryDropDownTime = (Math.random() * (0.4 - 0.1) + 0.1).toFixed(2)
     marker.content.style.animation = `drop-up ${ aleatoryDropDownTime }s ease-in-out forwards`
   })
   userMarkers = []
@@ -311,7 +412,7 @@ const removeUserMarker = () => {
     })
     markerSelected = null
   }, { once: true })
-  let aleatoryDropDownTime = (Math.random() * (1.0 - 0.1) + 0.1).toFixed(2)
+  let aleatoryDropDownTime = (Math.random() * (0.4 - 0.1) + 0.1).toFixed(2)
   markerSelected.content.style.animation = `drop-up ${ aleatoryDropDownTime }s ease-in-out forwards`
 }
 
@@ -324,7 +425,7 @@ const toggleFeatureLabels = () => {
       marker.content.addEventListener('animationend', () => {
         marker.content.style.animation = 'none'
       }, { once: true })
-      let aleatoryDropDownTime = (Math.random() * (1.0 - 0.1) + 0.1).toFixed(2)
+      let aleatoryDropDownTime = (Math.random() * (0.4 - 0.1) + 0.1).toFixed(2)
       marker.content.style.animation = `drop-down ${ aleatoryDropDownTime }s ease-in-out forwards`
     })
     return
@@ -334,7 +435,7 @@ const toggleFeatureLabels = () => {
       marker.map = null
       marker.content.style.animation = 'none'
     }, { once: true })
-    let aleatoryDropDownTime = (Math.random() * (1.0 - 0.1) + 0.1).toFixed(2)
+    let aleatoryDropDownTime = (Math.random() * (0.4 - 0.1) + 0.1).toFixed(2)
     marker.content.style.animation = `drop-up ${ aleatoryDropDownTime }s ease-in-out forwards`
   })
 }
@@ -347,7 +448,7 @@ const toggleUserMarkers = () => {
       marker.content.addEventListener('animationend', () => {
         marker.content.style.animation = 'none'
       }, { once: true })
-      let aleatoryDropDownTime = (Math.random() * (1.0 - 0.1) + 0.1).toFixed(2)
+      let aleatoryDropDownTime = (Math.random() * (0.4 - 0.1) + 0.1).toFixed(2)
       marker.content.style.animation = `drop-down ${ aleatoryDropDownTime }s ease-in-out forwards`
     })
     return
@@ -357,7 +458,7 @@ const toggleUserMarkers = () => {
       marker.map = null
       marker.content.style.animation = 'none'
     }, { once: true })
-    let aleatoryDropDownTime = (Math.random() * (1.0 - 0.1) + 0.1).toFixed(2)
+    let aleatoryDropDownTime = (Math.random() * (0.4 - 0.1) + 0.1).toFixed(2)
     marker.content.style.animation = `drop-up ${ aleatoryDropDownTime }s ease-in-out forwards`
   })
 }
@@ -374,33 +475,60 @@ const toggleUserMarkersDraggable = () => {
   })
 }
 
-const generateRoute = async (markers = [], isOptimized = false) => {
-  let result = null
+const generateRoute = async (markers = []) => {
+  let result = {}
   try {
-    const {
-      DirectionsService,
-      DirectionsRenderer,
-    } = await importLibrary('routes')
-    const directionsService = new DirectionsService()
-    const directionsRenderer = new DirectionsRenderer({
-      suppressMarkers: true,
-      map: map,
-    })
-    directionsRenderer.setMap(null)
-    if (!markers.length)
+    if (markers.length < 2)
       throw 'no markers'
+    const {
+      Route,
+    } = await importLibrary('routes')
+    const firstMarker = markers[0]
+    const lastMarker = markers[markers.length - 1]
+    const middleMarkers = markers.slice(1, -1)
+    let intermediates = []
+    for (const marker of middleMarkers)
+      intermediates.push({
+        lat: Number(marker.position.lat), 
+        lng: Number(marker.position.lng),
+      })
     const request = {
-      origin: markers[0].position,
-      destination: markers[markers.length - 1].position,
-      waypoints: markers.slice(1, -1).map(marker => ({
-        location: marker.position,
-        stopover: true,
-      })),
+      origin: {
+        lat: Number(firstMarker.position.lat), 
+        lng: Number(firstMarker.position.lng),
+      },
+      destination: {
+        lat: Number(lastMarker.position.lat), 
+        lng: Number(lastMarker.position.lng),
+      },
+      intermediates: intermediates,
       travelMode: google.maps.TravelMode.WALKING,
-      optimizeWaypoints: isOptimized,
+      optimizeWaypointOrder: false,
+      fields: [
+        'path',
+        'distanceMeters',
+        'durationMillis',
+        'legs',
+      ],
     }
-    result = await directionsService.route(request)
-    directionsRenderer.setDirections(result)
+    const { routes } = await Route.computeRoutes(request)
+    if (!routes || routes.length === 0)
+      throw 'no routes'
+    const routeResult = routes[0]
+    const polylines = routeResult.createPolylines()
+    polylines.forEach(polyline => {
+      polyline.setMap(map)
+      polyline.setOptions({
+        strokeColor: '#8055f6',
+        strokeOpacity: 1.0,
+        strokeWidth: 2,
+      })
+    })
+    result = {
+      polylines: polylines,
+      totalWaypoints: intermediates.length + 2,
+      route: routeResult,
+    }
   } catch (err) {
     console.error('== generateRoute ==', err)
   } finally {
@@ -463,6 +591,11 @@ const calcFeatureBounds = (geometry, callback, thisArg) => {
   }
 }
 
+// NOTE: DEBOUNCE FUNCTIONS
+const debounceZoomChanged = _.debounce(handleZoomChanged, 1000, { 'trailing': true })
+const debounceShowMarkersInBounds = _.debounce(showMarkersInBounds, 1000, { 'trailing': true })
+
+
 </script>
 
 <style scoped lang="css">
@@ -498,14 +631,23 @@ const calcFeatureBounds = (geometry, callback, thisArg) => {
   height: 100%;
 }
 
-.loader { 
+#loader { 
+  bottom: 0;
+  display: flex;
+  left: 0; 
+  margin: auto;
   position: absolute;
-  top: 10px;
-  left: 10px; 
-  background: white;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  right: 0;
+  top: 0;
+}
+
+#loader > p {
+  color: #FFFFFF;
+  font-weight: bold;
+  margin: auto;
+  text-align: center;
+  text-shadow: 0px 5px 20px rgba(0, 0, 0, 1);
+  text-transform: uppercase;
 }
 
 </style>

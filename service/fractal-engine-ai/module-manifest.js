@@ -22,4 +22,5 @@ export default {
   MODULE_RESULT: (await import('./module/result/index.js')).default,
   MODULE_CANDIDATE: (await import('./module/candidate/index.js')).default,
   MODULE_CARD: (await import('./module/card/index.js')).default,
+  MODULE_FEATURE: (await import('./module/feature/index.js')).default,
 }

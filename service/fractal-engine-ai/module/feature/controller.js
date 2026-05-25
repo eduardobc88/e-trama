@@ -16,7 +16,7 @@ const getFederalDistrictItems = async (req, res) => {
     if (result.error !== null)
       throw result.error
     response.items = result.records
-    geometryToJSON(response.items)
+    //geometryToJSON(response.items)
   } catch (err) {
     res.code(500)
     response.status_code = 1

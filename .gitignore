@@ -31,3 +31,6 @@ static/dashboard/fractal-engine-ai/dist/
 service/fractal-engine-ai/view/dashboard-index.ejs
 
 .vscode/
+.idea/
+.cursor/
+.zed/

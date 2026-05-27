@@ -404,9 +404,9 @@ const setupSectionFeaturesMap = () => {
         town_id: m.get('town_id'),
         district_f_id: m.get('district_f_id'),
         district_l_id: m.get('district_l_id'),
-        label: m.get('name'),
+        label: m.get('section_id'),
         zoom: 11,
-        color: 'rgba(30, 150, 220, 1)',
+        color: '',
         show: true,
         description: m.get('description'),
         model_id: 0,
@@ -462,6 +462,8 @@ const removeAccents = str => {
 }
 
 const GMFeatureOnClick = data => {
+  GMTitle.value = data.feature.nh.label
+  GMInfoBoxMarkdownText.value = data.feature.nh.description
   if (data.feature.nh.zoom === 10) {
     let featureModelId = data.feature.nh.model_id
     let models = resultCollection.filter(m => {
@@ -475,8 +477,6 @@ const GMFeatureOnClick = data => {
       model: rModel,
       data: {},
     }
-    GMTitle.value = townSelected.value.model.get('name')
-    GMInfoBoxMarkdownText.value = data.feature.nh.description
     generateChart()
   }
 }

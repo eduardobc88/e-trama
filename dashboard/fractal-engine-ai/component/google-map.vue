@@ -131,6 +131,7 @@ const isLoading = ref(false)
 
 let map = null
 let showZoomFeatures = ref(0)
+let isZoomNavigation = ref(false)
 let features = []
 let featureMarkers = []
 let userMarkers = []
@@ -145,22 +146,21 @@ let isFeaturesVisible = true
 // NOTE: LIFE CYCLE COMPONENT METHODS
 
 watch(() => PROPS.GMFeatures, newData => {
-  loadGeoJSON({
-    features: PROPS.GMFeatures[showZoomFeatures.value],
-    type: 'FeatureCollection'
-  })
+  loadCurrentZoomFeatures()
 })
 
 watch(showZoomFeatures, newData => {
-  loadGeoJSON({
-    features: PROPS.GMFeatures[newData],
-    type: 'FeatureCollection'
-  })
+  loadCurrentZoomFeatures()
+})
+
+watch(isZoomNavigation, newData => {
+  resetZoomGMFeatures()
 })
 
 onMounted (async () => {
   initMap()
 })
+
 
 const initMap = async () => {
   isLoading.value = true
@@ -173,8 +173,10 @@ const initMap = async () => {
     gestureHandling: 'cooperative',
     mapTypeControl: false,
     fullscreenControl: false,
+    streetViewControl: false,
   })
   setMapListeners()
+  setDefaultUIButtons()
   showZoomFeatures.value = PROPS.GMZoomFeatures
 }
 
@@ -192,6 +194,13 @@ const resetMap = () => {
 
 // NOTE: METHODS
 
+const loadCurrentZoomFeatures = () => {
+  loadGeoJSON({
+    features: PROPS.GMFeatures[showZoomFeatures.value],
+    type: 'FeatureCollection'
+  })
+}
+
 const loadGeoJSON = async geoJSON => {
   if (!map || !geoJSON || !geoJSON.features)
     return
@@ -207,7 +216,6 @@ const loadGeoJSON = async geoJSON => {
       setFeatureMarker(feature)
     })
     setFeatureStyles()
-    setDefaultUIButtons()
   } catch (err) {
     console.error('== loadGeoJSON ==', err)
   } finally {
@@ -251,7 +259,7 @@ const setMapListeners = () => {
     addUserMarker(event)
   })
   map.addListener('zoom_changed', debounceZoomChanged)
-  map.addListener('bounds_changed', () => debounceShowMarkersInBounds)
+  map.addListener('bounds_changed', debounceShowMarkersInBounds)
   map.addListener('center_changed', () => {
     PROPS.GMOnCenterChanged({
       zoom: map.getZoom(),
@@ -261,12 +269,12 @@ const setMapListeners = () => {
   })
 }
 
-const showMarkersInBounds = markers => {
+const showMarkersInBounds = () => {
   let bounds = map.getBounds()
   if (!bounds)
     return
 
-  markers.forEach((marker) => {
+  featureMarkers.forEach((marker) => {
     if (bounds.contains({ lat: Number(marker.position.lat), lng: Number(marker.position.lng) }))
       marker.setMap(map)
     else
@@ -280,22 +288,39 @@ const showMarkersInBounds = markers => {
 }
 
 const handleZoomChanged = () => {
-  let zoomNumber = Math.round(map.getZoom())
-  let fixedZoomNumber = -1
-  for (let key of Object.keys(PROPS.GMFeatures)) {
-    let zoomKey = parseInt(key)
-    if (zoomNumber <= zoomKey)
-      fixedZoomNumber = zoomKey
-    if (fixedZoomNumber >= 0 && showZoomFeatures.value !== fixedZoomNumber) {
-      showZoomFeatures.value = fixedZoomNumber
-      break
-    }
-  }
+  resetZoomGMFeatures()
   PROPS.GMOnZoomChanged({
     zoom: Math.round(map.getZoom()),
     center: map.getCenter(),
     bounds: map.getBounds(),
   })
+}
+
+const resetZoomGMFeatures = () => {
+  if (!isZoomNavigation.value)
+    return
+
+  let zoomNumber = Math.round(map.getZoom())
+  if (zoomNumber === showZoomFeatures.value)
+    return
+
+  let zoomKeys = Object.keys(PROPS.GMFeatures)
+  let lastZoomKey = parseInt(zoomKeys[zoomKeys.length - 1])
+  for (let key of zoomKeys) {
+    let zoomKey = parseInt(key)
+    if (zoomNumber <= zoomKey) {
+      showZoomFeatures.value = zoomKey
+      break
+    }
+    if (zoomNumber >= lastZoomKey) {
+      showZoomFeatures.value = lastZoomKey
+      break
+    }
+    if (zoomNumber === zoomKey) {
+      showZoomFeatures.value = zoomKey
+      break
+    }
+  }
 }
 
 const removeMapListeners = () => {
@@ -410,6 +435,7 @@ const setDefaultUIButtons = () => {
   addCustomUIButtonIcon('filter_center_focus', 'BOTTOM_CENTER', setMapCenterByUserMarkers)
   addCustomUIButtonIcon('route', 'BOTTOM_CENTER', () => generateRoute(userMarkers))
   addCustomUIButtonIcon('layers', 'BOTTOM_CENTER', toggleFeatures)
+  addCustomUIButtonIcon('linear_scale', 'BOTTOM_CENTER', toggleZoomNavigation)
 }
 
 const removeUserMarkers = () => {
@@ -571,6 +597,10 @@ const toggleFeatures = () => {
   })
 }
 
+const toggleZoomNavigation = () => {
+  isZoomNavigation.value = !isZoomNavigation.value
+}
+
 const addCustomUIButtonIcon = (iconName, position, callback) => {
   // NOTE: POSITION USE:
   // TOP: TOP_LEFT, TOP_CENTER, TOP_RIGHT
@@ -621,7 +651,7 @@ const calcFeatureBounds = (geometry, callback, thisArg) => {
 
 // NOTE: DEBOUNCE FUNCTIONS
 const debounceZoomChanged = _.debounce(handleZoomChanged, 1000, { 'trailing': true })
-const debounceShowMarkersInBounds = _.debounce(showMarkersInBounds, 1000, { 'trailing': true })
+const debounceShowMarkersInBounds = _.debounce(showMarkersInBounds, 500, { 'trailing': true })
 
 
 </script>

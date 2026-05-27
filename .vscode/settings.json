@@ -18,7 +18,7 @@
   "workbench.activityBar.location": "top",
   "window.autoDetectColorScheme": true,
   "workbench.preferredLightColorTheme": "Kursor Light",
-  "workbench.preferredDarkColorTheme": "Kursor Dark",
+  "workbench.preferredDarkColorTheme": "cursor-less-dark",
   "workbench.preferredHighContrastColorTheme": "Xcode Default Dark",
   "workbench.preferredHighContrastLightColorTheme": "Xcode 11 Default Light",
   "workbench.iconTheme": "material-icon-theme"

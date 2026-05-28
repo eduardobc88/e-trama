@@ -5,7 +5,7 @@
       <div
         v-if="PROPS.GMTitle !== ''"
         class="title">
-        {{ PROPS.GMTitle }}
+        {{ PROPS.GMTitle }} ({{ totalShowFeatures }})
       </div>
       <div
         v-if="PROPS.GMInfoBoxMarkdownText !== ''"
@@ -117,7 +117,15 @@ const PROPS = defineProps({
   GMInfoBoxMarkdownText: {
     type: String,
     default: '',
-  }
+  },
+  GMFilterFeatures: {
+    type: Object,
+    default: {
+      property_name: '',
+      property_value: '',
+      zoom_features: 0,
+    },
+  },
 })
 
 
@@ -130,6 +138,7 @@ const isLoading = ref(false)
 // NOTE: VARIABLES
 
 let map = null
+let totalShowFeatures = ref(0)
 let showZoomFeatures = ref(0)
 let isZoomNavigation = ref(false)
 let features = []
@@ -149,6 +158,19 @@ watch(() => PROPS.GMFeatures, newData => {
   loadCurrentZoomFeatures()
 })
 
+watch(() => PROPS.GMFilterFeatures, newData => {
+  let total = 0
+  for (let feature of PROPS.GMFeatures[newData.zoom_features]) {
+    feature.properties.show = false
+    if (feature.properties[newData.property_name].toString().split(',').includes(newData.property_value)) {
+      feature.properties.show = true
+      total++
+    }
+  }
+  totalShowFeatures.value = total
+  showZoomFeatures.value = newData.zoom_features
+})
+
 watch(showZoomFeatures, newData => {
   loadCurrentZoomFeatures()
 })
@@ -156,6 +178,7 @@ watch(showZoomFeatures, newData => {
 watch(isZoomNavigation, newData => {
   resetZoomGMFeatures()
 })
+
 
 onMounted (async () => {
   initMap()
@@ -211,6 +234,7 @@ const loadGeoJSON = async geoJSON => {
   isLoading.value = true
   try {
     resetMap()
+    geoJSON.features = geoJSON.features.filter(feature => feature.properties.show)
     features = map.data.addGeoJson(geoJSON)
     features.forEach(feature => {
       setFeatureMarker(feature)
@@ -240,7 +264,7 @@ const setFeatureStyles = () => {
   map.data.setStyle({})
   map.data.setStyle(feature => {
     return {
-      fillColor: feature.nh[PROPS.GMFeatureColorKey],
+      fillColor: feature.getProperty(PROPS.GMFeatureColorKey),
       fillOpacity: 0.3,
       strokeColor: '#222222',
       strokeWeight: 1,
@@ -348,21 +372,21 @@ const setFeatureMarker = async feature => {
     AdvancedMarkerElement,
   } = await importLibrary('marker')
   let labelDiv = document.createElement('div')
-  labelDiv.textContent = feature.nh[PROPS.GMFeatureLabelKey]
+  labelDiv.textContent = feature.getProperty(PROPS.GMFeatureLabelKey)
   labelDiv.style.fontSize = '12px'
   labelDiv.style.fontWeight = 'bold'
   labelDiv.style.color = '#ffffff'
   labelDiv.style.textTransform = 'uppercase'
-  labelDiv.style.background = feature.nh[PROPS.GMFeatureColorKey]
+  labelDiv.style.background = feature.getProperty(PROPS.GMFeatureColorKey)
   labelDiv.style.padding = '5px'
   labelDiv.style.borderRadius = '5px'
-  labelDiv.style.border = `1px solid ${ feature.nh[PROPS.GMFeatureColorKey] }`
+  labelDiv.style.border = `1px solid ${ feature.getProperty(PROPS.GMFeatureColorKey) }`
   labelDiv.style.boxShadow = `0 3px 4px 2px rgba(0, 0, 0, 0.2)`
   let marker = new AdvancedMarkerElement({
     position: bounds.getCenter(),
     map: map,
     content: labelDiv,
-    title: feature.nh[PROPS.GMFeatureLabelKey].toString(),
+    title: feature.getProperty(PROPS.GMFeatureLabelKey).toString(),
   })
   marker.content.addEventListener('animationend', () => {
     marker.content.style.animation = 'none'

@@ -11,7 +11,8 @@
       :GMFeatureColorKey="'color'"
       GMInfoBoxHeight="460px"
       GMInfoBoxWidth="400px"
-      :GMInfoBoxMarkdownText="GMInfoBoxMarkdownText"/>
+      :GMInfoBoxMarkdownText="GMInfoBoxMarkdownText"
+      :GMFilterFeatures="GMFilterFeatures"/>
     <GridSpace
       gridTemplateColumns="1fr 2fr">
       <template #slota>
@@ -235,6 +236,12 @@ let chartOptions = ref({
 
 // NOTE: MAP COMPONENT PROPERTIES
 let GMInfoBoxMarkdownText = ref('')
+let GMFilterFeatures = ref({
+  property_name: '',
+  property_value: '',
+  zoom_features: 0,
+})
+let initDistrictType = 'district_f_id'
 
 
 onMounted (async () => {
@@ -313,7 +320,7 @@ const setupMapFeatures = () => {
         id: m.get('id'),
         district_id: m.get('district_id'),
         label: `${ m.get('name') } ${m.get('header')}`,
-        zoom: 8,
+        zoom: 9,
         color: GLOBAL.$getHexColor(`${ m.get('name') } ${m.get('header')}`, true, 20, 50, 100),
         show: true,
         header: m.get('header'),
@@ -462,23 +469,40 @@ const removeAccents = str => {
 }
 
 const GMFeatureOnClick = data => {
-  GMTitle.value = data.feature.nh.label
-  GMInfoBoxMarkdownText.value = data.feature.nh.description
-  if (data.feature.nh.zoom === 10) {
-    let featureModelId = data.feature.nh.model_id
-    let models = resultCollection.filter(m => {
-      return (m.get('id') === featureModelId)
-    })
-    if (!models.getModels().length)
-      return
-
-    let rModel = models.getModels()[0]
-    townSelected.value = {
-      model: rModel,
-      data: {},
+  GMTitle.value = data.feature.getProperty('label')
+  GMInfoBoxMarkdownText.value = data.feature.getProperty('description')
+  let featureZoom = data.feature.getProperty('zoom')
+  if (featureZoom === 8)
+    initDistrictType = 'district_f_id'
+  else if (featureZoom === 9)
+    initDistrictType = 'district_l_id'
+  if (data.feature.getProperty('zoom') === 8 || data.feature.getProperty('zoom') === 9)
+    GMFilterFeatures.value = {
+      property_name: initDistrictType,
+      property_value: data.feature.getProperty('district_id').toString(),
+      zoom_features: 10,
     }
-    generateChart()
-  }
+  else if (data.feature.getProperty('zoom') === 10)
+    GMFilterFeatures.value = {
+      property_name: 'town_id',
+      property_value: data.feature.getProperty('town_id').toString(),
+      zoom_features: 11,
+    }
+  //if (data.feature.getProperty('zoom') === 10) {
+  //  let featureModelId = data.feature.getProperty('model_id')
+  //  let models = resultCollection.filter(m => {
+  //    return (m.get('id') === featureModelId)
+  //  })
+  //  if (!models.getModels().length)
+  //    return
+
+  //  let rModel = models.getModels()[0]
+  //  townSelected.value = {
+  //    model: rModel,
+  //    data: {},
+  //  }
+  //  generateChart()
+  //}
 }
 
 const generateChart = async () => {

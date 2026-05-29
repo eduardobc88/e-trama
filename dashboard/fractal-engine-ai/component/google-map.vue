@@ -140,7 +140,7 @@ const isLoading = ref(false)
 let map = null
 let totalShowFeatures = ref(0)
 let showZoomFeatures = ref(0)
-let isZoomNavigation = ref(false)
+let isZoomNavigation = ref(true)
 let features = []
 let featureMarkers = []
 let userMarkers = []
@@ -197,6 +197,7 @@ const initMap = async () => {
     mapTypeControl: false,
     fullscreenControl: false,
     streetViewControl: false,
+    panControl: false,
   })
   setMapListeners()
   setDefaultUIButtons()
@@ -324,6 +325,13 @@ const resetZoomGMFeatures = () => {
   if (!isZoomNavigation.value)
     return
 
+  setZoomFeatures()
+}
+
+const setZoomFeatures = () => {
+  for (let feature of PROPS.GMFeatures[showZoomFeatures.value])
+    feature.properties.show = true
+
   let zoomNumber = Math.round(map.getZoom())
   if (zoomNumber === showZoomFeatures.value)
     return
@@ -420,7 +428,8 @@ const onFeatureClick = event => {
   })
 }
 
-const addUserMarker = async e => {
+const addUserMarker = async el => {
+  el.stopPropagation()
   if (!isUserMarkersEnabled)
     return
 
@@ -450,16 +459,17 @@ const addUserMarker = async e => {
 const setDefaultUIButtons = () => {
   map.controls[google.maps.ControlPosition['BOTTOM_CENTER']] = []
   addCustomUIButtonIcon('center_focus_strong', 'BOTTOM_CENTER', () => setMapCenterByFeatures('setCenter'))
-  addCustomUIButtonIcon('strategy', 'BOTTOM_CENTER', toggleFeatureLabels)
-  addCustomUIButtonIcon('globe_location_pin', 'BOTTOM_CENTER', toggleUserMarkers)
-  addCustomUIButtonIcon('add_location_alt', 'BOTTOM_CENTER', toggleEnableUserMarkers)
-  addCustomUIButtonIcon('move', 'BOTTOM_CENTER', toggleUserMarkersDraggable)
+  addCustomUIButtonIcon('strategy', 'BOTTOM_CENTER', toggleFeatureLabels, isFeatureLabelsVisible)
+  addCustomUIButtonIcon('globe_location_pin', 'BOTTOM_CENTER', toggleUserMarkers, isUserMarkersVisible)
+  addCustomUIButtonIcon('add_location_alt', 'BOTTOM_CENTER', toggleEnableUserMarkers, isUserMarkersEnabled)
+  addCustomUIButtonIcon('move', 'BOTTOM_CENTER', toggleUserMarkersDraggable, isUserMarkersDraggable)
   addCustomUIButtonIcon('location_off', 'BOTTOM_CENTER', removeUserMarkers)
   addCustomUIButtonIcon('wrong_location', 'BOTTOM_CENTER', removeUserMarker)
   addCustomUIButtonIcon('filter_center_focus', 'BOTTOM_CENTER', setMapCenterByUserMarkers)
   addCustomUIButtonIcon('route', 'BOTTOM_CENTER', () => generateRoute(userMarkers))
-  addCustomUIButtonIcon('layers', 'BOTTOM_CENTER', toggleFeatures)
-  addCustomUIButtonIcon('linear_scale', 'BOTTOM_CENTER', toggleZoomNavigation)
+  addCustomUIButtonIcon('layers', 'BOTTOM_CENTER', toggleFeatures, isFeaturesVisible.value)
+  addCustomUIButtonIcon('linear_scale', 'BOTTOM_CENTER', toggleZoomNavigation, isZoomNavigation.value)
+  addCustomUIButtonIcon('refresh', 'BOTTOM_CENTER', setZoomFeatures)
 }
 
 const removeUserMarkers = () => {
@@ -621,11 +631,11 @@ const toggleFeatures = () => {
   })
 }
 
-const toggleZoomNavigation = () => {
+const toggleZoomNavigation = el => {
   isZoomNavigation.value = !isZoomNavigation.value
 }
 
-const addCustomUIButtonIcon = (iconName, position, callback) => {
+const addCustomUIButtonIcon = (iconName, position, callback, isToggle = undefined) => {
   // NOTE: POSITION USE:
   // TOP: TOP_LEFT, TOP_CENTER, TOP_RIGHT
   // LATERALS: LEFT_TOP, RIGHT_TOP, LEFT_CENTER, RIGHT_CENTER
@@ -636,10 +646,18 @@ const addCustomUIButtonIcon = (iconName, position, callback) => {
   icon.textContent = iconName
   icon.classList.add('material-symbols-rounded')
   icon.classList.add('icon')
+  icon.style.setProperty('pointer-events', 'none')
   controlUI.classList.add('gm-btn-icon')
+  if (isToggle === true)
+    controlUI.classList.add('active')
   controlUI.appendChild(icon)
+  controlDiv.classList.add('gm-btn-wrapper')
   controlDiv.appendChild(controlUI)
-  controlUI.addEventListener('click', callback)
+  controlUI.addEventListener('click', el => {
+    if (isToggle !== undefined)
+      el.target.classList.toggle('active')
+    callback(el)
+  })
   map.controls[google.maps.ControlPosition[position]].push(controlDiv)
 }
 
@@ -685,15 +703,16 @@ const debounceShowMarkersInBounds = _.debounce(showMarkersInBounds, 500, { 'trai
   background-color: var(--main-box-bg-color);
   border-radius: 10px;
   box-shadow: var(--main-box-shadow);
-  position: relative;
-  transition-duration: 500ms;
   overflow: hidden;
+  position: sticky;
+  top: 0;
+  transition-duration: 500ms;
 }
 
 #map-container {
   position: relative;
   width: 100%;
-  height: 480px;
+  height: 600px;
 }
 
 .title {
@@ -753,26 +772,36 @@ const debounceShowMarkersInBounds = _.debounce(showMarkersInBounds, 500, { 'trai
   to { transform: translateY(-500px); opacity: 0; }
 }
 
+.gm-btn-wrapper {
+  margin: 24px 5px;
+  background-color: var(--main-theme-color);
+}
+
 .gm-btn-icon {
-  background-color: #fff;
+  background-color: var(--main-box-bg-color);
   border: 0;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-  color: #666666;
+  color: var(--main-text-color);
   cursor: pointer;
-  margin: 24px 5px;
   padding: 5px 10px;
+  position: relative;
 }
 
 .gm-btn-icon:hover {
-  color: #333333;
+  background-color: var(--main-hover-color);
 }
 
 .gm-btn-icon:active {
-  color: #000000;
+  background-color: var(--main-active-color);
 }
 
 .gm-btn-icon:disabled {
   cursor: not-allowed;
 }
+
+.gm-btn-icon.active {
+  background-color: var(--main-active-color);
+}
+
 
 </style>

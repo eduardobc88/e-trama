@@ -93,6 +93,7 @@ export default {
   overflow: hidden;
   padding: 10px;
   position: relative;
+  width: calc(100% - 50px);
 }
 
 #section-header.expanded {
@@ -123,6 +124,7 @@ export default {
 
 #section-header p {
   position: relative;
+  white-space: pre-line;
 }
 
 #section-header p:first-child {

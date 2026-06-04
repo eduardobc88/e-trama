@@ -10,9 +10,11 @@
       :GMFeatureLabelKey="'label'"
       :GMFeatureColorKey="'color'"
       GMInfoBoxHeight="460px"
-      GMInfoBoxWidth="400px"
+      GMInfoBoxWidth="250px"
       :GMInfoBoxMarkdownText="GMInfoBoxMarkdownText"
-      :GMFilterFeatures="GMFilterFeatures"/>
+      :GMFilterFeatures="GMFilterFeatures"
+      :GMOnZoomChanged="GMOnZoomChanged"
+      :GMOnReset="GMOnReset"/>
     <GridSpace
       gridTemplateColumns="1fr 2fr">
       <template #slota>
@@ -335,6 +337,7 @@ const setupMapFeatures = () => {
   gmFeatures[10] = setupTownFeaturesMap()
   gmFeatures[11] = setupSectionFeaturesMap()
   googleMapFeatures.value = gmFeatures
+  setFeaturesTitle(8)
 }
 
 const setupTownFeaturesMap = () => {
@@ -469,40 +472,45 @@ const removeAccents = str => {
 }
 
 const GMFeatureOnClick = data => {
-  GMTitle.value = data.feature.getProperty('label')
+  let zoomFeatures = 8
   GMInfoBoxMarkdownText.value = data.feature.getProperty('description')
   let featureZoom = data.feature.getProperty('zoom')
-  if (featureZoom === 8)
+  if (featureZoom === 8) {
     initDistrictType = 'district_f_id'
-  else if (featureZoom === 9)
+    zoomFeatures = 9
+  } else if (featureZoom === 9)
     initDistrictType = 'district_l_id'
-  if (data.feature.getProperty('zoom') === 8 || data.feature.getProperty('zoom') === 9)
+  if (data.feature.getProperty('zoom') === 8 || data.feature.getProperty('zoom') === 9) {
     GMFilterFeatures.value = {
       property_name: initDistrictType,
       property_value: data.feature.getProperty('district_id').toString(),
       zoom_features: 10,
     }
-  else if (data.feature.getProperty('zoom') === 10)
+    zoomFeatures = 10
+  } else if (data.feature.getProperty('zoom') === 10) {
     GMFilterFeatures.value = {
       property_name: 'town_id',
       property_value: data.feature.getProperty('town_id').toString(),
       zoom_features: 11,
     }
-  //if (data.feature.getProperty('zoom') === 10) {
-  //  let featureModelId = data.feature.getProperty('model_id')
-  //  let models = resultCollection.filter(m => {
-  //    return (m.get('id') === featureModelId)
-  //  })
-  //  if (!models.getModels().length)
-  //    return
+    zoomFeatures = 11
+  }
+  setFeaturesTitle(zoomFeatures, data.feature.getProperty('label'))
+  if (data.feature.getProperty('zoom') === 10) {
+    let featureModelId = data.feature.getProperty('model_id')
+    let models = resultCollection.filter(m => {
+      return (m.get('id') === featureModelId)
+    })
+    if (!models.getModels().length)
+      return
 
-  //  let rModel = models.getModels()[0]
-  //  townSelected.value = {
-  //    model: rModel,
-  //    data: {},
-  //  }
-  //  generateChart()
-  //}
+    let rModel = models.getModels()[0]
+    townSelected.value = {
+      model: rModel,
+      data: {},
+    }
+    generateChart()
+  }
 }
 
 const generateChart = async () => {
@@ -533,6 +541,29 @@ const GMOnMarker = data => {
 
 const GMOnRouteCalculated = data => {
   console.log('== GMOnRouteCalculated ==: ', data)
+}
+
+const GMOnZoomChanged = data => {
+  setFeaturesTitle(data.zoom_features)
+}
+
+const GMOnReset = data => {
+  setFeaturesTitle(data.zoom_features)
+}
+
+const setFeaturesTitle = (zoomFeatures, label = '') => {
+  let title = label
+  if (zoomFeatures <= 8)
+    title = 'DISTRITOS FEDERALES'
+  else if (zoomFeatures === 9)
+    title = 'DISTRITOS LOCALES'
+  else if (zoomFeatures === 10)
+    title = 'MUNICIPIOS'
+  else if (zoomFeatures >= 11)
+    title = 'SECCIONES'
+  if (label !== '')
+    title = `${ title }\n${ label }`
+  GMTitle.value = title
 }
 
 </script>

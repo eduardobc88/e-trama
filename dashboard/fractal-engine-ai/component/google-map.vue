@@ -3,21 +3,47 @@
     id="box-wrapper">
     <div id="map-container">
       <div
-        v-if="PROPS.GMTitle !== ''"
-        class="title">
-        {{ PROPS.GMTitle }} ({{ totalShowFeatures }})
-      </div>
-      <div
-        v-if="PROPS.GMInfoBoxMarkdownText !== ''"
         id="info-box">
         <Widget
-          v-bind:sectionTitle="((PROPS.GMTitle == '')?'title':PROPS.GMTitle)"
-          sectionDescription="description"
+          :sectionTitle="((PROPS.GMTitle !== '')?PROPS.GMTitle:'')"
+          :sectionDescription="totalShowFeatures"
           :width="PROPS.GMInfoBoxWidth"
-          :height="PROPS.GMInfoBoxHeight">
-          <Markdown
-            :MDHeight="`calc(${ PROPS.GMInfoBoxHeight } - 80${ 'px' })`"
-            :MDText="PROPS.GMInfoBoxMarkdownText"/>
+          :height="PROPS.GMInfoBoxHeight"
+          :noPadding="true">
+          <div id="feature-labels">
+            <perfect-scrollbar
+              :style="{
+                height: `calc(${ PROPS.GMInfoBoxHeight } - 80${ 'px' })`,
+                padding: '0 10px',
+              }">
+              <table
+                id="table">
+                <thead>
+                  <tr>
+                    <td>#</td>
+                    <td>label</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template
+                    v-for="(label, i) of Object.keys(featureLabels)">
+                    <tr>
+                      <td>
+                        <p>
+                          {{ i + 1 }}
+                        </p>
+                      </td>
+                      <td>
+                        <p>
+                          {{ label }}
+                        </p>
+                      </td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </perfect-scrollbar>
+          </div>
         </Widget>
       </div>
       <div
@@ -126,6 +152,10 @@ const PROPS = defineProps({
       zoom_features: 0,
     },
   },
+  GMOnReset: {
+    type: Function,
+    default: () => {},
+  },
 })
 
 
@@ -150,6 +180,7 @@ let isUserMarkersDraggable = true
 let isUserMarkersVisible = true
 let markerSelected = null
 let isFeaturesVisible = true
+let featureLabels = ref([])
 
 
 // NOTE: LIFE CYCLE COMPONENT METHODS
@@ -159,15 +190,11 @@ watch(() => PROPS.GMFeatures, newData => {
 })
 
 watch(() => PROPS.GMFilterFeatures, newData => {
-  let total = 0
   for (let feature of PROPS.GMFeatures[newData.zoom_features]) {
     feature.properties.show = false
-    if (feature.properties[newData.property_name].toString().split(',').includes(newData.property_value)) {
+    if (feature.properties[newData.property_name].toString().split(',').includes(newData.property_value))
       feature.properties.show = true
-      total++
-    }
   }
-  totalShowFeatures.value = total
   showZoomFeatures.value = newData.zoom_features
 })
 
@@ -228,16 +255,20 @@ const loadCurrentZoomFeatures = () => {
 const loadGeoJSON = async geoJSON => {
   if (!map || !geoJSON || !geoJSON.features)
     return
-  
+
   if (!geoJSON.features.length)
     return
 
   isLoading.value = true
+  featureLabels.value = []
   try {
     resetMap()
     geoJSON.features = geoJSON.features.filter(feature => feature.properties.show)
+    totalShowFeatures.value = geoJSON.features.length
     features = map.data.addGeoJson(geoJSON)
     features.forEach(feature => {
+      let name = feature.getProperty(PROPS.GMFeatureLabelKey)
+      featureLabels.value[name] = name
       setFeatureMarker(feature)
     })
     setFeatureStyles()
@@ -315,6 +346,7 @@ const showMarkersInBounds = () => {
 const handleZoomChanged = () => {
   resetZoomGMFeatures()
   PROPS.GMOnZoomChanged({
+    zoom_features: showZoomFeatures.value,
     zoom: Math.round(map.getZoom()),
     center: map.getCenter(),
     bounds: map.getBounds(),
@@ -353,6 +385,9 @@ const setZoomFeatures = () => {
       break
     }
   }
+  PROPS.GMOnReset({
+    zoom_features: showZoomFeatures.value,
+  })
 }
 
 const removeMapListeners = () => {
@@ -425,11 +460,11 @@ const onFeatureClick = event => {
   PROPS.GMFeatureOnClick({
     event: 'clicked',
     feature: event.feature,
+    zoom_features: showZoomFeatures.value,
   })
 }
 
 const addUserMarker = async el => {
-  el.stopPropagation()
   if (!isUserMarkersEnabled)
     return
 
@@ -715,18 +750,6 @@ const debounceShowMarkersInBounds = _.debounce(showMarkersInBounds, 500, { 'trai
   height: 600px;
 }
 
-.title {
-  color: #FFFFFF;
-  font-weight: bold;
-  left: 10px;
-  margin: auto;
-  pointer-events: none;
-  position: absolute; 
-  text-shadow: 0px 5px 20px rgba(0, 0, 0, 1);
-  top: 10px;
-  z-index: 10;
-}
-
 .google-map {
   width: 100%;
   height: 100%;
@@ -757,6 +780,54 @@ const debounceShowMarkersInBounds = _.debounce(showMarkersInBounds, 500, { 'trai
   position: absolute;
   top: 10px;
   z-index: 10;
+}
+
+#feature-labels > h3 {
+  color: var(--main-accent-color);
+  font-size: var(--main-accent-font-size);
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+#feature-labels p {
+  color: var(--main-text-color);
+  font-size: var(--main-accent-font-size);
+  font-weight: 500;
+  text-transform: uppercase;
+  margin: 5px 0;
+}
+
+#table {
+  min-width: auto !important;
+  width: 100%;
+}
+
+#table thead td {
+  color: var(--main-text-color);
+  font-size: var(--main-accent-font-size);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+#table td {
+  width: 100%;
+}
+
+#table tr {
+  position: relative;
+}
+
+#table tr:after {
+  border-bottom: 2px solid var(--main-table-bg-row);
+  content: "";
+  height: 6px;
+  left: 0;
+  margin: auto;
+  position: absolute;
+  right: 0;
+  width: calc(100% - 15%);
+  bottom: -1px;
 }
 
 </style>

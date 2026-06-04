@@ -61,6 +61,7 @@
             }">
             <div
               id="content"
+              v-bind:class="((noPadding)?'no-padding':'')"
               v-bind:style="{
                 'min-height': minHeight,
                 'max-height': maxHeight,
@@ -239,7 +240,7 @@ export default {
 }
 
 #content.no-padding {
-  padding: 10px;
+  padding: 10px 0;
 }
 
 #btn-wrapper {

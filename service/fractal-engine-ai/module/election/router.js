@@ -47,8 +47,8 @@ export default async (instance, opts) => {
       resource_name: opts.resource_name,
       config: { resource_name: opts.resource_name, },
     }
-    route.preHandler = SESSION.isAuthenticated
     route.config = { ...route.config, ...defaultOptions }
+    route.preHandler = SESSION.isAuthenticated
     instance.route(route)
   })
 }

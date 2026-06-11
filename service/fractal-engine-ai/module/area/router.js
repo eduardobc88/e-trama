@@ -80,9 +80,9 @@ export default async (instance, opts) => {
     const defaultOptions = {
       name: opts.name,
       resource_name: opts.resource_name,
-      preHandler: session.isAuthenticated,
     }
     route.config = { ...route.config, ...defaultOptions }
+    route.preHandler = session.isAuthenticated
     instance.route(route)
   })
 }

@@ -19,10 +19,10 @@ export default async (instance, opts) => {
   ROUTES.forEach(route => {
     const defaultOptions = {
       name: opts.name,
-      preHandler: session.isAuthenticated,
       resource_name: opts.resource_name,
     }
     route.config = { ...route.config, ...defaultOptions }
+    route.preHandler = session.isAuthenticated
     instance.route(route)
   })
 }

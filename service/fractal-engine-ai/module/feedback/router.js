@@ -1,4 +1,4 @@
-import session from '../../lib/session.js'
+import SESSION from '../../lib/session.js'
 import controller from './controller.js'
 
 
@@ -92,9 +92,9 @@ export default async (instance, opts) => {
     const defaultOptions = {
       name: opts.name,
       resource_name: opts.resource_name,
-      preHandler: session.isAuthenticated,
     }
     route.config = { ...route.config, ...defaultOptions }
+    route.preHandler = SESSION.isAuthenticated
     instance.route(route)
   })
 }

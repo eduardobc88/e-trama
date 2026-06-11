@@ -95,7 +95,7 @@ class ResultCollection extends BaseCollection {
   }
   routes () {
     return {
-      fetch: `${ CONFIG_MANIFEST.app_api_url }/result/items/{state}/`,
+      fetch: `${ CONFIG_MANIFEST.app_api_url }/election/items/{state}/`,
     }
   }
 }

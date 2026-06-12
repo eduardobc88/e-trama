@@ -10,27 +10,27 @@ const ROUTES = [
   },
   {
     method: 'GET',
-    url: '/result/:scope/:type/:year/items/',
+    url: '/result/:scope/:type/:election/items/',
     handler: CONTROLLER.getElectionResultItems,
   },
   {
     method: 'GET',
-    url: '/result/federal-district/:scope/:type/:year/items/',
+    url: '/result/federal-district/:scope/:type/:election/items/',
     handler: CONTROLLER.getElectionResultByFederalDistrictItems,
   },
   {
     method: 'GET',
-    url: '/result/local-district/:scope/:type/:year/items/',
+    url: '/result/local-district/:scope/:type/:election/items/',
     handler: CONTROLLER.getElectionResultByLocalDistrictItems,
   },
   {
     method: 'GET',
-    url: '/result/town/:scope/:type/:year/items/',
+    url: '/result/town/:scope/:type/:election/items/',
     handler: CONTROLLER.getElectionResultByTownItems,
   },
   {
     method: 'GET',
-    url: '/result/section/:scope/:type/:year/items/',
+    url: '/result/section/:scope/:type/:election/items/',
     handler: CONTROLLER.getElectionResultBySectionItems,
   },
   {

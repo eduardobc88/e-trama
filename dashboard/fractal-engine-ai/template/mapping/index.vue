@@ -14,7 +14,8 @@
       :GMInfoBoxMarkdownText="GMInfoBoxMarkdownText"
       :GMFilterFeatures="GMFilterFeatures"
       :GMOnZoomChanged="GMOnZoomChanged"
-      :GMOnReset="GMOnReset"/>
+      :GMOnReset="GMOnReset"
+      :GMDropDownMenus="GMDropDownMenus"/>
     <GridSpace
       gridTemplateColumns="1fr 2fr">
       <template #slota>
@@ -145,11 +146,17 @@ let isLoading = ref(false)
 let googleMapFeatures = ref({})
 let townSelected = ref(null)
 let GMTitle = ref('')
+let GMDropDownMenus = ref([])
 let federalDistrictFeatureCollection = new GLOBAL.$model.FeatureMC.collection()
 let localDistrictFeatureCollection = new GLOBAL.$model.FeatureMC.collection()
 let townFeatureCollection = new GLOBAL.$model.FeatureMC.collection()
 let sectionFeatureCollection = new GLOBAL.$model.FeatureMC.collection()
-let resultCollection = new GLOBAL.$model.ResultMC.collection()
+let electionCollection = new GLOBAL.$model.ElectionMC.collection()
+let electionTypeCollection = new GLOBAL.$model.ElectionTypeMC.collection()
+let federalDistrictElectionCollection = new GLOBAL.$model.ElectionMC.collection()
+let localDistrictElectionCollection = new GLOBAL.$model.ElectionMC.collection()
+let townElectionCollection = new GLOBAL.$model.ElectionMC.collection()
+let sectionElectionCollection = new GLOBAL.$model.ElectionMC.collection()
 let colors = {
   pan: '#00579c',
   pri: '#28b154',
@@ -245,6 +252,10 @@ let GMFilterFeatures = ref({
 })
 let initDistrictType = 'district_f_id'
 
+let GMDDOptionScopeSelected = []
+let GMDDOptionElectionSelected = []
+let GMDDOptionTypeSelected = []
+
 
 onMounted (async () => {
   await setup()
@@ -254,12 +265,138 @@ onMounted (async () => {
 const setup = async () => {
   try {
     isLoading.value = true
-    resultCollection.set('state', 'michoacán')
-    await resultCollection.fetch()
-    let response = await fetchFeatures()
-    if (response.error !== null)
-      throw response.error
+    await electionTypeCollection.fetch()
+    setElectionDropDownMenus()
+    //electionCollection.set('state', 'michoacán')
+    //await electionCollection.fetch()
+    await fetchFeatures()
     setupMapFeatures()
+  } catch (err) {
+    console.error(err)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const setElectionDropDownMenus = (scopeFilter = [], electionFilter = [], typeFilter = []) => {
+  let scopeItems = {
+    label: 'scope',
+    selectOptions: [],
+    onSelectOption: GMOnOptionSelected,
+  }
+  let electionItems = {
+    label: 'election',
+    selectOptions: [],
+    onSelectOption: GMOnOptionSelected,
+  }
+  let typeItems = {
+    label: 'type',
+    selectOptions: [],
+    onSelectOption: GMOnOptionSelected,
+  }
+  let scope = []
+  let election = []
+  let type = []
+  for (let e of electionTypeCollection.getModels()) {
+    if (!scope.includes(e.get('scope')))
+      scope.push(e.get('scope'))
+    if (scopeFilter.includes(e.get('scope')) && !election.includes(e.get('election')))
+      election.push(e.get('election'))
+    if (scopeFilter.includes(e.get('scope')) && electionFilter.includes(e.get('election')) && !type.includes(e.get('type')))
+      type.push(e.get('type'))
+  }
+  for (let o of scope)
+    scopeItems.selectOptions.push({
+      item_name: o,
+      item_prop: 'scope',
+      item_value: scopeFilter.includes(o),
+    })
+  for (let o of election)
+    electionItems.selectOptions.push({
+      item_name: o,
+      item_prop: 'election',
+      item_value: electionFilter.includes(o),
+    })
+  for (let o of type)
+    typeItems.selectOptions.push({
+      item_name: o,
+      item_prop: 'type',
+      item_value: typeFilter.includes(o),
+    })
+  GMDropDownMenus.value = [scopeItems, electionItems, typeItems]
+  fetchElectionData()
+}
+
+const GMOnOptionSelected = (prop, data) => {
+  if (prop === 'scope')
+    if (data.item_value)
+      GMDDOptionScopeSelected = GMDDOptionScopeSelected.filter(o => o !== data.item_name)
+    else
+      GMDDOptionScopeSelected.push(data.item_name)
+  if (prop === 'election')
+    if (data.item_value)
+      GMDDOptionElectionSelected = GMDDOptionElectionSelected.filter(o => o !== data.item_name)
+    else
+      GMDDOptionElectionSelected.push(data.item_name)
+  if (prop === 'type')
+    if (data.item_value)
+      GMDDOptionTypeSelected = GMDDOptionTypeSelected.filter(o => o !== data.item_name)
+    else
+      GMDDOptionTypeSelected.push(data.item_name)
+  let election = []
+  let type = []
+  for (let e of electionTypeCollection.getModels()) {
+    if (!election.includes(e.get('election')))
+      election.push(e.get('election'))
+    if (!type.includes(e.get('type')))
+      type.push(e.get('type'))
+  }
+  GMDDOptionElectionSelected = GMDDOptionElectionSelected.filter(o => election.includes(o))
+  GMDDOptionTypeSelected = GMDDOptionTypeSelected.filter(o => type.includes(o))
+  setElectionDropDownMenus(GMDDOptionScopeSelected, GMDDOptionElectionSelected, GMDDOptionTypeSelected)
+}
+
+const fetchElectionData = async () => {
+  console.log('== fetchElectionData ==', GMDDOptionScopeSelected, GMDDOptionElectionSelected, GMDDOptionTypeSelected)
+  try {
+    isLoading.value = true
+    if (!GMDDOptionScopeSelected.length || !GMDDOptionElectionSelected.length || !GMDDOptionTypeSelected.length)
+      throw 'Not select scope, election and type'
+    federalDistrictElectionCollection.set({
+      scope: GMDDOptionScopeSelected[0],
+      election: GMDDOptionElectionSelected[0],
+      type: GMDDOptionTypeSelected[0],
+    })
+    localDistrictElectionCollection.set({
+      scope: GMDDOptionScopeSelected[0],
+      election: GMDDOptionElectionSelected[0],
+      type: GMDDOptionTypeSelected[0],
+    })
+    townElectionCollection.set({
+      scope: GMDDOptionScopeSelected[0],
+      election: GMDDOptionElectionSelected[0],
+      type: GMDDOptionTypeSelected[0],
+    })
+    sectionElectionCollection.set({
+      scope: GMDDOptionScopeSelected[0],
+      election: GMDDOptionElectionSelected[0],
+      type: GMDDOptionTypeSelected[0],
+    })
+    let fetchPromiseItems = []
+    fetchPromiseItems.push(federalDistrictElectionCollection.fetchResultFederal())
+    fetchPromiseItems.push(localDistrictElectionCollection.fetchResultLocal())
+    fetchPromiseItems.push(townElectionCollection.fetchResultTown())
+    fetchPromiseItems.push(sectionElectionCollection.fetchResultSection())
+    await Promise.all(fetchPromiseItems)
+    console.log('== federalDistrictElectionCollection ==', federalDistrictElectionCollection.getModels().length)
+    console.log('== localDistrictElectionCollection ==', localDistrictElectionCollection.getModels().length)
+    console.log('== townElectionCollection ==', townElectionCollection.getModels().length)
+    console.log('== sectionElectionCollection ==', sectionElectionCollection.getModels().length)
+    // TODO: CREATE OBJECT TO KNOW WITCH COMBINATION OF DATA ARE LOADED
+    // TODO: PRINT DATA OVER THE MAP
+    // TODO: PRINT INFO BOX DATA
+    // TODO: PRINT RESULTS DATA
+    // TODO: PRINT RESULTS CHART
   } catch (err) {
     console.error(err)
   } finally {
@@ -360,7 +497,7 @@ const setupTownFeaturesMap = () => {
       type: 'Feature',
     }
     let iName = removeAccents(feature.properties.label).toLowerCase()
-    let models = resultCollection.filter(m => {
+    let models = electionCollection.filter(m => {
       let mName = removeAccents(m.get('name')).toLowerCase()
       return (mName === iName)
     })
@@ -424,7 +561,7 @@ const setupSectionFeaturesMap = () => {
       type: 'Feature',
     }
     let townId = parseInt(feature.properties.town_id)
-    let models = resultCollection.filter(m => {
+    let models = electionCollection.filter(m => {
       let id = parseInt(m.get('id'))
       return (townId === id)
     })
@@ -498,7 +635,7 @@ const GMFeatureOnClick = data => {
   setFeaturesTitle(zoomFeatures, data.feature.getProperty('label'))
   if (data.feature.getProperty('zoom') === 10) {
     let featureModelId = data.feature.getProperty('model_id')
-    let models = resultCollection.filter(m => {
+    let models = electionCollection.filter(m => {
       return (m.get('id') === featureModelId)
     })
     if (!models.getModels().length)

@@ -38,11 +38,11 @@ const getElectionResultItems = async (req, res) => {
   try {
     let scope = req.params.scope
     let type = req.params.type
-    let year = req.params.year
+    let election = req.params.election
     let result = await REPOSITORY.listElectionResult({
       scope: scope,
       type: type,
-      year: year,
+      election: election,
     })
     if (result.error !== null)
       throw result.error
@@ -70,11 +70,11 @@ const getElectionResultByFederalDistrictItems = async (req, res) => {
   try {
     let scope = req.params.scope
     let type = req.params.type
-    let year = req.params.year
-    let result = await REPOSITORY.listElectionResultByFederalDistrict({
+    let election = req.params.election
+    let result = await REPOSITORY.listElectionByFederalDistrict({
       scope: scope,
       type: type,
-      year: year,
+      election: election,
     })
     if (result.error !== null)
       throw result.error
@@ -102,11 +102,11 @@ const getElectionResultByLocalDistrictItems = async (req, res) => {
   try {
     let scope = req.params.scope
     let type = req.params.type
-    let year = req.params.year
-    let result = await REPOSITORY.listElectionResultByLocalDistrict({
+    let election = req.params.election
+    let result = await REPOSITORY.listElectionByLocalDistrict({
       scope: scope,
       type: type,
-      year: year,
+      election: election,
     })
     if (result.error !== null)
       throw result.error
@@ -134,11 +134,11 @@ const getElectionResultByTownItems = async (req, res) => {
   try {
     let scope = req.params.scope
     let type = req.params.type
-    let year = req.params.year
-    let result = await REPOSITORY.listElectionResultByTown({
+    let election = req.params.election
+    let result = await REPOSITORY.listElectionByTown({
       scope: scope,
       type: type,
-      year: year,
+      election: election,
     })
     if (result.error !== null)
       throw result.error
@@ -166,11 +166,11 @@ const getElectionResultBySectionItems = async (req, res) => {
   try {
     let scope = req.params.scope
     let type = req.params.type
-    let year = req.params.year
-    let result = await REPOSITORY.listElectionResultBySection({
+    let election = req.params.election
+    let result = await REPOSITORY.listElectionBySection({
       scope: scope,
       type: type,
-      year: year,
+      election: election,
     })
     if (result.error !== null)
       throw result.error

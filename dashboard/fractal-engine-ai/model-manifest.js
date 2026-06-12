@@ -31,4 +31,6 @@ export default {
   CandidateBaseMC: (await import('./model/candidate-base-mc.vue')).default,
   CardMC: (await import('./model/card-mc.vue')).default,
   FeatureMC: (await import('./model/feature-mc.vue')).default,
+  ElectionMC: (await import('./model/election-mc.vue')).default,
+  ElectionTypeMC: (await import('./model/election-type-mc.vue')).default,
 }

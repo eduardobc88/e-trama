@@ -7,6 +7,7 @@
       v-on:click="showOptions"
       v-bind:class="{
         open: show,
+        'set-bkg': setBKG,
       }">
       <i class="material-symbols-rounded icon">
         {{ getIconName() }}
@@ -24,6 +25,7 @@
           'bottom': !openInTop,
           'full': isFullContent && isLast,
           'transition-wrapper': true,
+          'last': isLast
         }">
         <perfect-scrollbar class="scroll-area">
           <div id="items">
@@ -87,6 +89,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    setBKG: {
+      type: Boolean,
+      default: false,
+    },
   },
   data () {
     return {
@@ -105,7 +111,7 @@ export default {
       this.show = !this.show
     },
     onSelect (propName, isChecked, data) {
-      this.onSelectOption(data.item_prop)
+      this.onSelectOption(data.item_prop, data)
     },
     clickOutsite (el) {
       this.show = false
@@ -152,6 +158,18 @@ export default {
   align-self: center;
   cursor: pointer;
   margin: 0 4px;
+}
+
+#button.set-bkg:after {
+  background-color: var(--main-box-bg-color);
+  border-radius: 10px;
+  bottom: 0;
+  content: '';
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: -1;
 }
 
 #button:hover {
@@ -218,6 +236,11 @@ export default {
 
 #select-options.bottom {
   top: calc(100% + 10px);
+}
+
+#select-options.last {
+  left: auto;
+  right: 0;
 }
 
 #select-options .item {

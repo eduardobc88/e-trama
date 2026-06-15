@@ -30,8 +30,8 @@ const listElectionResult = async data => {
     dbConn = await MY_SQL_DB.getPoolConnection()
     let result = await dbConn.query(QUERY.fetchElectionResult, [
       data.scope,
+      data.election,
       data.type,
-      data.year,
     ])
     response.records = result[0]
   } catch (err) {
@@ -51,8 +51,8 @@ const listElectionByFederalDistrict = async data => {
     dbConn = await MY_SQL_DB.getPoolConnection()
     let result = await dbConn.query(QUERY.fetchElectionResultByFederalDistrict, [
       data.scope,
+      data.election,
       data.type,
-      data.year,
     ])
     response.records = result[0]
   } catch (err) {
@@ -72,8 +72,8 @@ const listElectionByLocalDistrict = async data => {
     dbConn = await MY_SQL_DB.getPoolConnection()
     let result = await dbConn.query(QUERY.fetchElectionResultByLocalDistrict, [
       data.scope,
+      data.election,
       data.type,
-      data.year,
     ])
     response.records = result[0]
   } catch (err) {
@@ -91,10 +91,10 @@ const listElectionByTown = async data => {
   }
   try {
     dbConn = await MY_SQL_DB.getPoolConnection()
-    let result = await dbConn.query(QUERY.fetchElectionResultByTown, [
+    let result = await dbConn.query(QUERY.fetchElectioResultByTown, [
       data.scope,
+      data.election,
       data.type,
-      data.year,
     ])
     response.records = result[0]
   } catch (err) {
@@ -114,8 +114,8 @@ const listElectionBySection = async data => {
     dbConn = await MY_SQL_DB.getPoolConnection()
     let result = await dbConn.query(QUERY.fetchElectionResultBySection, [
       data.scope,
+      data.election,
       data.type,
-      data.year,
     ])
     response.records = result[0]
   } catch (err) {

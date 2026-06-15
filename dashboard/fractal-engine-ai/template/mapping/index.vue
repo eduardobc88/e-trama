@@ -14,7 +14,8 @@
       :GMInfoBoxMarkdownText="GMInfoBoxMarkdownText"
       :GMFilterFeatures="GMFilterFeatures"
       :GMOnZoomChanged="GMOnZoomChanged"
-      :GMOnReset="GMOnReset"/>
+      :GMOnReset="GMOnReset"
+      :GMDropDownMenus="GMDropDownMenus"/>
     <GridSpace
       gridTemplateColumns="1fr 2fr">
       <template #slota>
@@ -145,11 +146,18 @@ let isLoading = ref(false)
 let googleMapFeatures = ref({})
 let townSelected = ref(null)
 let GMTitle = ref('')
+let GMDropDownMenus = ref([])
 let federalDistrictFeatureCollection = new GLOBAL.$model.FeatureMC.collection()
 let localDistrictFeatureCollection = new GLOBAL.$model.FeatureMC.collection()
 let townFeatureCollection = new GLOBAL.$model.FeatureMC.collection()
 let sectionFeatureCollection = new GLOBAL.$model.FeatureMC.collection()
-let resultCollection = new GLOBAL.$model.ResultMC.collection()
+let electionCollection = new GLOBAL.$model.ElectionMC.collection()
+let electionDataResults = []
+let electionTypeCollection = new GLOBAL.$model.ElectionTypeMC.collection()
+let federalDistrictElectionCollection = new GLOBAL.$model.ElectionMC.collection()
+let localDistrictElectionCollection = new GLOBAL.$model.ElectionMC.collection()
+let townElectionCollection = new GLOBAL.$model.ElectionMC.collection()
+let sectionElectionCollection = new GLOBAL.$model.ElectionMC.collection()
 let colors = {
   pan: '#00579c',
   pri: '#28b154',
@@ -244,6 +252,9 @@ let GMFilterFeatures = ref({
   zoom_features: 0,
 })
 let initDistrictType = 'district_f_id'
+let GMDDOptionScopeSelected = []
+let GMDDOptionElectionSelected = []
+let GMDDOptionTypeSelected = []
 
 
 onMounted (async () => {
@@ -254,17 +265,97 @@ onMounted (async () => {
 const setup = async () => {
   try {
     isLoading.value = true
-    resultCollection.set('state', 'michoacán')
-    await resultCollection.fetch()
-    let response = await fetchFeatures()
-    if (response.error !== null)
-      throw response.error
+    await electionTypeCollection.fetch()
+    setElectionDropDownMenus()
+    //electionCollection.set('state', 'michoacán')
+    //await electionCollection.fetch()
+    await fetchFeatures()
     setupMapFeatures()
   } catch (err) {
     console.error(err)
   } finally {
     isLoading.value = false
   }
+}
+
+const setElectionDropDownMenus = () => {
+  let menu = {
+    label: 'election',
+    selectOptions: [],
+    onSelectOption: GMOnOptionSelected,
+  }
+
+  for (let e of electionTypeCollection.getModels()) {
+    let name = `${ e.get('type') } ${ e.get('scope') } ${ e.get('election') }`
+    menu.selectOptions.push({
+      item_name: name,
+      item_prop: {
+        scope: e.get('scope'),
+        election: e.get('election'),
+        type: e.get('type'),
+      },
+      item_value: false,
+      item_old_value: false,
+      requested: false,
+      collectionFederal: new GLOBAL.$model.ElectionMC.collection(),
+      collectionLocal: new GLOBAL.$model.ElectionMC.collection(),
+      collectionTown: new GLOBAL.$model.ElectionMC.collection(),
+      collectionSection: new GLOBAL.$model.ElectionMC.collection(),
+    })
+  }
+  GMDropDownMenus.value = [menu]
+}
+
+const GMOnOptionSelected = (prop, data) => {
+  data.item_old_value = data.item_value
+  data.item_value = !data.item_value
+  fetchElectionData(data)
+}
+
+const fetchElectionData = async data => {
+  try {
+    isLoading.value = true
+    if (data.requested) {
+      matchFeatureWithElectionData()
+      return
+    }
+    let fetchPromiseItems = []
+    data.collectionFederal.set({
+      scope: data.item_prop.scope,
+      election: data.item_prop.election,
+      type: data.item_prop.type,
+    })
+    data.collectionLocal.set({
+      scope: data.item_prop.scope,
+      election: data.item_prop.election,
+      type: data.item_prop.type,
+    })
+    data.collectionTown.set({
+      scope: data.item_prop.scope,
+      election: data.item_prop.election,
+      type: data.item_prop.type,
+    })
+    data.collectionSection.set({
+      scope: data.item_prop.scope,
+      election: data.item_prop.election,
+      type: data.item_prop.type,
+    })
+    fetchPromiseItems.push(data.collectionFederal.fetchResultFederal())
+    fetchPromiseItems.push(data.collectionLocal.fetchResultLocal())
+    fetchPromiseItems.push(data.collectionTown.fetchResultTown())
+    fetchPromiseItems.push(data.collectionSection.fetchResultSection())
+    await Promise.all(fetchPromiseItems)
+    data.requested = true
+    matchFeatureWithElectionData()
+  } catch (err) {
+    console.error(err)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const matchFeatureWithElectionData = () => {
+  // TODO: MATCH DATA BETWEEN FEATURES AND ELECTION DATA
 }
 
 const fetchFeatures = async () => {
@@ -303,7 +394,7 @@ const setupMapFeatures = () => {
         district_id: m.get('district_id'),
         label: `${ m.get('name') } ${ m.get('header') }`,
         zoom: 8,
-        color: GLOBAL.$getHexColor(`${ m.get('name') } ${m.get('header')}`, true, 20, 50, 100),
+        color: GLOBAL.$getHexColor(`${ m.get('id') } ${ m.get('name') } ${m.get('header')}`, true, 20, 50, 100),
         show: true,
         header: m.get('header'),
         description: m.get('description'),
@@ -323,7 +414,7 @@ const setupMapFeatures = () => {
         district_id: m.get('district_id'),
         label: `${ m.get('name') } ${m.get('header')}`,
         zoom: 9,
-        color: GLOBAL.$getHexColor(`${ m.get('name') } ${m.get('header')}`, true, 20, 50, 100),
+        color: GLOBAL.$getHexColor(`${ m.get('id') } ${ m.get('name') } ${m.get('header')}`, true, 20, 50, 100),
         show: true,
         header: m.get('header'),
         description: m.get('description'),
@@ -334,15 +425,56 @@ const setupMapFeatures = () => {
     features.push(feature)
   }
   gmFeatures[9] = features
-  gmFeatures[10] = setupTownFeaturesMap()
-  gmFeatures[11] = setupSectionFeaturesMap()
+  features = []
+  for (let m of townFeatureCollection.getModels()) {
+    let feature = {
+      geometry: JSON.parse(m.get('geometry')),
+      properties: {
+        id: m.get('id'),
+        town_id: m.get('town_id'),
+        district_f_id: m.get('district_f_id'),
+        district_l_id: m.get('district_l_id'),
+        label: m.get('name'),
+        zoom: 10,
+        color: GLOBAL.$getHexColor(`${ m.get('id') } ${ m.get('name') } ${ m.get('town_id') }`, true, 20, 50, 100),
+        show: true,
+        description: m.get('description'),
+        model_id: 0,
+      },
+      type: 'Feature',
+    }
+    features.push(feature)
+  }
+  gmFeatures[10] = features
+  features = []
+  for (let m of sectionFeatureCollection.getModels()) {
+    let feature = {
+      geometry: JSON.parse(m.get('geometry')),
+      properties: {
+        id: m.get('id'),
+        section_id: m.get('section_id'),
+        town_id: m.get('town_id'),
+        district_f_id: m.get('district_f_id'),
+        district_l_id: m.get('district_l_id'),
+        label: m.get('section_id'),
+        zoom: 11,
+        color: GLOBAL.$getHexColor(`${ m.get('id') } ${ m.get('section_id') } ${ m.get('district_f_id') } ${ m.get('district_l_id') }`, true, 20, 50, 100),
+        show: true,
+        description: m.get('description'),
+        model_id: 0,
+      },
+      type: 'Feature',
+    }
+    features.push(feature)
+  }
+  gmFeatures[11] = features
   googleMapFeatures.value = gmFeatures
   setFeaturesTitle(8)
 }
 
 const setupTownFeaturesMap = () => {
   let features = []
-    for (let m of townFeatureCollection.getModels()) {
+  for (let m of townFeatureCollection.getModels()) {
     let feature = {
       geometry: JSON.parse(m.get('geometry')),
       properties: {
@@ -360,7 +492,7 @@ const setupTownFeaturesMap = () => {
       type: 'Feature',
     }
     let iName = removeAccents(feature.properties.label).toLowerCase()
-    let models = resultCollection.filter(m => {
+    let models = electionCollection.filter(m => {
       let mName = removeAccents(m.get('name')).toLowerCase()
       return (mName === iName)
     })
@@ -424,7 +556,7 @@ const setupSectionFeaturesMap = () => {
       type: 'Feature',
     }
     let townId = parseInt(feature.properties.town_id)
-    let models = resultCollection.filter(m => {
+    let models = electionCollection.filter(m => {
       let id = parseInt(m.get('id'))
       return (townId === id)
     })
@@ -498,7 +630,7 @@ const GMFeatureOnClick = data => {
   setFeaturesTitle(zoomFeatures, data.feature.getProperty('label'))
   if (data.feature.getProperty('zoom') === 10) {
     let featureModelId = data.feature.getProperty('model_id')
-    let models = resultCollection.filter(m => {
+    let models = electionCollection.filter(m => {
       return (m.get('id') === featureModelId)
     })
     if (!models.getModels().length)

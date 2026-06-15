@@ -47,6 +47,19 @@
         </Widget>
       </div>
       <div
+        v-if="GMDropDownMenus.length"
+        id="tool-bar">
+        <template
+          v-for="(dropdownMenu, i) of GMDropDownMenus">
+          <DropdownMultiSelect
+            :setBKG="true"
+            :label="dropdownMenu.label"
+            :selectOptions="dropdownMenu.selectOptions"
+            :onSelectOption="dropdownMenu.onSelectOption"
+            :isLast="i === GMDropDownMenus.length - 1"/>
+        </template>
+      </div>
+      <div
         ref="map_ref"
         class="google-map">
       </div>
@@ -62,6 +75,7 @@
 <script setup>
 import Markdown from './markdown.vue'
 import Widget from './widget.vue'
+import DropdownMultiSelect from './dropdown-multi-select.vue'
 
 import {
   getCurrentInstance,
@@ -91,6 +105,10 @@ const PROPS = defineProps({
   GMInfoBoxHeight: {
     type: String,
     default: '460px'
+  },
+  GMDropDownMenus: {
+    type: Array,
+    default: [],
   },
   GMInfoBoxWidth: {
     type: String,
@@ -829,6 +847,18 @@ const debounceShowMarkersInBounds = _.debounce(showMarkersInBounds, 500, { 'trai
   width: calc(100% - 15%);
   bottom: -1px;
 }
+
+
+#tool-bar {
+  display: flex;
+  gap: 10px;
+  margin: auto;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 10;
+}
+
 
 </style>
 

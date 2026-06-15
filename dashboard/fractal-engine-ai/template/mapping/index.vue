@@ -152,6 +152,7 @@ let localDistrictFeatureCollection = new GLOBAL.$model.FeatureMC.collection()
 let townFeatureCollection = new GLOBAL.$model.FeatureMC.collection()
 let sectionFeatureCollection = new GLOBAL.$model.FeatureMC.collection()
 let electionCollection = new GLOBAL.$model.ElectionMC.collection()
+let electionDataResults = []
 let electionTypeCollection = new GLOBAL.$model.ElectionTypeMC.collection()
 let federalDistrictElectionCollection = new GLOBAL.$model.ElectionMC.collection()
 let localDistrictElectionCollection = new GLOBAL.$model.ElectionMC.collection()
@@ -251,7 +252,6 @@ let GMFilterFeatures = ref({
   zoom_features: 0,
 })
 let initDistrictType = 'district_f_id'
-
 let GMDDOptionScopeSelected = []
 let GMDDOptionElectionSelected = []
 let GMDDOptionTypeSelected = []
@@ -278,130 +278,84 @@ const setup = async () => {
   }
 }
 
-const setElectionDropDownMenus = (scopeFilter = [], electionFilter = [], typeFilter = []) => {
-  let scopeItems = {
-    label: 'scope',
-    selectOptions: [],
-    onSelectOption: GMOnOptionSelected,
-  }
-  let electionItems = {
+const setElectionDropDownMenus = () => {
+  let menu = {
     label: 'election',
     selectOptions: [],
     onSelectOption: GMOnOptionSelected,
   }
-  let typeItems = {
-    label: 'type',
-    selectOptions: [],
-    onSelectOption: GMOnOptionSelected,
-  }
-  let scope = []
-  let election = []
-  let type = []
+
   for (let e of electionTypeCollection.getModels()) {
-    if (!scope.includes(e.get('scope')))
-      scope.push(e.get('scope'))
-    if (scopeFilter.includes(e.get('scope')) && !election.includes(e.get('election')))
-      election.push(e.get('election'))
-    if (scopeFilter.includes(e.get('scope')) && electionFilter.includes(e.get('election')) && !type.includes(e.get('type')))
-      type.push(e.get('type'))
+    let name = `${ e.get('type') } ${ e.get('scope') } ${ e.get('election') }`
+    menu.selectOptions.push({
+      item_name: name,
+      item_prop: {
+        scope: e.get('scope'),
+        election: e.get('election'),
+        type: e.get('type'),
+      },
+      item_value: false,
+      item_old_value: false,
+      requested: false,
+      collectionFederal: new GLOBAL.$model.ElectionMC.collection(),
+      collectionLocal: new GLOBAL.$model.ElectionMC.collection(),
+      collectionTown: new GLOBAL.$model.ElectionMC.collection(),
+      collectionSection: new GLOBAL.$model.ElectionMC.collection(),
+    })
   }
-  for (let o of scope)
-    scopeItems.selectOptions.push({
-      item_name: o,
-      item_prop: 'scope',
-      item_value: scopeFilter.includes(o),
-    })
-  for (let o of election)
-    electionItems.selectOptions.push({
-      item_name: o,
-      item_prop: 'election',
-      item_value: electionFilter.includes(o),
-    })
-  for (let o of type)
-    typeItems.selectOptions.push({
-      item_name: o,
-      item_prop: 'type',
-      item_value: typeFilter.includes(o),
-    })
-  GMDropDownMenus.value = [scopeItems, electionItems, typeItems]
-  fetchElectionData()
+  GMDropDownMenus.value = [menu]
 }
 
 const GMOnOptionSelected = (prop, data) => {
-  if (prop === 'scope')
-    if (data.item_value)
-      GMDDOptionScopeSelected = GMDDOptionScopeSelected.filter(o => o !== data.item_name)
-    else
-      GMDDOptionScopeSelected.push(data.item_name)
-  if (prop === 'election')
-    if (data.item_value)
-      GMDDOptionElectionSelected = GMDDOptionElectionSelected.filter(o => o !== data.item_name)
-    else
-      GMDDOptionElectionSelected.push(data.item_name)
-  if (prop === 'type')
-    if (data.item_value)
-      GMDDOptionTypeSelected = GMDDOptionTypeSelected.filter(o => o !== data.item_name)
-    else
-      GMDDOptionTypeSelected.push(data.item_name)
-  let election = []
-  let type = []
-  for (let e of electionTypeCollection.getModels()) {
-    if (!election.includes(e.get('election')))
-      election.push(e.get('election'))
-    if (!type.includes(e.get('type')))
-      type.push(e.get('type'))
-  }
-  GMDDOptionElectionSelected = GMDDOptionElectionSelected.filter(o => election.includes(o))
-  GMDDOptionTypeSelected = GMDDOptionTypeSelected.filter(o => type.includes(o))
-  setElectionDropDownMenus(GMDDOptionScopeSelected, GMDDOptionElectionSelected, GMDDOptionTypeSelected)
+  data.item_old_value = data.item_value
+  data.item_value = !data.item_value
+  fetchElectionData(data)
 }
 
-const fetchElectionData = async () => {
-  console.log('== fetchElectionData ==', GMDDOptionScopeSelected, GMDDOptionElectionSelected, GMDDOptionTypeSelected)
+const fetchElectionData = async data => {
   try {
     isLoading.value = true
-    if (!GMDDOptionScopeSelected.length || !GMDDOptionElectionSelected.length || !GMDDOptionTypeSelected.length)
-      throw 'Not select scope, election and type'
-    federalDistrictElectionCollection.set({
-      scope: GMDDOptionScopeSelected[0],
-      election: GMDDOptionElectionSelected[0],
-      type: GMDDOptionTypeSelected[0],
-    })
-    localDistrictElectionCollection.set({
-      scope: GMDDOptionScopeSelected[0],
-      election: GMDDOptionElectionSelected[0],
-      type: GMDDOptionTypeSelected[0],
-    })
-    townElectionCollection.set({
-      scope: GMDDOptionScopeSelected[0],
-      election: GMDDOptionElectionSelected[0],
-      type: GMDDOptionTypeSelected[0],
-    })
-    sectionElectionCollection.set({
-      scope: GMDDOptionScopeSelected[0],
-      election: GMDDOptionElectionSelected[0],
-      type: GMDDOptionTypeSelected[0],
-    })
+    if (data.requested) {
+      matchFeatureWithElectionData()
+      return
+    }
     let fetchPromiseItems = []
-    fetchPromiseItems.push(federalDistrictElectionCollection.fetchResultFederal())
-    fetchPromiseItems.push(localDistrictElectionCollection.fetchResultLocal())
-    fetchPromiseItems.push(townElectionCollection.fetchResultTown())
-    fetchPromiseItems.push(sectionElectionCollection.fetchResultSection())
+    data.collectionFederal.set({
+      scope: data.item_prop.scope,
+      election: data.item_prop.election,
+      type: data.item_prop.type,
+    })
+    data.collectionLocal.set({
+      scope: data.item_prop.scope,
+      election: data.item_prop.election,
+      type: data.item_prop.type,
+    })
+    data.collectionTown.set({
+      scope: data.item_prop.scope,
+      election: data.item_prop.election,
+      type: data.item_prop.type,
+    })
+    data.collectionSection.set({
+      scope: data.item_prop.scope,
+      election: data.item_prop.election,
+      type: data.item_prop.type,
+    })
+    fetchPromiseItems.push(data.collectionFederal.fetchResultFederal())
+    fetchPromiseItems.push(data.collectionLocal.fetchResultLocal())
+    fetchPromiseItems.push(data.collectionTown.fetchResultTown())
+    fetchPromiseItems.push(data.collectionSection.fetchResultSection())
     await Promise.all(fetchPromiseItems)
-    console.log('== federalDistrictElectionCollection ==', federalDistrictElectionCollection.getModels().length)
-    console.log('== localDistrictElectionCollection ==', localDistrictElectionCollection.getModels().length)
-    console.log('== townElectionCollection ==', townElectionCollection.getModels().length)
-    console.log('== sectionElectionCollection ==', sectionElectionCollection.getModels().length)
-    // TODO: CREATE OBJECT TO KNOW WITCH COMBINATION OF DATA ARE LOADED
-    // TODO: PRINT DATA OVER THE MAP
-    // TODO: PRINT INFO BOX DATA
-    // TODO: PRINT RESULTS DATA
-    // TODO: PRINT RESULTS CHART
+    data.requested = true
+    matchFeatureWithElectionData()
   } catch (err) {
     console.error(err)
   } finally {
     isLoading.value = false
   }
+}
+
+const matchFeatureWithElectionData = () => {
+  // TODO: MATCH DATA BETWEEN FEATURES AND ELECTION DATA
 }
 
 const fetchFeatures = async () => {
@@ -440,7 +394,7 @@ const setupMapFeatures = () => {
         district_id: m.get('district_id'),
         label: `${ m.get('name') } ${ m.get('header') }`,
         zoom: 8,
-        color: GLOBAL.$getHexColor(`${ m.get('name') } ${m.get('header')}`, true, 20, 50, 100),
+        color: GLOBAL.$getHexColor(`${ m.get('id') } ${ m.get('name') } ${m.get('header')}`, true, 20, 50, 100),
         show: true,
         header: m.get('header'),
         description: m.get('description'),
@@ -460,7 +414,7 @@ const setupMapFeatures = () => {
         district_id: m.get('district_id'),
         label: `${ m.get('name') } ${m.get('header')}`,
         zoom: 9,
-        color: GLOBAL.$getHexColor(`${ m.get('name') } ${m.get('header')}`, true, 20, 50, 100),
+        color: GLOBAL.$getHexColor(`${ m.get('id') } ${ m.get('name') } ${m.get('header')}`, true, 20, 50, 100),
         show: true,
         header: m.get('header'),
         description: m.get('description'),
@@ -471,15 +425,56 @@ const setupMapFeatures = () => {
     features.push(feature)
   }
   gmFeatures[9] = features
-  gmFeatures[10] = setupTownFeaturesMap()
-  gmFeatures[11] = setupSectionFeaturesMap()
+  features = []
+  for (let m of townFeatureCollection.getModels()) {
+    let feature = {
+      geometry: JSON.parse(m.get('geometry')),
+      properties: {
+        id: m.get('id'),
+        town_id: m.get('town_id'),
+        district_f_id: m.get('district_f_id'),
+        district_l_id: m.get('district_l_id'),
+        label: m.get('name'),
+        zoom: 10,
+        color: GLOBAL.$getHexColor(`${ m.get('id') } ${ m.get('name') } ${ m.get('town_id') }`, true, 20, 50, 100),
+        show: true,
+        description: m.get('description'),
+        model_id: 0,
+      },
+      type: 'Feature',
+    }
+    features.push(feature)
+  }
+  gmFeatures[10] = features
+  features = []
+  for (let m of sectionFeatureCollection.getModels()) {
+    let feature = {
+      geometry: JSON.parse(m.get('geometry')),
+      properties: {
+        id: m.get('id'),
+        section_id: m.get('section_id'),
+        town_id: m.get('town_id'),
+        district_f_id: m.get('district_f_id'),
+        district_l_id: m.get('district_l_id'),
+        label: m.get('section_id'),
+        zoom: 11,
+        color: GLOBAL.$getHexColor(`${ m.get('id') } ${ m.get('section_id') } ${ m.get('district_f_id') } ${ m.get('district_l_id') }`, true, 20, 50, 100),
+        show: true,
+        description: m.get('description'),
+        model_id: 0,
+      },
+      type: 'Feature',
+    }
+    features.push(feature)
+  }
+  gmFeatures[11] = features
   googleMapFeatures.value = gmFeatures
   setFeaturesTitle(8)
 }
 
 const setupTownFeaturesMap = () => {
   let features = []
-    for (let m of townFeatureCollection.getModels()) {
+  for (let m of townFeatureCollection.getModels()) {
     let feature = {
       geometry: JSON.parse(m.get('geometry')),
       properties: {

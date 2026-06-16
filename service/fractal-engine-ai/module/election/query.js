@@ -13,16 +13,54 @@ const fetchElectionTypes = `
 
 const fetchElectionResultByFederalDistrict = `
   SELECT
-    FDF.district_id,
-    FDF.name,
-    SUM(RS.total_votos) AS total_votos
+    FDF.name AS district_id,
+    FDF.header,
+    SUM(RS.mc) AS votos_mc,
+    SUM(RS.morena) AS votos_morena,
+    SUM(RS.pan) AS votos_pan,
+    SUM(RS.pes) AS votos_pes,
+    SUM(RS.prd) AS votos_prd,
+    SUM(RS.pri) AS votos_pri,
+    SUM(RS.pt) AS votos_pt,
+    SUM(RS.casillas) AS casillas,
+    SUM(RS.lista_nominal) AS lista_nominal,
+    SUM(RS.num_votos_nulos) AS num_votos_nulos,
+    SUM(RS.num_votos_validos) AS num_votos_validos,
+    SUM(RS.total_votos) AS total_votos,
+	  GREATEST (
+      COALESCE(SUM(RS.mc), 0),
+      COALESCE(SUM(RS.morena), 0),
+      COALESCE(SUM(RS.pan), 0),
+      COALESCE(SUM(RS.pes), 0),
+      COALESCE(SUM(RS.prd), 0),
+      COALESCE(SUM(RS.pri), 0),
+      COALESCE(SUM(RS.pt), 0)
+    ) AS ganador_votos,
+	  CASE GREATEST(
+      COALESCE(SUM(RS.mc), 0),
+      COALESCE(SUM(RS.morena), 0),
+      COALESCE(SUM(RS.pan), 0),
+      COALESCE(SUM(RS.pes), 0),
+      COALESCE(SUM(RS.prd), 0),
+      COALESCE(SUM(RS.pri), 0),
+      COALESCE(SUM(RS.pt), 0)
+    )
+      WHEN 0 THEN 'sin votos'
+      WHEN COALESCE(SUM(RS.mc), 0) THEN 'mc'
+      WHEN COALESCE(SUM(RS.morena), 0) THEN 'morena'
+      WHEN COALESCE(SUM(RS.pan), 0) THEN 'pan'
+      WHEN COALESCE(SUM(RS.pes), 0) THEN 'pes'
+      WHEN COALESCE(SUM(RS.prd), 0) THEN 'prd'
+      WHEN COALESCE(SUM(RS.pri), 0) THEN 'pri'
+      WHEN COALESCE(SUM(RS.pt), 0) THEN 'pt'
+    END AS ganador
   FROM
     federal_district_feature AS FDF
   LEFT JOIN
     town_feature AS TF
   ON
-    TF.district_l_id = FDF.district_id
-  INNER JOIN
+	  FIND_IN_SET(FDF.name, TF.district_f_id) > 0
+  LEFT JOIN
     result_seccion AS RS
   ON
     RS.town_id = TF.town_id
@@ -33,21 +71,59 @@ const fetchElectionResultByFederalDistrict = `
   AND
     RS.type = ?
   GROUP BY
-    TF.district_f_id;
+    FDF.name;
 `
 
 const fetchElectionResultByLocalDistrict = `
   SELECT
-    LDF.district_id,
-    LDF.name,
-    SUM(RS.total_votos) AS total_votos
+    LDF.name AS district_id,
+	  LDF.header,
+	  SUM(RS.mc) AS votos_mc,
+    SUM(RS.morena) AS votos_morena,
+    SUM(RS.pan) AS votos_pan,
+    SUM(RS.pes) AS votos_pes,
+    SUM(RS.prd) AS votos_prd,
+    SUM(RS.pri) AS votos_pri,
+    SUM(RS.pt) AS votos_pt,
+    SUM(RS.casillas) AS casillas,
+    SUM(RS.lista_nominal) AS lista_nominal,
+    SUM(RS.num_votos_nulos) AS num_votos_nulos,
+    SUM(RS.num_votos_validos) AS num_votos_validos,
+    SUM(RS.total_votos) AS total_votos,
+	  GREATEST (
+      COALESCE(SUM(RS.mc), 0),
+      COALESCE(SUM(RS.morena), 0),
+      COALESCE(SUM(RS.pan), 0),
+      COALESCE(SUM(RS.pes), 0),
+      COALESCE(SUM(RS.prd), 0),
+      COALESCE(SUM(RS.pri), 0),
+      COALESCE(SUM(RS.pt), 0)
+    ) AS ganador_votos,
+	  CASE GREATEST(
+      COALESCE(SUM(RS.mc), 0),
+      COALESCE(SUM(RS.morena), 0),
+      COALESCE(SUM(RS.pan), 0),
+      COALESCE(SUM(RS.pes), 0),
+      COALESCE(SUM(RS.prd), 0),
+      COALESCE(SUM(RS.pri), 0),
+      COALESCE(SUM(RS.pt), 0)
+    )
+      WHEN 0 THEN 'sin votos'
+      WHEN COALESCE(SUM(RS.mc), 0) THEN 'mc'
+      WHEN COALESCE(SUM(RS.morena), 0) THEN 'morena'
+      WHEN COALESCE(SUM(RS.pan), 0) THEN 'pan'
+      WHEN COALESCE(SUM(RS.pes), 0) THEN 'pes'
+      WHEN COALESCE(SUM(RS.prd), 0) THEN 'prd'
+      WHEN COALESCE(SUM(RS.pri), 0) THEN 'pri'
+      WHEN COALESCE(SUM(RS.pt), 0) THEN 'pt'
+    END AS ganador
   FROM
     local_district_feature AS LDF
   LEFT JOIN
     town_feature AS TF
   ON
-    TF.district_l_id = LDF.district_id
-  INNER JOIN
+	  FIND_IN_SET(LDF.name, TF.district_l_id) > 0
+  LEFT JOIN
     result_seccion AS RS
   ON
     RS.town_id = TF.town_id
@@ -58,7 +134,7 @@ const fetchElectionResultByLocalDistrict = `
   AND
     RS.type = ?
   GROUP BY
-    TF.district_l_id;
+    LDF.name;
 `
 
 const fetchElectionResultByTown = `
@@ -80,7 +156,34 @@ const fetchElectionResultByTown = `
     SUM(RS.lista_nominal) AS lista_nominal,
     SUM(RS.num_votos_nulos) AS num_votos_nulos,
     SUM(RS.num_votos_validos) AS num_votos_validos,
-    SUM(RS.total_votos) AS total_votos
+    SUM(RS.total_votos) AS total_votos,
+	  GREATEST (
+      COALESCE(SUM(RS.mc), 0),
+      COALESCE(SUM(RS.morena), 0),
+      COALESCE(SUM(RS.pan), 0),
+      COALESCE(SUM(RS.pes), 0),
+      COALESCE(SUM(RS.prd), 0),
+      COALESCE(SUM(RS.pri), 0),
+      COALESCE(SUM(RS.pt), 0)
+    ) AS ganador_votos,
+	  CASE GREATEST(
+      COALESCE(SUM(RS.mc), 0),
+      COALESCE(SUM(RS.morena), 0),
+      COALESCE(SUM(RS.pan), 0),
+      COALESCE(SUM(RS.pes), 0),
+      COALESCE(SUM(RS.prd), 0),
+      COALESCE(SUM(RS.pri), 0),
+      COALESCE(SUM(RS.pt), 0)
+    )
+      WHEN 0 THEN 'sin votos'
+      WHEN COALESCE(SUM(RS.mc), 0) THEN 'mc'
+      WHEN COALESCE(SUM(RS.morena), 0) THEN 'morena'
+      WHEN COALESCE(SUM(RS.pan), 0) THEN 'pan'
+      WHEN COALESCE(SUM(RS.pes), 0) THEN 'pes'
+      WHEN COALESCE(SUM(RS.prd), 0) THEN 'prd'
+      WHEN COALESCE(SUM(RS.pri), 0) THEN 'pri'
+      WHEN COALESCE(SUM(RS.pt), 0) THEN 'pt'
+    END AS ganador
   FROM
     town_feature AS TF
   INNER JOIN
@@ -105,6 +208,7 @@ const fetchElectionResultBySection = `
     RS.scope,
     FDF.header,
     SF.district_f_id,
+    SF.district_l_id,
     RS.town_id,
     RS.municipio,
     SF.section_id,
@@ -119,7 +223,34 @@ const fetchElectionResultBySection = `
     RS.lista_nominal,
     RS.num_votos_nulos,
     RS.num_votos_validos,
-    RS.total_votos
+    RS.total_votos,
+	  GREATEST (
+      COALESCE(RS.mc, 0),
+      COALESCE(RS.morena, 0),
+      COALESCE(RS.pan, 0),
+      COALESCE(RS.pes, 0),
+      COALESCE(RS.prd, 0),
+      COALESCE(RS.pri, 0),
+      COALESCE(RS.pt, 0)
+    ) AS ganador_votos,
+	  CASE GREATEST(
+      COALESCE(RS.mc, 0),
+      COALESCE(RS.morena, 0),
+      COALESCE(RS.pan, 0),
+      COALESCE(RS.pes, 0),
+      COALESCE(RS.prd, 0),
+      COALESCE(RS.pri, 0),
+      COALESCE(RS.pt, 0)
+    )
+      WHEN 0 THEN 'sin votos'
+      WHEN COALESCE(RS.mc, 0) THEN 'mc'
+      WHEN COALESCE(RS.morena, 0) THEN 'morena'
+      WHEN COALESCE(RS.pan, 0) THEN 'pan'
+      WHEN COALESCE(RS.pes, 0) THEN 'pes'
+      WHEN COALESCE(RS.prd, 0) THEN 'prd'
+      WHEN COALESCE(RS.pri, 0) THEN 'pri'
+      WHEN COALESCE(RS.pt, 0) THEN 'pt'
+    END AS ganador
   FROM
     section_feature AS SF
   LEFT JOIN

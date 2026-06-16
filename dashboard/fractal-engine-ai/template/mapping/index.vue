@@ -1,6 +1,7 @@
 <template lang="html">
   <div id="wrapper">
     <GoogleMap
+      :GMUpdateFeatures="GMUUID"
       :GMTitle="GMTitle"
       :GMFeatures="googleMapFeatures"
       :GMZoomFeatures="8"
@@ -145,6 +146,7 @@ const GLOBAL = INSTANCE.appContext.config.globalProperties
 let isLoading = ref(false)
 let googleMapFeatures = ref({})
 let townSelected = ref(null)
+let GMUUID = ref(GLOBAL.$uuid.v1())
 let GMTitle = ref('')
 let GMDropDownMenus = ref([])
 let federalDistrictFeatureCollection = new GLOBAL.$model.FeatureMC.collection()
@@ -152,12 +154,9 @@ let localDistrictFeatureCollection = new GLOBAL.$model.FeatureMC.collection()
 let townFeatureCollection = new GLOBAL.$model.FeatureMC.collection()
 let sectionFeatureCollection = new GLOBAL.$model.FeatureMC.collection()
 let electionCollection = new GLOBAL.$model.ElectionMC.collection()
-let electionDataResults = []
+
 let electionTypeCollection = new GLOBAL.$model.ElectionTypeMC.collection()
-let federalDistrictElectionCollection = new GLOBAL.$model.ElectionMC.collection()
-let localDistrictElectionCollection = new GLOBAL.$model.ElectionMC.collection()
-let townElectionCollection = new GLOBAL.$model.ElectionMC.collection()
-let sectionElectionCollection = new GLOBAL.$model.ElectionMC.collection()
+
 let colors = {
   pan: '#00579c',
   pri: '#28b154',
@@ -166,12 +165,6 @@ let colors = {
   pvem: '#9fce67',
   mc: '#ff7e00',
   morena: '#a53422',
-  pan_pri_prd: '#4f8d62',
-  pan_pri: '#148478',
-  pan_prd: '#809450',
-  pri_prd : '#94c22c',
-  pt_morena: '#c62428',
-  activo: '#00629f',
 }
 let parties = [
   {
@@ -252,9 +245,6 @@ let GMFilterFeatures = ref({
   zoom_features: 0,
 })
 let initDistrictType = 'district_f_id'
-let GMDDOptionScopeSelected = []
-let GMDDOptionElectionSelected = []
-let GMDDOptionTypeSelected = []
 
 
 onMounted (async () => {
@@ -267,8 +257,6 @@ const setup = async () => {
     isLoading.value = true
     await electionTypeCollection.fetch()
     setElectionDropDownMenus()
-    //electionCollection.set('state', 'michoacán')
-    //await electionCollection.fetch()
     await fetchFeatures()
     setupMapFeatures()
   } catch (err) {
@@ -297,10 +285,10 @@ const setElectionDropDownMenus = () => {
       item_value: false,
       item_old_value: false,
       requested: false,
-      collectionFederal: new GLOBAL.$model.ElectionMC.collection(),
-      collectionLocal: new GLOBAL.$model.ElectionMC.collection(),
-      collectionTown: new GLOBAL.$model.ElectionMC.collection(),
-      collectionSection: new GLOBAL.$model.ElectionMC.collection(),
+      federal_collection: new GLOBAL.$model.ElectionMC.collection(),
+      local_collection: new GLOBAL.$model.ElectionMC.collection(),
+      town_collection: new GLOBAL.$model.ElectionMC.collection(),
+      section_collection: new GLOBAL.$model.ElectionMC.collection(),
     })
   }
   GMDropDownMenus.value = [menu]
@@ -320,30 +308,30 @@ const fetchElectionData = async data => {
       return
     }
     let fetchPromiseItems = []
-    data.collectionFederal.set({
+    data.federal_collection.set({
       scope: data.item_prop.scope,
       election: data.item_prop.election,
       type: data.item_prop.type,
     })
-    data.collectionLocal.set({
+    data.local_collection.set({
       scope: data.item_prop.scope,
       election: data.item_prop.election,
       type: data.item_prop.type,
     })
-    data.collectionTown.set({
+    data.town_collection.set({
       scope: data.item_prop.scope,
       election: data.item_prop.election,
       type: data.item_prop.type,
     })
-    data.collectionSection.set({
+    data.section_collection.set({
       scope: data.item_prop.scope,
       election: data.item_prop.election,
       type: data.item_prop.type,
     })
-    fetchPromiseItems.push(data.collectionFederal.fetchResultFederal())
-    fetchPromiseItems.push(data.collectionLocal.fetchResultLocal())
-    fetchPromiseItems.push(data.collectionTown.fetchResultTown())
-    fetchPromiseItems.push(data.collectionSection.fetchResultSection())
+    fetchPromiseItems.push(data.federal_collection.fetchResultFederal())
+    fetchPromiseItems.push(data.local_collection.fetchResultLocal())
+    fetchPromiseItems.push(data.town_collection.fetchResultTown())
+    fetchPromiseItems.push(data.section_collection.fetchResultSection())
     await Promise.all(fetchPromiseItems)
     data.requested = true
     matchFeatureWithElectionData()
@@ -354,8 +342,96 @@ const fetchElectionData = async data => {
   }
 }
 
-const matchFeatureWithElectionData = () => {
-  // TODO: MATCH DATA BETWEEN FEATURES AND ELECTION DATA
+const matchFeatureWithElectionData = async () => {
+  // NOTE: FEDERAL DISTRICT
+  for (let feature of googleMapFeatures.value[8]) {
+    let model = null
+    for (let option of GMDropDownMenus.value[0].selectOptions) {
+      if (!option.item_value)
+        continue
+
+      let featureDistrictId = parseInt(feature.properties.district_id)
+      for (let m of option.federal_collection.getModels())
+        if (parseInt(m.get('district_id')) === featureDistrictId) {
+          model = m
+          break
+        }
+      if (model !== null)
+        break
+    }
+    if (model === null)
+      continue
+
+    feature.properties.color = colors[model.get('ganador')]
+    feature.properties.label = `${ feature.properties.model.get('name') } ${ feature.properties.model.get('header') } \n ${ model.get('total_votos') } \n ${ model.get('ganador') }: ${ model.get('ganador_votos') }`
+  }
+  // NOTE: LOCAL DISTRICT
+  for (let feature of googleMapFeatures.value[9]) {
+    let model = null
+    for (let option of GMDropDownMenus.value[0].selectOptions) {
+      if (!option.item_value)
+        continue
+
+      let featureDistrictId = parseInt(feature.properties.district_id)
+      for (let m of option.local_collection.getModels())
+        if (parseInt(m.get('district_id')) === featureDistrictId) {
+          model = m
+          break
+        }
+      if (model !== null)
+        break
+    }
+    if (model === null)
+      continue
+
+    feature.properties.color = colors[model.get('ganador')]
+    feature.properties.label = `${ feature.properties.model.get('name') } ${ feature.properties.model.get('header') } \n ${ model.get('total_votos') } \n ${ model.get('ganador') }: ${ model.get('ganador_votos') }`
+  }
+  // NOTE: TOWN
+  for (let feature of googleMapFeatures.value[10]) {
+    let model = null
+    for (let option of GMDropDownMenus.value[0].selectOptions) {
+      if (!option.item_value)
+        continue
+
+      let featureTownId = parseInt(feature.properties.town_id)
+      for (let m of option.town_collection.getModels())
+        if (parseInt(m.get('town_id')) === featureTownId) {
+          model = m
+          break
+        }
+      if (model !== null)
+        break
+    }
+    if (model === null)
+      continue
+
+    feature.properties.color = colors[model.get('ganador')]
+    feature.properties.label = `${ feature.properties.model.get('name') } ${ feature.properties.model.get('header') } \n ${ model.get('total_votos') } \n ${ model.get('ganador') }: ${ model.get('ganador_votos') }`
+  }
+  // NOTE: SECTION
+  for (let feature of googleMapFeatures.value[11]) {
+    let model = null
+    for (let option of GMDropDownMenus.value[0].selectOptions) {
+      if (!option.item_value)
+        continue
+
+      let featureSectionId = parseInt(feature.properties.section_id)
+      for (let m of option.section_collection.getModels())
+        if (parseInt(m.get('section_id')) === featureSectionId) {
+          model = m
+          break
+        }
+      if (model !== null)
+        break
+    }
+    if (model === null)
+      continue
+
+    feature.properties.color = colors[model.get('ganador')]
+    feature.properties.label = `${ feature.properties.model.get('name') } ${ feature.properties.model.get('header') } \n ${ model.get('total_votos') } \n ${ model.get('ganador') }: ${ model.get('ganador_votos') }`
+  }
+  GMUUID.value = GLOBAL.$uuid.v1()
 }
 
 const fetchFeatures = async () => {
@@ -399,6 +475,7 @@ const setupMapFeatures = () => {
         header: m.get('header'),
         description: m.get('description'),
         model_id: 0,
+        model: m,
       },
       type: 'Feature',
     }
@@ -419,6 +496,7 @@ const setupMapFeatures = () => {
         header: m.get('header'),
         description: m.get('description'),
         model_id: 0,
+        model: m,
       },
       type: 'Feature',
     }
@@ -440,6 +518,7 @@ const setupMapFeatures = () => {
         show: true,
         description: m.get('description'),
         model_id: 0,
+        model: m,
       },
       type: 'Feature',
     }
@@ -462,6 +541,7 @@ const setupMapFeatures = () => {
         show: true,
         description: m.get('description'),
         model_id: 0,
+        model: m,
       },
       type: 'Feature',
     }

@@ -174,6 +174,10 @@ const PROPS = defineProps({
     type: Function,
     default: () => {},
   },
+  GMUpdateFeatures: {
+    type: String,
+    default: '',
+  },
 })
 
 
@@ -202,6 +206,10 @@ let featureLabels = ref([])
 
 
 // NOTE: LIFE CYCLE COMPONENT METHODS
+
+watch(() => PROPS.GMUpdateFeatures, newData => {
+  loadCurrentZoomFeatures()
+})
 
 watch(() => PROPS.GMFeatures, newData => {
   loadCurrentZoomFeatures()
@@ -443,6 +451,8 @@ const setFeatureMarker = async feature => {
   labelDiv.style.borderRadius = '5px'
   labelDiv.style.border = `1px solid ${ feature.getProperty(PROPS.GMFeatureColorKey) }`
   labelDiv.style.boxShadow = `0 3px 4px 2px rgba(0, 0, 0, 0.2)`
+  labelDiv.style.whiteSpace = 'pre-line'
+  labelDiv.style.textAlign = 'center'
   let marker = new AdvancedMarkerElement({
     position: bounds.getCenter(),
     map: map,

@@ -169,10 +169,10 @@ class ElectionCollection extends BaseCollection {
   }
   routes () {
     return {
-      fetchResultFederal: `${ CONFIG_MANIFEST.app_api_url }/election/result/federal-district/{scope}/{type}/{election}/items/`,
-      fetchResultLocal: `${ CONFIG_MANIFEST.app_api_url }/election/result/local-district/{scope}/{type}/{election}/items/`,
-      fetchResultTown: `${ CONFIG_MANIFEST.app_api_url }/election/result/town/{scope}/{type}/{election}/items/`,
-      fetchResultSection: `${ CONFIG_MANIFEST.app_api_url }/election/result/section/{scope}/{type}/{election}/items/`,
+      fetchResultFederal: `${ CONFIG_MANIFEST.app_api_url }/election/result/federal-district/items/?scope={scope}&type={type}&election={election}`,
+      fetchResultLocal: `${ CONFIG_MANIFEST.app_api_url }/election/result/local-district/items/?scope={scope}&type={type}&election={election}`,
+      fetchResultTown: `${ CONFIG_MANIFEST.app_api_url }/election/result/town/items/?scope={scope}&type={type}&election={election}`,
+      fetchResultSection: `${ CONFIG_MANIFEST.app_api_url }/election/result/section/items/?scope={scope}&type={type}&election={election}`,
       fetch: `${ CONFIG_MANIFEST.app_api_url }/election/items/{state}/`,
     }
   }

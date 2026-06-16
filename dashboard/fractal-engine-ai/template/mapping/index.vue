@@ -156,6 +156,10 @@ let sectionFeatureCollection = new GLOBAL.$model.FeatureMC.collection()
 let electionCollection = new GLOBAL.$model.ElectionMC.collection()
 
 let electionTypeCollection = new GLOBAL.$model.ElectionTypeMC.collection()
+let federalElectionCollection = new GLOBAL.$model.ElectionMC.collection()
+let localElectionCollection = new GLOBAL.$model.ElectionMC.collection()
+let townElectionCollection = new GLOBAL.$model.ElectionMC.collection()
+let sectionElectionCollection = new GLOBAL.$model.ElectionMC.collection()
 
 let colors = {
   pan: '#00579c',
@@ -272,7 +276,6 @@ const setElectionDropDownMenus = () => {
     selectOptions: [],
     onSelectOption: GMOnOptionSelected,
   }
-
   for (let e of electionTypeCollection.getModels()) {
     let name = `${ e.get('type') } ${ e.get('scope') } ${ e.get('election') }`
     menu.selectOptions.push({
@@ -285,10 +288,6 @@ const setElectionDropDownMenus = () => {
       item_value: false,
       item_old_value: false,
       requested: false,
-      federal_collection: new GLOBAL.$model.ElectionMC.collection(),
-      local_collection: new GLOBAL.$model.ElectionMC.collection(),
-      town_collection: new GLOBAL.$model.ElectionMC.collection(),
-      section_collection: new GLOBAL.$model.ElectionMC.collection(),
     })
   }
   GMDropDownMenus.value = [menu]
@@ -303,42 +302,57 @@ const GMOnOptionSelected = (prop, data) => {
 const fetchElectionData = async data => {
   try {
     isLoading.value = true
-    if (data.requested) {
-      matchFeatureWithElectionData()
-      return
-    }
+    //if (data.requested) {
+    //  matchFeatureWithElectionData()
+    //  return
+    //}
+    federalElectionCollection = new GLOBAL.$model.ElectionMC.collection()
+    localElectionCollection = new GLOBAL.$model.ElectionMC.collection()
+    townElectionCollection = new GLOBAL.$model.ElectionMC.collection()
+    sectionElectionCollection = new GLOBAL.$model.ElectionMC.collection()
     let fetchPromiseItems = []
-    data.federal_collection.set({
-      scope: data.item_prop.scope,
-      election: data.item_prop.election,
-      type: data.item_prop.type,
+    let scope = []
+    let election = []
+    let type = []
+    for (let option of GMDropDownMenus.value[0].selectOptions) {
+      if (!option.item_value)
+        continue
+
+      scope.push(option.item_prop.scope)
+      election.push(option.item_prop.election)
+      type.push(option.item_prop.type)
+    }
+    federalElectionCollection.set({
+      scope: scope.join(','),
+      election: election.join(','),
+      type: type.join(','),
     })
-    data.local_collection.set({
-      scope: data.item_prop.scope,
-      election: data.item_prop.election,
-      type: data.item_prop.type,
+    localElectionCollection.set({
+      scope: scope.join(','),
+      election: election.join(','),
+      type: type.join(','),
     })
-    data.town_collection.set({
-      scope: data.item_prop.scope,
-      election: data.item_prop.election,
-      type: data.item_prop.type,
+    townElectionCollection.set({
+      scope: scope.join(','),
+      election: election.join(','),
+      type: type.join(','),
     })
-    data.section_collection.set({
-      scope: data.item_prop.scope,
-      election: data.item_prop.election,
-      type: data.item_prop.type,
+    sectionElectionCollection.set({
+      scope: scope.join(','),
+      election: election.join(','),
+      type: type.join(','),
     })
-    fetchPromiseItems.push(data.federal_collection.fetchResultFederal())
-    fetchPromiseItems.push(data.local_collection.fetchResultLocal())
-    fetchPromiseItems.push(data.town_collection.fetchResultTown())
-    fetchPromiseItems.push(data.section_collection.fetchResultSection())
+    fetchPromiseItems.push(federalElectionCollection.fetchResultFederal())
+    fetchPromiseItems.push(localElectionCollection.fetchResultLocal())
+    fetchPromiseItems.push(townElectionCollection.fetchResultTown())
+    fetchPromiseItems.push(sectionElectionCollection.fetchResultSection())
     await Promise.all(fetchPromiseItems)
     data.requested = true
-    matchFeatureWithElectionData()
   } catch (err) {
     console.error(err)
   } finally {
     isLoading.value = false
+    matchFeatureWithElectionData()
   }
 }
 
@@ -351,7 +365,7 @@ const matchFeatureWithElectionData = async () => {
         continue
 
       let featureDistrictId = parseInt(feature.properties.district_id)
-      for (let m of option.federal_collection.getModels())
+      for (let m of federalElectionCollection.getModels())
         if (parseInt(m.get('district_id')) === featureDistrictId) {
           model = m
           break
@@ -373,7 +387,7 @@ const matchFeatureWithElectionData = async () => {
         continue
 
       let featureDistrictId = parseInt(feature.properties.district_id)
-      for (let m of option.local_collection.getModels())
+      for (let m of localElectionCollection.getModels())
         if (parseInt(m.get('district_id')) === featureDistrictId) {
           model = m
           break
@@ -395,7 +409,7 @@ const matchFeatureWithElectionData = async () => {
         continue
 
       let featureTownId = parseInt(feature.properties.town_id)
-      for (let m of option.town_collection.getModels())
+      for (let m of townElectionCollection.getModels())
         if (parseInt(m.get('town_id')) === featureTownId) {
           model = m
           break
@@ -417,7 +431,7 @@ const matchFeatureWithElectionData = async () => {
         continue
 
       let featureSectionId = parseInt(feature.properties.section_id)
-      for (let m of option.section_collection.getModels())
+      for (let m of sectionElectionCollection.getModels())
         if (parseInt(m.get('section_id')) === featureSectionId) {
           model = m
           break

@@ -68,9 +68,11 @@ const getElectionResultByFederalDistrictItems = async (req, res) => {
     status_msg: '',
   }
   try {
-    let scope = req.params.scope
-    let type = req.params.type
-    let election = req.params.election
+    const {
+      scope,
+      election,
+      type
+    } = req.query
     let result = await REPOSITORY.listElectionByFederalDistrict({
       scope: scope,
       type: type,
@@ -100,9 +102,11 @@ const getElectionResultByLocalDistrictItems = async (req, res) => {
     status_msg: '',
   }
   try {
-    let scope = req.params.scope
-    let type = req.params.type
-    let election = req.params.election
+    const {
+      scope,
+      election,
+      type
+    } = req.query
     let result = await REPOSITORY.listElectionByLocalDistrict({
       scope: scope,
       type: type,
@@ -132,9 +136,11 @@ const getElectionResultByTownItems = async (req, res) => {
     status_msg: '',
   }
   try {
-    let scope = req.params.scope
-    let type = req.params.type
-    let election = req.params.election
+    const {
+      scope,
+      election,
+      type
+    } = req.query
     let result = await REPOSITORY.listElectionByTown({
       scope: scope,
       type: type,
@@ -164,9 +170,11 @@ const getElectionResultBySectionItems = async (req, res) => {
     status_msg: '',
   }
   try {
-    let scope = req.params.scope
-    let type = req.params.type
-    let election = req.params.election
+    const {
+      scope,
+      election,
+      type
+    } = req.query
     let result = await REPOSITORY.listElectionBySection({
       scope: scope,
       type: type,

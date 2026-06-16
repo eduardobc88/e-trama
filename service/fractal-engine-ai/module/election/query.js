@@ -65,11 +65,11 @@ const fetchElectionResultByFederalDistrict = `
   ON
     RS.town_id = TF.town_id
   AND
-    RS.scope = ?
+    FIND_IN_SET(RS.scope, ?)
   AND
-    RS.election = ?
+    FIND_IN_SET(RS.election, ?)
   AND
-    RS.type = ?
+    FIND_IN_SET(RS.type, ?)
   GROUP BY
     FDF.name;
 `
@@ -128,11 +128,11 @@ const fetchElectionResultByLocalDistrict = `
   ON
     RS.town_id = TF.town_id
   AND
-    RS.scope = ?
+    FIND_IN_SET(RS.scope, ?)
   AND
-    RS.election = ?
+    FIND_IN_SET(RS.election, ?)
   AND
-    RS.type = ?
+    FIND_IN_SET(RS.type, ?)
   GROUP BY
     LDF.name;
 `
@@ -191,11 +191,11 @@ const fetchElectionResultByTown = `
   ON
     RS.town_id = TF.town_id
   AND
-    RS.scope = ?
+    FIND_IN_SET(RS.scope, ?)
   AND
-    RS.election = ?
+    FIND_IN_SET(RS.election, ?)
   AND
-    RS.type = ?
+    FIND_IN_SET(RS.type, ?)
   GROUP BY
     RS.town_id;
 `
@@ -260,11 +260,11 @@ const fetchElectionResultBySection = `
   LEFT JOIN
     result_seccion AS RS
   ON
-    RS.scope = ?
+    FIND_IN_SET(RS.scope, ?)
   AND
-    RS.election = ?
+    FIND_IN_SET(RS.election, ?)
   AND
-    RS.type = ?
+    FIND_IN_SET(RS.type, ?)
   AND
     RS.seccion = SF.section_id;
 `

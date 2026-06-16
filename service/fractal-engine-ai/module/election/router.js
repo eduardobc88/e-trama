@@ -15,23 +15,67 @@ const ROUTES = [
   },
   {
     method: 'GET',
-    url: '/result/federal-district/:scope/:type/:election/items/',
+    url: '/result/federal-district/items/',
+    schema: {
+      querystring: {
+        type: 'object',
+        properties: {
+          scope: { type: 'string' },
+          election: { type: 'string' },
+          type: { type: 'string' },
+        },
+        required: ['scope', 'election', 'type'],
+      },
+    },
     handler: CONTROLLER.getElectionResultByFederalDistrictItems,
   },
   {
     method: 'GET',
-    url: '/result/local-district/:scope/:type/:election/items/',
+    url: '/result/local-district/items/',
     handler: CONTROLLER.getElectionResultByLocalDistrictItems,
+    schema: {
+      querystring: {
+        type: 'object',
+        properties: {
+          scope: { type: 'string' },
+          election: { type: 'string' },
+          type: { type: 'string' },
+        },
+        required: ['scope', 'election', 'type'],
+      },
+    },
   },
   {
     method: 'GET',
-    url: '/result/town/:scope/:type/:election/items/',
+    url: '/result/town/items/',
     handler: CONTROLLER.getElectionResultByTownItems,
+    schema: {
+      querystring: {
+        type: 'object',
+        properties: {
+          scope: { type: 'string' },
+          election: { type: 'string' },
+          type: { type: 'string' },
+        },
+        required: ['scope', 'election', 'type'],
+      },
+    },
   },
   {
     method: 'GET',
-    url: '/result/section/:scope/:type/:election/items/',
+    url: '/result/section/items/',
     handler: CONTROLLER.getElectionResultBySectionItems,
+    schema: {
+      querystring: {
+        type: 'object',
+        properties: {
+          scope: { type: 'string' },
+          election: { type: 'string' },
+          type: { type: 'string' },
+        },
+        required: ['scope', 'election', 'type'],
+      },
+    },
   },
   {
     method: 'GET',

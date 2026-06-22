@@ -13,6 +13,7 @@ const fetchElectionTypes = `
 
 const fetchElectionResultByFederalDistrict = `
   SELECT
+    FDF.name AS id,
     FDF.name AS district_id,
     FDF.header,
     SUM(RS.mc) AS votos_mc,
@@ -22,6 +23,7 @@ const fetchElectionResultByFederalDistrict = `
     SUM(RS.prd) AS votos_prd,
     SUM(RS.pri) AS votos_pri,
     SUM(RS.pt) AS votos_pt,
+    SUM(RS.pvem) AS votos_pvem,
     SUM(RS.casillas) AS casillas,
     SUM(RS.lista_nominal) AS lista_nominal,
     SUM(RS.num_votos_nulos) AS num_votos_nulos,
@@ -34,7 +36,8 @@ const fetchElectionResultByFederalDistrict = `
       COALESCE(SUM(RS.pes), 0),
       COALESCE(SUM(RS.prd), 0),
       COALESCE(SUM(RS.pri), 0),
-      COALESCE(SUM(RS.pt), 0)
+      COALESCE(SUM(RS.pt), 0),
+      COALESCE(SUM(RS.pvem), 0)
     ) AS ganador_votos,
 	  CASE GREATEST(
       COALESCE(SUM(RS.mc), 0),
@@ -43,7 +46,8 @@ const fetchElectionResultByFederalDistrict = `
       COALESCE(SUM(RS.pes), 0),
       COALESCE(SUM(RS.prd), 0),
       COALESCE(SUM(RS.pri), 0),
-      COALESCE(SUM(RS.pt), 0)
+      COALESCE(SUM(RS.pt), 0),
+      COALESCE(SUM(RS.pvem), 0)
     )
       WHEN 0 THEN 'sin votos'
       WHEN COALESCE(SUM(RS.mc), 0) THEN 'mc'
@@ -53,6 +57,7 @@ const fetchElectionResultByFederalDistrict = `
       WHEN COALESCE(SUM(RS.prd), 0) THEN 'prd'
       WHEN COALESCE(SUM(RS.pri), 0) THEN 'pri'
       WHEN COALESCE(SUM(RS.pt), 0) THEN 'pt'
+      WHEN COALESCE(SUM(RS.pvem), 0) THEN 'pvem'
     END AS ganador
   FROM
     federal_district_feature AS FDF
@@ -76,6 +81,7 @@ const fetchElectionResultByFederalDistrict = `
 
 const fetchElectionResultByLocalDistrict = `
   SELECT
+    LDF.name AS id,
     LDF.name AS district_id,
 	  LDF.header,
 	  SUM(RS.mc) AS votos_mc,
@@ -85,6 +91,7 @@ const fetchElectionResultByLocalDistrict = `
     SUM(RS.prd) AS votos_prd,
     SUM(RS.pri) AS votos_pri,
     SUM(RS.pt) AS votos_pt,
+    SUM(RS.pvem) AS votos_pvem,
     SUM(RS.casillas) AS casillas,
     SUM(RS.lista_nominal) AS lista_nominal,
     SUM(RS.num_votos_nulos) AS num_votos_nulos,
@@ -97,7 +104,8 @@ const fetchElectionResultByLocalDistrict = `
       COALESCE(SUM(RS.pes), 0),
       COALESCE(SUM(RS.prd), 0),
       COALESCE(SUM(RS.pri), 0),
-      COALESCE(SUM(RS.pt), 0)
+      COALESCE(SUM(RS.pt), 0),
+      COALESCE(SUM(RS.pvem), 0)
     ) AS ganador_votos,
 	  CASE GREATEST(
       COALESCE(SUM(RS.mc), 0),
@@ -106,7 +114,8 @@ const fetchElectionResultByLocalDistrict = `
       COALESCE(SUM(RS.pes), 0),
       COALESCE(SUM(RS.prd), 0),
       COALESCE(SUM(RS.pri), 0),
-      COALESCE(SUM(RS.pt), 0)
+      COALESCE(SUM(RS.pt), 0),
+      COALESCE(SUM(RS.pvem), 0)
     )
       WHEN 0 THEN 'sin votos'
       WHEN COALESCE(SUM(RS.mc), 0) THEN 'mc'
@@ -116,6 +125,7 @@ const fetchElectionResultByLocalDistrict = `
       WHEN COALESCE(SUM(RS.prd), 0) THEN 'prd'
       WHEN COALESCE(SUM(RS.pri), 0) THEN 'pri'
       WHEN COALESCE(SUM(RS.pt), 0) THEN 'pt'
+      WHEN COALESCE(SUM(RS.pvem), 0) THEN 'pvem'
     END AS ganador
   FROM
     local_district_feature AS LDF
@@ -139,7 +149,7 @@ const fetchElectionResultByLocalDistrict = `
 
 const fetchElectionResultByTown = `
   SELECT
-    RS.id,
+    RS.town_id AS id,
     RS.type,
     RS.election,
     RS.scope,
@@ -152,6 +162,7 @@ const fetchElectionResultByTown = `
     SUM(RS.prd) AS votos_prd,
     SUM(RS.pri) AS votos_pri,
     SUM(RS.pt) AS votos_pt,
+    SUM(RS.pvem) AS votos_pvem,
     SUM(RS.casillas) AS casillas,
     SUM(RS.lista_nominal) AS lista_nominal,
     SUM(RS.num_votos_nulos) AS num_votos_nulos,
@@ -164,7 +175,8 @@ const fetchElectionResultByTown = `
       COALESCE(SUM(RS.pes), 0),
       COALESCE(SUM(RS.prd), 0),
       COALESCE(SUM(RS.pri), 0),
-      COALESCE(SUM(RS.pt), 0)
+      COALESCE(SUM(RS.pt), 0),
+      COALESCE(SUM(RS.pvem), 0)
     ) AS ganador_votos,
 	  CASE GREATEST(
       COALESCE(SUM(RS.mc), 0),
@@ -173,7 +185,8 @@ const fetchElectionResultByTown = `
       COALESCE(SUM(RS.pes), 0),
       COALESCE(SUM(RS.prd), 0),
       COALESCE(SUM(RS.pri), 0),
-      COALESCE(SUM(RS.pt), 0)
+      COALESCE(SUM(RS.pt), 0),
+      COALESCE(SUM(RS.pvem), 0)
     )
       WHEN 0 THEN 'sin votos'
       WHEN COALESCE(SUM(RS.mc), 0) THEN 'mc'
@@ -183,6 +196,7 @@ const fetchElectionResultByTown = `
       WHEN COALESCE(SUM(RS.prd), 0) THEN 'prd'
       WHEN COALESCE(SUM(RS.pri), 0) THEN 'pri'
       WHEN COALESCE(SUM(RS.pt), 0) THEN 'pt'
+      WHEN COALESCE(SUM(RS.pvem), 0) THEN 'pvem'
     END AS ganador
   FROM
     town_feature AS TF
@@ -202,7 +216,7 @@ const fetchElectionResultByTown = `
 
 const fetchElectionResultBySection = `
   SELECT
-    RS.id,
+    SF.section_id AS id,
     RS.type,
     RS.election,
     RS.scope,
@@ -219,6 +233,7 @@ const fetchElectionResultBySection = `
     RS.prd AS votos_prd,
     RS.pri AS votos_pri,
     RS.pt AS votos_pt,
+    RS.pvem AS votos_pvem,
     RS.casillas,
     RS.lista_nominal,
     RS.num_votos_nulos,
@@ -231,7 +246,8 @@ const fetchElectionResultBySection = `
       COALESCE(RS.pes, 0),
       COALESCE(RS.prd, 0),
       COALESCE(RS.pri, 0),
-      COALESCE(RS.pt, 0)
+      COALESCE(RS.pt, 0),
+      COALESCE(RS.pvem, 0)
     ) AS ganador_votos,
 	  CASE GREATEST(
       COALESCE(RS.mc, 0),
@@ -240,7 +256,8 @@ const fetchElectionResultBySection = `
       COALESCE(RS.pes, 0),
       COALESCE(RS.prd, 0),
       COALESCE(RS.pri, 0),
-      COALESCE(RS.pt, 0)
+      COALESCE(RS.pt, 0),
+      COALESCE(RS.pvem, 0)
     )
       WHEN 0 THEN 'sin votos'
       WHEN COALESCE(RS.mc, 0) THEN 'mc'
@@ -250,6 +267,7 @@ const fetchElectionResultBySection = `
       WHEN COALESCE(RS.prd, 0) THEN 'prd'
       WHEN COALESCE(RS.pri, 0) THEN 'pri'
       WHEN COALESCE(RS.pt, 0) THEN 'pt'
+      WHEN COALESCE(RS.pvem, 0) THEN 'pvem'
     END AS ganador
   FROM
     section_feature AS SF

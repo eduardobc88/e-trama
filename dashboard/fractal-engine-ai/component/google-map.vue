@@ -27,7 +27,7 @@
                 <tbody>
                   <template
                     v-for="(label, i) of Object.keys(featureLabels)">
-                    <tr>
+                    <tr v-on:click="onRowClick(i)">
                       <td>
                         <p>
                           {{ i + 1 }}
@@ -178,6 +178,10 @@ const PROPS = defineProps({
     type: String,
     default: '',
   },
+  GMOnRowClick: {
+    type: Function,
+    default: () => {},
+  },
 })
 
 
@@ -203,6 +207,7 @@ let isUserMarkersVisible = true
 let markerSelected = null
 let isFeaturesVisible = true
 let featureLabels = ref([])
+let routePolylines = []
 
 
 // NOTE: LIFE CYCLE COMPONENT METHODS
@@ -492,7 +497,7 @@ const onFeatureClick = event => {
   })
 }
 
-const addUserMarker = async el => {
+const addUserMarker = async e => {
   if (!isUserMarkersEnabled)
     return
 
@@ -545,10 +550,18 @@ const removeUserMarkers = () => {
     marker.content.style.animation = `drop-up ${ aleatoryDropDownTime }s ease-in-out forwards`
   })
   userMarkers = []
+  removeRoute()
   PROPS.GMOnMarker({
     event: 'removed-all',
     markers: userMarkers,
   })
+}
+
+const removeRoute = () => {
+  routePolylines.forEach(polyline => {
+    polyline.setMap(null)
+  })
+  routePolylines = []
 }
 
 const removeUserMarker = () => {
@@ -562,6 +575,7 @@ const removeUserMarker = () => {
       markers: userMarkers,
     })
     markerSelected = null
+    removeRoute()
   }, { once: true })
   let aleatoryDropDownTime = (Math.random() * (0.4 - 0.1) + 0.1).toFixed(2)
   markerSelected.content.style.animation = `drop-up ${ aleatoryDropDownTime }s ease-in-out forwards`
@@ -629,6 +643,7 @@ const toggleUserMarkersDraggable = () => {
 const generateRoute = async (markers = []) => {
   let result = {}
   try {
+    removeRoute()
     if (markers.length < 2)
       throw 'no markers'
     const {
@@ -666,8 +681,8 @@ const generateRoute = async (markers = []) => {
     if (!routes || routes.length === 0)
       throw 'no routes'
     const routeResult = routes[0]
-    const polylines = routeResult.createPolylines()
-    polylines.forEach(polyline => {
+    routePolylines = routeResult.createPolylines()
+    routePolylines.forEach(polyline => {
       polyline.setMap(map)
       polyline.setOptions({
         strokeColor: '#8055f6',
@@ -676,7 +691,7 @@ const generateRoute = async (markers = []) => {
       })
     })
     result = {
-      polylines: polylines,
+      polylines: routePolylines,
       totalWaypoints: intermediates.length + 2,
       route: routeResult,
     }
@@ -752,6 +767,14 @@ const calcFeatureBounds = (geometry, callback, thisArg) => {
       calcFeatureBounds(g, callback, thisArg)
     })
   }
+}
+
+const onRowClick = index => {
+  PROPS.GMOnRowClick({
+    event: 'click',
+    feature: features[index],
+    zoom_features: showZoomFeatures.value,
+  })
 }
 
 // NOTE: DEBOUNCE FUNCTIONS

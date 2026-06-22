@@ -16,7 +16,8 @@
       :GMFilterFeatures="GMFilterFeatures"
       :GMOnZoomChanged="GMOnZoomChanged"
       :GMOnReset="GMOnReset"
-      :GMDropDownMenus="GMDropDownMenus"/>
+      :GMDropDownMenus="GMDropDownMenus"
+      :GMOnRowClick="GMOnRowClick"/>
     <GridSpace
       gridTemplateColumns="1fr 2fr">
       <template #slota>
@@ -26,73 +27,22 @@
           width="100%"
           minHeight="300px">
           <template v-if="townSelected !== null">
-            <div
-              v-if="townSelected.data.coa === 'coa'"
-              class="item-definition">
-              <div
-                class="icon"
-                v-bind:style="{
-                  'background-color': '#00629f',
-                }">
-              </div>
-              <div class="text">
-                <span>coalición:</span> {{ townSelected.data.party.replaceAll('_', ', ') }}
-              </div>
-            </div>
-            <div
-              v-if="townSelected.data.coa === 'coa'"
-              class="item-definition">
-              <div
-                class="icon"
-                v-bind:style="{
-                  'background-color': '#00629f',
-                }">
-              </div>
-              <div class="text">
-                <span>coa total:</span> {{ townSelected.data.coa_total }}
-              </div>
-            </div>
-            <div
-              v-if="townSelected.data.coa === ''"
-              class="item-definition">
-              <div
-                class="icon"
-                v-bind:style="{
-                  'background-color': '#00629f',
-                }">
-              </div>
-              <div class="text">
-                <span>partido:</span> {{ townSelected.data.party }}
-              </div>
-            </div>
-            <div
-              v-if="townSelected.data.coa === ''"
-              class="item-definition">
-              <div
-                class="icon"
-                v-bind:style="{
-                  'background-color': '#00629f',
-                }">
-              </div>
-              <div class="text">
-                <span>total:</span> {{ townSelected.data.single_total }}
-              </div>
-            </div>
-            <hr />
             <template
               v-for="(attrKey, i) of resultDefaultProps">
-              <div
-                class="item-definition">
+              <template v-if="townSelected.model.get(attrKey) !== undefined">
                 <div
-                  class="icon"
-                  v-bind:style="{
-                    'background-color': '#00629f',
-                  }">
+                  class="item-definition"> 
+                  <div
+                    class="icon"
+                    v-bind:style="{
+                      'background-color': '#00629f',
+                    }">
+                  </div>
+                  <div class="text">
+                    <span>{{ attrKey.replaceAll('_', ' ') }}:</span> {{ townSelected.model.get(attrKey) }}
+                  </div>
                 </div>
-                <div class="text">
-                  <span>{{ attrKey.replaceAll('_', ' ') }}:</span> {{ townSelected.model.get(attrKey) }}
-                </div>
-              </div>
+              </template>
             </template>
             <!--<Button
               buttonIcon="feed"
@@ -153,8 +103,6 @@ let federalDistrictFeatureCollection = new GLOBAL.$model.FeatureMC.collection()
 let localDistrictFeatureCollection = new GLOBAL.$model.FeatureMC.collection()
 let townFeatureCollection = new GLOBAL.$model.FeatureMC.collection()
 let sectionFeatureCollection = new GLOBAL.$model.FeatureMC.collection()
-let electionCollection = new GLOBAL.$model.ElectionMC.collection()
-
 let electionTypeCollection = new GLOBAL.$model.ElectionTypeMC.collection()
 let federalElectionCollection = new GLOBAL.$model.ElectionMC.collection()
 let localElectionCollection = new GLOBAL.$model.ElectionMC.collection()
@@ -175,60 +123,72 @@ let parties = [
     name: 'movimiento ciudadano',
     abr: 'mc',
     icon: 'mc.png',
-    active: false,
+    active: true,
   },
   {
     name: 'morena',
     abr: 'morena',
     icon: 'morena.png',
-    active: false,
+    active: true,
   },
   {
     name: 'partido acción nacional',
     abr: 'pan',
     icon: 'pan.png',
-    active: false,
+    active: true,
   },
   {
     name: 'partido revolucionario democratico',
     abr: 'prd',
     icon: 'prd.png',
-    active: false,
+    active: true,
   },
   {
     name: 'partido revolucionario institucional',
     abr: 'pri',
     icon: 'pri.png',
-    active: false,
+    active: true,
   },
   {
     name: 'partido del trabajo',
     abr: 'pt',
     icon: 'pt.png',
-    active: false,
+    active: true,
   },
   {
     name: 'partido verde',
     abr: 'pvem',
     icon: 'pv.png',
-    active: false,
+    active: true,
   },
 ]
 let resultDefaultProps = [
   'id',
-  'name',
-  'total_votos',
-  'votos_nulos',
-  'votos_validos',
+  'type',
+  'election',
+  'scope',
+  'header',
+  'district_id',
+  'district_f_id',
+  'district_l_id',
+  'town_id',
+  'municipio',
+  'section_id',
+  'votos_mc',
+  'votos_morena',
+  'votos_pan',
+  'votos_pes',
+  'votos_prd',
+  'votos_pri',
+  'votos_pt',
+  'votos_pvem',
+  'casillas',
   'lista_nominal',
-  'participacion_ciudadana',
-  'pan',
-  'pri',
-  'prd',
-  'pt',
-  'pvem',
-  'mc',
-  'morena',
+  'num_votos_nulos',
+  'num_votos_validos',
+  'total_votos',
+  'ganador_votos',
+  'ganador',
 ]
 // NOTE: CHART
 let chartAKey = ref('')
@@ -286,26 +246,19 @@ const setElectionDropDownMenus = () => {
         type: e.get('type'),
       },
       item_value: false,
-      item_old_value: false,
-      requested: false,
     })
   }
   GMDropDownMenus.value = [menu]
 }
 
-const GMOnOptionSelected = (prop, data) => {
-  data.item_old_value = data.item_value
+const GMOnOptionSelected = async (prop, data) => {
   data.item_value = !data.item_value
-  fetchElectionData(data)
+  await fetchElectionData(data)
 }
 
 const fetchElectionData = async data => {
   try {
     isLoading.value = true
-    //if (data.requested) {
-    //  matchFeatureWithElectionData()
-    //  return
-    //}
     federalElectionCollection = new GLOBAL.$model.ElectionMC.collection()
     localElectionCollection = new GLOBAL.$model.ElectionMC.collection()
     townElectionCollection = new GLOBAL.$model.ElectionMC.collection()
@@ -322,32 +275,34 @@ const fetchElectionData = async data => {
       election.push(option.item_prop.election)
       type.push(option.item_prop.type)
     }
+    let scopeStr = scope.join(',')
+    let electionStr = election.join(',')
+    let typeStr = type.join(',')
     federalElectionCollection.set({
-      scope: scope.join(','),
-      election: election.join(','),
-      type: type.join(','),
+      scope: scopeStr,
+      election: electionStr,
+      type: typeStr,
     })
     localElectionCollection.set({
-      scope: scope.join(','),
-      election: election.join(','),
-      type: type.join(','),
+      scope: scopeStr,
+      election: electionStr,
+      type: typeStr,
     })
     townElectionCollection.set({
-      scope: scope.join(','),
-      election: election.join(','),
-      type: type.join(','),
+      scope: scopeStr,
+      election: electionStr,
+      type: typeStr,
     })
     sectionElectionCollection.set({
-      scope: scope.join(','),
-      election: election.join(','),
-      type: type.join(','),
+      scope: scopeStr,
+      election: electionStr,
+      type: typeStr,
     })
     fetchPromiseItems.push(federalElectionCollection.fetchResultFederal())
     fetchPromiseItems.push(localElectionCollection.fetchResultLocal())
     fetchPromiseItems.push(townElectionCollection.fetchResultTown())
     fetchPromiseItems.push(sectionElectionCollection.fetchResultSection())
     await Promise.all(fetchPromiseItems)
-    data.requested = true
   } catch (err) {
     console.error(err)
   } finally {
@@ -366,7 +321,7 @@ const matchFeatureWithElectionData = async () => {
 
       let featureDistrictId = parseInt(feature.properties.district_id)
       for (let m of federalElectionCollection.getModels())
-        if (parseInt(m.get('district_id')) === featureDistrictId) {
+        if (parseInt(m.get('id')) === featureDistrictId) {
           model = m
           break
         }
@@ -376,6 +331,7 @@ const matchFeatureWithElectionData = async () => {
     if (model === null)
       continue
 
+    feature.properties.model_id = model.get('id')
     feature.properties.color = colors[model.get('ganador')]
     feature.properties.label = `${ feature.properties.model.get('name') } ${ feature.properties.model.get('header') } \n ${ model.get('total_votos') } \n ${ model.get('ganador') }: ${ model.get('ganador_votos') }`
   }
@@ -388,7 +344,7 @@ const matchFeatureWithElectionData = async () => {
 
       let featureDistrictId = parseInt(feature.properties.district_id)
       for (let m of localElectionCollection.getModels())
-        if (parseInt(m.get('district_id')) === featureDistrictId) {
+        if (parseInt(m.get('id')) === featureDistrictId) {
           model = m
           break
         }
@@ -398,6 +354,7 @@ const matchFeatureWithElectionData = async () => {
     if (model === null)
       continue
 
+    feature.properties.model_id = model.get('id')
     feature.properties.color = colors[model.get('ganador')]
     feature.properties.label = `${ feature.properties.model.get('name') } ${ feature.properties.model.get('header') } \n ${ model.get('total_votos') } \n ${ model.get('ganador') }: ${ model.get('ganador_votos') }`
   }
@@ -410,7 +367,7 @@ const matchFeatureWithElectionData = async () => {
 
       let featureTownId = parseInt(feature.properties.town_id)
       for (let m of townElectionCollection.getModels())
-        if (parseInt(m.get('town_id')) === featureTownId) {
+        if (parseInt(m.get('id')) === featureTownId) {
           model = m
           break
         }
@@ -420,6 +377,7 @@ const matchFeatureWithElectionData = async () => {
     if (model === null)
       continue
 
+    feature.properties.model_id = model.get('id')
     feature.properties.color = colors[model.get('ganador')]
     feature.properties.label = `${ feature.properties.model.get('name') } ${ feature.properties.model.get('header') } \n ${ model.get('total_votos') } \n ${ model.get('ganador') }: ${ model.get('ganador_votos') }`
   }
@@ -432,7 +390,7 @@ const matchFeatureWithElectionData = async () => {
 
       let featureSectionId = parseInt(feature.properties.section_id)
       for (let m of sectionElectionCollection.getModels())
-        if (parseInt(m.get('section_id')) === featureSectionId) {
+        if (parseInt(m.get('id')) === featureSectionId) {
           model = m
           break
         }
@@ -442,6 +400,7 @@ const matchFeatureWithElectionData = async () => {
     if (model === null)
       continue
 
+    feature.properties.model_id = model.get('id')
     feature.properties.color = colors[model.get('ganador')]
     feature.properties.label = `${ feature.properties.model.get('name') } ${ feature.properties.model.get('header') } \n ${ model.get('total_votos') } \n ${ model.get('ganador') }: ${ model.get('ganador_votos') }`
   }
@@ -566,137 +525,6 @@ const setupMapFeatures = () => {
   setFeaturesTitle(8)
 }
 
-const setupTownFeaturesMap = () => {
-  let features = []
-  for (let m of townFeatureCollection.getModels()) {
-    let feature = {
-      geometry: JSON.parse(m.get('geometry')),
-      properties: {
-        id: m.get('id'),
-        town_id: m.get('town_id'),
-        district_f_id: m.get('district_f_id'),
-        district_l_id: m.get('district_l_id'),
-        label: m.get('name'),
-        zoom: 10,
-        color: 'rgba(200, 90, 90, 1)',
-        show: true,
-        description: m.get('description'),
-        model_id: 0,
-      },
-      type: 'Feature',
-    }
-    let iName = removeAccents(feature.properties.label).toLowerCase()
-    let models = electionCollection.filter(m => {
-      let mName = removeAccents(m.get('name')).toLowerCase()
-      return (mName === iName)
-    })
-    if (!models.getModels().length)
-      continue
-
-    let rModel = models.getModels()[0]
-    feature.properties.model_id = rModel.get('id')
-    // NOTE: GET THE MAYOR FOR COA AND SINGLE PARTIES
-    let coaTotalVotes = 0
-    let coaKey = ''
-    let singleTotalVotes = 0
-    let singleKey = ''
-    for (let p of parties) {
-      for (let k of Object.keys(rModel.attributes)) {
-        // NOTE: COA
-        if (k.includes('_') && k.includes(p.abr) && parseInt(rModel.get(k)) > coaTotalVotes) {
-          coaTotalVotes = parseInt(rModel.get(k))
-          coaKey = k
-        }
-        // NOTE: SINGLE
-        if (k === p.abr && parseInt(rModel.get(k)) > singleTotalVotes) {
-          singleTotalVotes = parseInt(rModel.get(k))
-          singleKey = k
-        }
-      }
-    }
-    // NOTE: CHECK IF IS PARTY AND SET DATA
-    feature.properties.party = singleKey
-    feature.properties.color = colors[singleKey]
-    if (coaKey.includes(singleKey) && coaTotalVotes > singleTotalVotes) {
-      feature.properties.coa = 'coa'
-      feature.properties.party = coaKey.toString()
-      feature.properties.color = colors[coaKey]
-    }
-    feature.properties.coa_total = coaTotalVotes
-    feature.properties.single_total = singleTotalVotes
-    features.push(feature)
-  }
-  return features
-}
-
-const setupSectionFeaturesMap = () => {
-  let features = []
-  for (let m of sectionFeatureCollection.getModels()) {
-    let feature = {
-      geometry: JSON.parse(m.get('geometry')),
-      properties: {
-        id: m.get('id'),
-        section_id: m.get('section_id'),
-        town_id: m.get('town_id'),
-        district_f_id: m.get('district_f_id'),
-        district_l_id: m.get('district_l_id'),
-        label: m.get('section_id'),
-        zoom: 11,
-        color: '',
-        show: true,
-        description: m.get('description'),
-        model_id: 0,
-      },
-      type: 'Feature',
-    }
-    let townId = parseInt(feature.properties.town_id)
-    let models = electionCollection.filter(m => {
-      let id = parseInt(m.get('id'))
-      return (townId === id)
-    })
-    if (!models.getModels().length)
-      continue
-
-    let rModel = models.getModels()[0]
-    feature.properties.model_id = rModel.get('id')
-    // NOTE: GET THE MAYOR FOR COA AND SINGLE PARTIES
-    let coaTotalVotes = 0
-    let coaKey = ''
-    let singleTotalVotes = 0
-    let singleKey = ''
-    for (let p of parties) {
-      for (let k of Object.keys(rModel.attributes)) {
-        // NOTE: COA
-        if (k.includes('_') && k.includes(p.abr) && parseInt(rModel.get(k)) > coaTotalVotes) {
-          coaTotalVotes = parseInt(rModel.get(k))
-          coaKey = k
-        }
-        // NOTE: SINGLE
-        if (k === p.abr && parseInt(rModel.get(k)) > singleTotalVotes) {
-          singleTotalVotes = parseInt(rModel.get(k))
-          singleKey = k
-        }
-      }
-    }
-    // NOTE: CHECK IF IS PARTY AND SET DATA
-    feature.properties.party = singleKey
-    feature.properties.color = colors[singleKey]
-    if (coaKey.includes(singleKey) && coaTotalVotes > singleTotalVotes) {
-      feature.properties.coa = 'coa'
-      feature.properties.party = coaKey.toString()
-      feature.properties.color = colors[coaKey]
-    }
-    feature.properties.coa_total = coaTotalVotes
-    feature.properties.single_total = singleTotalVotes
-    features.push(feature)
-  }
-  return features
-}
-
-const removeAccents = str => {
-  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-}
-
 const GMFeatureOnClick = data => {
   let zoomFeatures = 8
   GMInfoBoxMarkdownText.value = data.feature.getProperty('description')
@@ -722,32 +550,47 @@ const GMFeatureOnClick = data => {
     zoomFeatures = 11
   }
   setFeaturesTitle(zoomFeatures, data.feature.getProperty('label'))
-  if (data.feature.getProperty('zoom') === 10) {
-    let featureModelId = data.feature.getProperty('model_id')
-    let models = electionCollection.filter(m => {
-      return (m.get('id') === featureModelId)
-    })
-    if (!models.getModels().length)
-      return
+  let id = data.feature.getProperty('model_id')
+  refreshChartData(featureZoom, id)
+}
 
-    let rModel = models.getModels()[0]
-    townSelected.value = {
-      model: rModel,
-      data: {},
-    }
-    generateChart()
+const GMOnRowClick = data => {
+  let featureZoom = data.feature.getProperty('zoom')
+  let id = data.feature.getProperty('model_id')
+  refreshChartData(featureZoom, id)
+}
+
+const refreshChartData = (zoom, modelId) => {
+  let featureZoom = zoom
+  let collection = null
+  let id = modelId
+  if (featureZoom === 8)
+    collection = federalElectionCollection.filter(f => f.get('id') === id)
+  else if (featureZoom === 9)
+    collection = localElectionCollection.filter(f => f.get('id') === id)
+  else if (featureZoom === 10)
+    collection = townElectionCollection.filter(f => f.get('id') === id)
+  else if (featureZoom === 11)
+    collection = sectionElectionCollection.filter(f => f.get('id') === id)
+  townSelected.value = {
+    model: collection.getModels()[0],
+    data: {},
   }
+  generateChart()
 }
 
 const generateChart = async () => {
   let chartDataSets = []
-  for (let key of Object.keys(colors)) {
-    if (key === 'activo')
+  for (let key of Object.keys(parties)) {
+    if (!parties[key].active)
       continue
 
-    let color = colors[key]
-    let label = key.replaceAll('_', ' ')
-    let total = townSelected.value.model.get(key)
+    let partyAbr = parties[key].abr
+    let partyName = parties[key].name
+    let propPartyName = `votos_${ partyAbr }`
+    let color = colors[partyAbr]
+    let label = partyName
+    let total = townSelected.value.model.get(propPartyName)
     chartDataSets.push({
       label: label,
       backgroundColor: color,

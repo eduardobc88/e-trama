@@ -283,6 +283,13 @@ const getFormatDate = (date, format) => {
   return formated
 }
 
+const getCSSVarValue  = property => {
+  const root = document.getElementById('app-wrapper')
+  const estilos = getComputedStyle(root)
+  const color = estilos.getPropertyValue(property).trim()
+  return color
+}
+
 export default {
   getHexColor,
   getAvatarURL,
@@ -299,6 +306,7 @@ export default {
   getOptionsFromCollection: getOptionsFromCollection,
   getGeneratedOptionsFromCollection: getGeneratedOptionsFromCollection,
   getFormatDate: getFormatDate,
+  getCSSVarValue,
   exportTo: {
     xlsx: exportToXLSX,
   },

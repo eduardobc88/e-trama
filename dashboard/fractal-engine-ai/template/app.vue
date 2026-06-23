@@ -304,7 +304,6 @@ export default {
     isLightTheme (newValue, oldValue) {
       this.setMaterialYouTheme(this.route.meta.title)
       this.$config.is_light_theme = this.isLightTheme
-      this.$emitter.emit('dashboard-change-theme', '')
     },
   },
   created () {
@@ -443,6 +442,7 @@ export default {
         this.appTheme['--main-border-color'] = border
         this.appTheme['--main-border'] = `1px solid ${ mainBorder }`
         this.appTheme['--main-gradient-bkg-color'] = mainBorder
+        this.$emitter.emit('dashboard-change-theme', '')
       }, 150)
     },
     setThemeOS () {

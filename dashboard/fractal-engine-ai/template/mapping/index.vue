@@ -73,6 +73,129 @@
         </Widget> 
       </template>
     </GridSpace>
+    <GridSpace
+      gridTemplateColumns="1fr 2fr">
+      <template #slota>
+        <Widget
+          sectionTitle="ACTORES POLÍTICOS"
+          sectionDescription="datos generales"
+          width="100%"
+          minHeight="300px">
+          <div
+            class="item-definition"> 
+            <div
+              class="icon"
+              v-bind:style="{
+                'background-color': '#00629f',
+              }">
+            </div>
+            <div class="text">
+              <span>Presidente:</span>MANUEL ESQUIVEL BEJARANO
+            </div>
+          </div>
+          <div
+            class="item-definition"> 
+            <div
+              class="icon"
+              v-bind:style="{
+                'background-color': '#00629f',
+              }">
+            </div>
+            <div class="text">
+              <span>COALICIÓN:</span>morena
+            </div>
+          </div>
+          <div
+            class="item-definition"> 
+            <div
+              class="icon"
+              v-bind:style="{
+                'background-color': '#00629f',
+              }">
+            </div>
+            <div class="text">
+              <span>Diputado federal:</span>LEONEL GODOY RANGEL
+            </div>
+          </div>
+          <div
+            class="item-definition"> 
+            <div
+              class="icon"
+              v-bind:style="{
+                'background-color': '#00629f',
+              }">
+            </div>
+            <div class="text">
+              <span>Distrito federal 1:</span>morelia
+            </div>
+          </div>
+          <div
+            class="item-definition"> 
+            <div
+              class="icon"
+              v-bind:style="{
+                'background-color': '#00629f',
+              }">
+            </div>
+            <div class="text">
+              <span>Diputado local:</span>MARÍA ITZE CAMACHO ZAPIAÍN
+            </div>
+          </div>
+          <div
+            class="item-definition"> 
+            <div
+              class="icon"
+              v-bind:style="{
+                'background-color': '#00629f',
+              }">
+            </div>
+            <div class="text">
+              <span>Distrito Local 24:</span>morena
+            </div>
+          </div>
+          <div
+            class="item-definition"> 
+            <div
+              class="icon"
+              v-bind:style="{
+                'background-color': '#00629f',
+              }">
+            </div>
+            <div class="text">
+              <span>Programas Sociales del Bienestar Estatal:</span>536 |	$10,727,400
+            </div>
+          </div>
+          <div
+            class="item-definition"> 
+            <div
+              class="icon"
+              v-bind:style="{
+                'background-color': '#00629f',
+              }">
+            </div>
+            <div class="text">
+              <span>Programas Sociales del Bienestar Federal:</span>35,032 | $760,937,006
+            </div>
+          </div>
+          <div
+            class="item-definition"> 
+            <div
+              class="icon"
+              v-bind:style="{
+                'background-color': '#00629f',
+              }">
+            </div>
+            <div class="text">
+              <span>Infraestructura Educativa (2022-2023):</span>27 | $85,607,334<br/>Destacan, construcción y rehabilitación  de aulas, bardas y  construcción de sanitarios.
+            </div>
+          </div>
+          <div
+            class="item-definition"> 
+          </div>
+        </Widget>
+      </template>
+      <template #slotb></template>
+    </GridSpace>
   </div>
 </template>
 
@@ -201,6 +324,7 @@ let chartOptions = ref({
   maintainAspectRatio: false,
 })
 
+
 // NOTE: MAP COMPONENT PROPERTIES
 let GMInfoBoxMarkdownText = ref('')
 let GMFilterFeatures = ref({
@@ -214,7 +338,6 @@ let initDistrictType = 'district_f_id'
 onMounted (async () => {
   await setup()
 })
-
 
 const setup = async () => {
   try {
@@ -640,9 +763,10 @@ const setFeaturesTitle = (zoomFeatures, label = '') => {
 <style scoped lang="css">
 
 .item-definition {
-  display: flex;
-  height: 25px;
   align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 10fr;
+  height: 40px;
 }
 
 .item-definition .icon {

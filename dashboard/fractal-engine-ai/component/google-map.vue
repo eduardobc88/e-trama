@@ -790,7 +790,7 @@ const debounceShowMarkersInBounds = _.debounce(showMarkersInBounds, 500, { 'trai
   border-radius: 10px;
   box-shadow: var(--main-box-shadow);
   overflow: hidden;
-  position: sticky;
+  /*position: sticky;*/
   top: 0;
   transition-duration: 500ms;
 }
@@ -859,6 +859,10 @@ const debounceShowMarkersInBounds = _.debounce(showMarkersInBounds, 500, { 'trai
   font-size: var(--main-accent-font-size);
   font-weight: 600;
   text-transform: uppercase;
+}
+
+#table tr td:first-child {
+  width: 40px;
 }
 
 #table td {

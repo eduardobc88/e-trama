@@ -1,4 +1,5 @@
 #!/bin/bash
+# NOTE: IF YOU NEED RUN COMMANDS WITH DOCKER, REPLACE "podman" WITH "docker" ON THIS FILE
 
 NAME="== FRACTAL ENGINE AI ==";
 ARCHITECTURE=`uname -m`;
@@ -35,35 +36,34 @@ fractal_engine_ai_build()
 {
   mkdir database;
   echo "$NAME : BUILD";
-  base_dir=./docker/;
+  base_dir=./engine/;
   mkdir -p ${base_dir}../upload/1/;
   echo "creating fractal-engine-ai-node-img";
-  docker build -f ${base_dir}/build/dockerfile-${ARCHITECTURE}-node -t fractal-engine-ai-node-img .;
+  podman build -f ${base_dir}/build/recipe-${ARCHITECTURE}-node -t fractal-engine-ai-node-img .;
   echo "creating fractal-engine-ai-nginx-img";
-  docker build -f ${base_dir}/build/dockerfile-${ARCHITECTURE}-nginx -t fractal-engine-ai-nginx-img .;
+  podman build -f ${base_dir}/build/recipe-${ARCHITECTURE}-nginx -t fractal-engine-ai-nginx-img .;
   echo "creating fractal-engine-ai-mysql-img";
-  docker build -f ${base_dir}/build/dockerfile-${ARCHITECTURE}-mysql -t fractal-engine-ai-mysql-img .;
+  podman build -f ${base_dir}/build/recipe-${ARCHITECTURE}-mysql -t fractal-engine-ai-mysql-img .;
   echo "$NAME : BUILD FINISHED";
 }
-
 
 fractal_engine_ai_start_development()
 {
   echo "$NAME : START DEVELOPMENT";
   echo "";
-  base_dir=./docker/development/;
-  docker compose -f ${base_dir}docker-compose.yml -p fractal-development up -d;
+  base_dir=./engine/development/;
+  podman compose -f ${base_dir}compose.yml -p fractal-development up -d;
   echo "";
   echo "$NAME : START DEVELOPMENT FINISHED";
-  docker ps;
+  podman ps;
 }
 
 fractal_engine_ai_stop_development()
 {
   echo "$NAME : STOP DEVELOPMENT";
   echo "";
-  base_dir=./docker/development/;
-  docker compose -f ${base_dir}docker-compose.yml -p fractal-development stop;
+  base_dir=./engine/development/;
+  podman compose -f ${base_dir}compose.yml -p fractal-development stop;
   echo "";
   echo "$NAME : STOP DEVELOPMENT FINISHED";
 }
@@ -72,8 +72,8 @@ fractal_engine_ai_remove_development()
 {
   echo "$NAME : REMOVE DEVELOPMENT";
   echo "";
-  base_dir=./docker/development/;
-  docker compose -f ${base_dir}docker-compose.yml -p fractal-development down;
+  base_dir=./engine/development/;
+  podman compose -f ${base_dir}compose.yml -p fractal-development down;
   echo "";
   echo "$NAME : REMOVE DEVELOPMENT FINISHED";
 }
@@ -82,9 +82,9 @@ fractal_engine_ai_restart_development()
 {
   echo "$NAME : RESTART DEVELOPMENT";
   echo "";
-  base_dir=./docker/development/;
-  docker compose -f ${base_dir}docker-compose.yml -p fractal-development down;
-  docker compose -f ${base_dir}docker-compose.yml -p fractal-development up -d;
+  base_dir=./engine/development/;
+  podman compose -f ${base_dir}compose.yml -p fractal-development down;
+  podman compose -f ${base_dir}compose.yml -p fractal-development up -d;
   echo "";
   echo "$NAME : RESTART DEVELOPMENT FINISHED";
 }
@@ -93,8 +93,8 @@ fractal_engine_ai_start_production()
 {
   echo "$NAME : START PRODUCTION";
   echo "";
-  base_dir=./docker/production/;
-  docker compose -f ${base_dir}docker-compose.yml -p fractal-production up -d;
+  base_dir=./engine/production/;
+  podman compose -f ${base_dir}compose.yml -p fractal-production up -d;
   echo "";
   echo "$NAME : START PRODUCTION FINISHED";
 }
@@ -103,8 +103,8 @@ fractal_engine_ai_stop_production()
 {
   echo "$NAME : STOP PRODUCTION";
   echo "";
-  base_dir=./docker/production/;
-  docker compose -f ${base_dir}docker-compose.yml -p fractal-production stop;
+  base_dir=./engine/production/;
+  podman compose -f ${base_dir}compose.yml -p fractal-production stop;
   echo "";
   echo "$NAME : STOP PRODUCTION FINISHED";
 }
@@ -113,9 +113,9 @@ fractal_engine_ai_restart_production()
 {
   echo "$NAME : RESTART PRODUCTION";
   echo "";
-  base_dir=./docker/production/;
-  docker compose -f ${base_dir}docker-compose.yml -p fractal-production stop;
-  docker compose -f ${base_dir}docker-compose.yml -p fractal-production up -d;
+  base_dir=./engine/production/;
+  podman compose -f ${base_dir}compose.yml -p fractal-production stop;
+  podman compose -f ${base_dir}compose.yml -p fractal-production up -d;
   echo "";
   echo "$NAME : RESTART PRODUCTION FINISHED";
 }
@@ -124,8 +124,8 @@ fractal_engine_ai_build_production()
 {
   echo "$NAME : START BUILD PRODUCTION";
   echo "";
-  base_dir=./docker/production/;
-  docker compose -f ${base_dir}fractal-engine-ai-dashboard-production.yml run --rm fractal-install;
+  base_dir=./engine/production/;
+  podman compose -f ${base_dir}fractal-engine-ai-dashboard-production.yml run --rm fractal-install;
   echo "";
   echo "$NAME : START BUILD PRODUCTION FINISHED";
 }
@@ -134,8 +134,8 @@ fractal_engine_ai_install_dependencies()
 {
   echo "$NAME : INSTALL DEPENDENCIES";
   echo "";
-  base_dir=./docker/;
-  docker compose -f ${base_dir}run/install-dependencies.yml run --rm fractal-install;
+  base_dir=./engine/;
+  podman compose -f ${base_dir}run/install-dependencies.yml run --rm fractal-install;
   echo "";
   echo "$NAME : INSTALL DEPENDENCIES FINISHED";
 }
@@ -144,7 +144,7 @@ fractal_engine_ai_remove_networks()
 {
   echo "$NAME : REMOVE NETWORKS";
   echo "";
-  docker network rm fractal-network;
+  podman network rm fractal-network;
   sleep 6;
   echo "";
   echo "$NAME : REMOVE NETWORKS FINISHED";
@@ -154,8 +154,8 @@ fractal_engine_ai_add_migration()
 {
   echo "$NAME : ADD MIGRATION";
   echo "";
-  base_dir=./docker/;
-  MIGRATION_ARGS="add migration ${1}" docker compose -f ${base_dir}run/add-migration.yml run --rm fractal-migrations;
+  base_dir=./engine/;
+  MIGRATION_ARGS="add migration ${1}" podman compose -f ${base_dir}run/add-migration.yml run --rm fractal-migrations;
   echo "";
   echo "$NAME : ADD MIGRATION FINISHED";
 }
@@ -164,8 +164,8 @@ fractal_engine_ai_run_migrations()
 {
   echo "$NAME : RUN MIGRATIONS";
   echo "";
-  base_dir=./docker/;
-  MIGRATION_ARGS="up --migrate-all" docker compose -f ${base_dir}run/add-migration.yml run --rm fractal-migrations;
+  base_dir=./engine/;
+  MIGRATION_ARGS="up --migrate-all" podman compose -f ${base_dir}run/add-migration.yml run --rm fractal-migrations;
   echo "";
   echo "$NAME : RUN MIGRATIONS FINISHED";
 }
@@ -174,8 +174,8 @@ fractal_engine_ai_init_db()
 {
   echo "$NAME : INIT DB";
   echo "";
-  base_dir=./docker/;
-  MIGRATION_ARGS="up --migrate-all" docker compose -f ${base_dir}run/init-db.yml run --rm fractal-engine-ai-init;
+  base_dir=./engine/;
+  MIGRATION_ARGS="up --migrate-all" podman compose -f ${base_dir}run/init-db.yml run --rm fractal-engine-ai-init;
   echo "";
   echo "$NAME : INIT DB FINISHED";
 }
@@ -184,8 +184,8 @@ fractal_engine_ai_backup_db()
 {
   echo "$NAME : BACKUP DB";
   echo "";
-  base_dir=./docker/run/;
-  MIGRATION_ARGS="up --migrate-all" docker compose -f ${base_dir}backup-db.yml run --rm fractal-engine-ai-init;
+  base_dir=./engine/run/;
+  MIGRATION_ARGS="up --migrate-all" podman compose -f ${base_dir}backup-db.yml run --rm fractal-engine-ai-init;
   echo "";
   echo "$NAME : BACKUP DB FINISHED";
 }
@@ -193,19 +193,19 @@ fractal_engine_ai_backup_db()
 fractal_dashboard_logs()
 {
   echo "$NAME :  DASHBOARD LOGS";
-  docker logs fractal-engine-ai-dashboard -f --tail 2;
+  podman logs fractal-engine-ai-dashboard -f --tail 2;
 }
 
 fractal_notification_logs()
 {
   echo "$NAME :  NOTIFICATION LOGS";
-  docker logs fractal-engine-ai-notification-service -f --tail 2;
+  podman logs fractal-engine-ai-notification-service -f --tail 2;
 }
 
 fractal_service_logs()
 {
   echo "$NAME :  SERVICE : LOGS";
-  docker logs fractal-engine-ai-service -f --tail 2;
+  podman logs fractal-engine-ai-service -f --tail 2;
 }
 
 case $1 in

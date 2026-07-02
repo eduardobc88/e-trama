@@ -17,13 +17,12 @@ services:
     restart: always
     hostname: fractal-engine-ai-db-service
     container_name: fractal-engine-ai-db-service
-    user: "1000:1000" # NOTE: IS THE USER ID FROM OS USE TO BE 1000:1000 IN MACOS AND LINUX, REMOVE FOR PRODUCTION AND --user=root TOO
     networks:
       - fractal-engine-ai-network
     ports:
       - "3306:3306"
     volumes:
-      - fractal-engine-ai-db:/var/lib/mysql/
+      - fractal-engine-ai-db:/var/lib/mysql/:Z,U
     environment:
       MYSQL_ROOT_PASSWORD: fractalengineai2026
       MYSQL_DATABASE: fractal-engine-ai
